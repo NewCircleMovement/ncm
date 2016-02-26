@@ -1,0 +1,17 @@
+.container
+  .row
+    .col-md-4
+      tree 1
+    .col-md-4
+      tree 2
+    .col-md-4
+      tree 3
+
+.container
+  .row
+    .col-md-3
+      = link_to "Login", new_user_session_path, :class => 'btn btn-primary btn-lg'
+    .col-md-3
+      = link_to "Bliv medlem", new_user_registration_path, :class => 'btn btn-primary btn-lg'
+    .col-md-3
+      = link_to "Opret epicenter", new_epicenter_path, :class => 'btn btn-primary btn-lg'
