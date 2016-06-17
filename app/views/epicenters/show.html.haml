@@ -1,3 +1,8 @@
 %h1= @epicenter.name
+%p
+  %strong Caretaker
+  - for caretaker in @epicenter.users_with_tshirt("caretaker")
+    = caretaker.email
+
 %p= @epicenter.description
 = @epicenter.video.html_safe

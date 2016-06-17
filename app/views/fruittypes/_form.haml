@@ -1,0 +1,8 @@
+= simple_form_for [@epicenter, @fruittype] do |f|
+  = f.input :name, label: "Navn på frugten"
+  = f.input :monthly_decay, label: "Månedlig forfald"
+  
+  = f.submit "Gem", class: 'btn btn-primary'
+  - if action_name == 'new'
+    = link_to "Fortryd", :back, class: "btn btn-default"
+

@@ -1,0 +1,10 @@
+= simple_form_for [@epicenter, @membership] do |f|
+  = f.input :name
+  = f.input :monthly_fee
+  
+  = f.submit "Gem", :class => 'btn btn-primary'
+  - if action_name == 'edit'
+    = link_to "Slet", [@epicenter, @membership], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
+  - if action_name == 'new'
+    = link_to "Fortryd", :back, class: "btn btn-default"
+

@@ -1,0 +1,9 @@
+.container.top
+  .row
+    .col-md-3
+      %ul.nav.nav-pills.nav-stacked
+        %li{ class: "#{controller_name == 'epicenters' ? 'active' : ''}" }= link_to "Epicenter", edit_epicenter_path(@epicenter)
+        %li{ class: "#{controller_name == 'memberships' ? 'active' : ''}" }= link_to "Memberships", epicenter_memberships_path(@epicenter)
+        %li{ class: "#{controller_name == 'fruittypes' ? 'active' : ''}" }= link_to "Fruit type", epicenter_fruittypes_path(@epicenter)
+    .col-md-9
+      = yield

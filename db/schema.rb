@@ -11,20 +11,97 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160226094941) do
+ActiveRecord::Schema.define(version: 20160616155244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "access_points", force: :cascade do |t|
+    t.integer  "location_id"
+    t.string   "name"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
 
   create_table "epicenters", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
     t.string   "video_url"
-    t.integer  "max_members", default: 1000
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.boolean  "growing",     default: false
-    t.boolean  "manifested",  default: false
+    t.integer  "max_members",          default: 1000
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.boolean  "growing",              default: false
+    t.boolean  "manifested",           default: false
+    t.integer  "location_id"
+    t.integer  "niveau"
+    t.integer  "depth_members"
+    t.integer  "depth_fruits"
+    t.integer  "mother_id"
+    t.integer  "monthly_fruits_basis", default: 100
+  end
+
+  create_table "fruitbags", force: :cascade do |t|
+    t.integer  "amount"
+    t.string   "fruittype_id"
+    t.string   "fruitbasket_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "fruitbaskets", force: :cascade do |t|
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "fruittrees", force: :cascade do |t|
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "fruits_per_month"
+    t.integer  "fruittype_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  create_table "fruittypes", force: :cascade do |t|
+    t.string   "name"
+    t.float    "monthly_decay"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "epicenter_id"
+  end
+
+  create_table "locations", force: :cascade do |t|
+    t.integer  "density"
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "membershipcards", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "membership_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "monthly_fee"
+    t.integer  "epicenter_id"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.integer  "engagement",   default: 2
+  end
+
+  create_table "tshirts", force: :cascade do |t|
+    t.integer  "epicenter_id"
+    t.integer  "user_id"
+    t.integer  "access_point_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.integer  "membership_id"
   end
 
   create_table "users", force: :cascade do |t|

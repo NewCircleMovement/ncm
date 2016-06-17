@@ -37,8 +37,11 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.4.0)
+    annotate (2.7.0)
+      activerecord (>= 3.2, < 6.0)
+      rake (~> 10.4)
     arel (6.0.3)
-    autoprefixer-rails (6.3.3.1)
+    autoprefixer-rails (6.3.6.2)
       execjs
     bcrypt (3.1.10)
     better_errors (2.1.1)
@@ -92,6 +95,8 @@ GEM
     faker (1.6.3)
       i18n (~> 0.5)
     ffi (1.9.10)
+    font-awesome-sass (4.4.0)
+      sass (>= 3.2)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     haml (4.0.7)
@@ -238,6 +243,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate
   better_errors
   bootstrap-sass
   byebug
@@ -247,6 +253,7 @@ DEPENDENCIES
   devise
   factory_girl_rails
   faker
+  font-awesome-sass
   haml-rails
   high_voltage
   html2haml

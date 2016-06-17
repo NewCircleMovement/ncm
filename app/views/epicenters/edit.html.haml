@@ -1,2 +1,31 @@
-.container
-  = render :partial => "form"
+= render layout: "edit_epicenter" do
+  %h3
+    = @epicenter.name
+    %small.pull-right
+      %a{"aria-controls" => "settings", "data-toggle" => "tab", :href => "#settings", :role => "tab"} Ret
+  %div
+      
+  / Tab panes
+  .tab-content
+    #about.tab-pane.active{:role => "tabpanel"} 
+      .well
+        = @epicenter.description
+      %hr/
+      - if @epicenter.memberships.present?
+        %i.fa.fa-check-circle-o.space-right 
+        Medlemsskaber oprettet
+      - else
+        %i.fa.fa-ban.space-right
+        Ingen medlemsskaber oprettet
+      %hr/
+      - if @epicenter.fruittype.present?
+        %i.fa.fa-check-circle-o.space-right 
+        %strong= @epicenter.fruittype.name
+        frugttype oprettet
+      - else
+        %i.fa.fa-ban.space-right 
+        Ingen frugttype oprettet
+    #settings.tab-pane{:role => "tabpanel"}
+      = render :partial => "form"
+      %a{"aria-controls" => "about", "data-toggle" => "tab", :href => "#about", :role => "tab"}
+        Tilbage

@@ -1,0 +1,20 @@
+= render layout: "epicenters/edit_epicenter" do
+  
+  - if @epicenter.memberships.present?
+    .alert.alert-success
+      %i.fa.fa-check
+      Medlemskaber er aktive
+    .row
+      - for membership in @epicenter.memberships
+        .col-md-4
+          .well.well-sm
+            %strong= membership.name
+            = link_to "Ret", edit_epicenter_membership_path(@epicenter, membership)
+      .col-md-12
+        = link_to "Opret medlemsskab", new_epicenter_membership_path(@epicenter), class: "btn btn-primary"  
+  - else
+    .alert.alert-danger
+      %i.fa.fa-times
+      Der er ikke oprettet nogen medlemskaber
+    = link_to "Opret medlemsskab", new_epicenter_membership_path(@epicenter), class: "btn btn-primary"
+    

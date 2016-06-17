@@ -1,3 +1,29 @@
-- @epicenters.each do |epicenter|
-  = link_to epicenter.name, epicenter
-  = link_to "edit", edit_epicenter_path(epicenter)
+.container.top
+  .col-md-8
+    - @epicenters.each do |epicenter|
+      .well
+        %h3= link_to epicenter.name, epicenter
+        %p
+          %strong Status:
+          status
+        %p
+          %strong Medlemmer:
+          = epicenter.members.count
+        %p
+          %strong Frugter i frugtkurven:
+          frugter
+        %p
+          %strong Medlemsskab per måned:
+          - if epicenter.memberships.first.present?
+            = epicenter.memberships.first.monthly_fee
+          = epicenter.mother.fruittype.name
+
+        - if current_user
+          - if epicenter.user_is_member( current_user )
+            = link_to "Afslut medlemskab", leave_epicenter_path( {id: epicenter.id} ), :class => 'btn btn-danger', :data => { :confirm => 'Er du sikker' }
+          - else
+            = link_to "Bliv medlem", join_epicenter_path( {id: epicenter.id} ), :class => 'btn btn-primary'
+        - else
+          = link_to "Bliv medlem", new_user_registration_path, :class => 'btn btn-primary'
+        = link_to "edit", edit_epicenter_path(epicenter), :class => "btn btn-default"
+  .col-md-4

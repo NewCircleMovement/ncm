@@ -1,6 +1,6 @@
 // import the CSS framework
-@import "bootstrap-sprockets";
-@import "bootstrap";
+// @import "bootstrap-sprockets";
+// @import "bootstrap";
 
 // make all images responsive by default
 img {
@@ -34,7 +34,7 @@ img {
 // apply styles to HTML elements
 // to make views framework-neutral
 main {
-  @extend .container;
+  // @extend .container;
   background-color: #eee;
   padding-bottom: 80px;
   width: 100%;
