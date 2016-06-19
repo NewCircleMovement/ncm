@@ -64,17 +64,6 @@ class Epicenter < ActiveRecord::Base
           child.make_tshirt( current_user, access )
         end
 
-        # temporary solution for fruit types and meberships
-        # fruit = Fruittype.create(:name => epicenter_params[:fruittype_name], 
-        #                          :monthly_decay => epicenter_params[:fruittype_decay],
-        #                          :epicenter_id => child.id)
-        # fruit.save
-
-        # membership = Membership.create(:name => 'basis', 
-        #                                :monthly_fruits => epicenter_params[:membership_monthly_fruits],
-        #                                :epicenter_id => child.id)
-        # membership.save
-
       end
 
     end

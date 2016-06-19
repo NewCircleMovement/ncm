@@ -48,7 +48,7 @@ class FruittypesController < ApplicationController
     end
 
     def fruittype_params
-      params.require(:membership).permit(:name, :monthly_decay, :epicenter_id)
+      params.require(:fruittype).permit(:name, :monthly_decay, :epicenter_id)
     end
 
 end

@@ -80,6 +80,9 @@ class EpicentersController < ApplicationController
     end
   end
 
+  def members
+    @epicenter = Epicenter.find(params[:epicenter_id])
+  end
 
 
   def get_mother

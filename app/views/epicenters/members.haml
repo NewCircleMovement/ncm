@@ -1,0 +1,5 @@
+= render layout: "edit_epicenter" do
+  %h3
+    Medlemmer
+  - for user in @epicenter.users_with_tshirt('member')
+    = user.name

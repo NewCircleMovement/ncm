@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   resources :epicenters do
     resources :memberships
     resources :fruittypes
+    resources :access_points
+    get '/members' => 'epicenters#members'
   end
 
   get '/join_epicenter' => 'epicenters#join_epicenter'

@@ -1,0 +1,7 @@
+= simple_form_for [@epicenter, @access] do |f|
+  = f.input :name, label: "Navn på access point"
+  
+  = f.submit "Gem", class: 'btn btn-primary'
+  - if action_name == 'new'
+    = link_to "Fortryd", :back, class: "btn btn-default"
+

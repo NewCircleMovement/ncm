@@ -1,0 +1,55 @@
+class AccessPointsController < ApplicationController
+  before_action :set_epicenter
+  before_action :set_access, only: [:edit, :update, :destroy]
+
+  def index
+  end
+
+  def new
+    @access = AccessPoint.new
+  end
+
+  def edit
+  end
+
+
+  def create
+    @access = AccessPoint.new(access_point_params)
+    @access.location_id = @location.id
+    if @access.save
+      redirect_to epicenter_access_points_path(@epicenter), notice: 'Access point blev oprettet'
+    else
+      render action: 'new'
+    end
+
+  end
+
+  def update
+    if @access.update(access_point_params)
+      redirect_to epicenter_access_points_path(@epicenter), notice: 'Access point blev opdateret.'
+    else
+      render action: 'edit'
+    end
+  end
+
+  def destroy
+    @access.destroy
+    redirect_to epicenter_access_points_path(@epicenter)
+  end
+
+
+  private
+    def set_epicenter
+      @epicenter = Epicenter.find(params[:epicenter_id])
+      @location = @epicenter.location
+    end
+
+    def set_access
+      @access = AccessPoint.find(params[:id])
+    end
+
+    def access_point_params
+      params.require(:access_point).permit(:name, :monthly_decay, :location_id)
+    end
+
+end
