@@ -84,6 +84,22 @@ class EpicentersController < ApplicationController
     @epicenter = Epicenter.find(params[:epicenter_id])
   end
 
+  def tshirts
+    @tshirt = Tshirt.new
+    @temptshirt = TempTshirt.new
+    @epicenter = Epicenter.find(params[:epicenter_id])
+  end
+
+  def give_tshirt
+    @epicenter = Epicenter.find(params[:epicenter_id])
+    temp = params["temp_tshirt"]
+    user = User.find_by_email( temp["email"] )
+    access_point = AccessPoint.find_by_id( temp["access_point"] )
+
+    Tshirt.find_or_create_by(:user_id => user.id, :access_point_id => access_point.id, :epicenter_id => @epicenter.id)
+    puts params
+    redirect_to edit_epicenter_path(@epicenter), notice: "Du gav en #{access_point.name} tshirt til #{user.name}"
+  end
 
   def get_mother
     @mother = Epicenter.grand_mother
@@ -102,6 +118,5 @@ class EpicentersController < ApplicationController
                                         fruittype_attributes: [:name, :monthly_decay],
                                         memberships_attributes: [:name, :monthly_fee, :engagement] )
     end
-
 
 end

@@ -14,7 +14,7 @@ class FruittypesController < ApplicationController
 
 
   def create
-    @fruittype = Fruittype.new(membership_params)
+    @fruittype = Fruittype.new(fruittype_params)
     @fruittype.epicenter_id = @epicenter.id
     if @fruittype.save
       redirect_to epicenter_fruittypes_path(@epicenter), notice: 'Frugttypen blev oprettet'

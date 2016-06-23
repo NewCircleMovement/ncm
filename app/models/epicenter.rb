@@ -82,8 +82,8 @@ class Epicenter < ActiveRecord::Base
   end
 
   def give_fruittree(user)
-    puts "Giving fruittree to", user.
-    fruittree = Fruittree.find_or_create_by(
+    puts "Giving fruittree to"
+    Fruittree.find_or_create_by(
       :owner_id => user.id, 
       :owner_type => 'User', 
       :fruittype_id => self.fruittype.id,
@@ -98,7 +98,7 @@ class Epicenter < ActiveRecord::Base
   def users_with_tshirt(role)
     tshirts = self.tshirts.joins(:access_point).where('access_points.name' => [role.downcase])
     user_ids = tshirts.map(&:user_id)
-    return User.where(:id => user_ids)
+    return User.where(id: user_ids)
   end
 
   def tshirts_belonging_to_user(user)

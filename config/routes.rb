@@ -1,12 +1,15 @@
 Rails.application.routes.draw do
   root to: 'pages#index'
-  devise_for :users
+  devise_for :users, controllers: { registrations: "registrations" }
   resources :users
+  
   resources :epicenters do
     resources :memberships
     resources :fruittypes
     resources :access_points
     get '/members' => 'epicenters#members'
+    get '/tshirts' => 'epicenters#tshirts'
+    post '/give_tshirt' => 'epicenters#give_tshirt'
   end
 
   get '/join_epicenter' => 'epicenters#join_epicenter'

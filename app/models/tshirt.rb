@@ -20,10 +20,25 @@ class Tshirt < ActiveRecord::Base
 	belongs_to :user
 	belongs_to :ecicenter
 	belongs_to :access_point
-	belongs_to :membership
+	belongs_to :membership # why this?
 
 	def name
 		self.access_point.name
 	end
+
+end
+
+
+class TempTshirt
+	extend ActiveModel::Naming
+  include ActiveModel::Conversion
+
+	attr_accessor :email
+	attr_accessor :epicenter
+	attr_accessor :access_point
+
+  def persisted?
+    false
+  end
 
 end

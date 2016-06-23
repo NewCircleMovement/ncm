@@ -1,0 +1,9 @@
+= render layout: "edit_epicenter" do
+  %h3
+    Tshirts
+  = simple_form_for @temptshirt, :url => epicenter_give_tshirt_path do |f|
+    = f.input :email
+    = f.collection_radio_buttons :access_point, @epicenter.location.access_points.pluck(:id, :name),:first, :last
+    = f.submit "Giv tshirt"
+    = link_to "Fortryd", :back, class: "btn btn-default"
+    
