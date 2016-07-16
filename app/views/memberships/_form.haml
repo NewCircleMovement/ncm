@@ -2,6 +2,7 @@
   = f.input :name
   = f.input :monthly_fee, label: "Pris for medlemsskab pr. måned"
   = f.input :monthly_gain, label: "Udbytte af medlemsskab pr. måned"
+  = f.input :profile, label: "Giv medlemskabet en profil"
   
   - if @epicenter == @mother
     = f.input :payment_id, label: "Stripe id for membership"

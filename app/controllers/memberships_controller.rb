@@ -65,7 +65,7 @@ class MembershipsController < ApplicationController
     end
 
     def membership_params
-      params.require(:membership).permit(:name, :monthly_fee, :monthly_gain, :epicenter_id, :payment_id)
+      params.require(:membership).permit(:name, :profile, :monthly_fee, :monthly_gain, :epicenter_id, :payment_id)
     end
 
 end

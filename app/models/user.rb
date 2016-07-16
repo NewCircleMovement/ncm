@@ -24,18 +24,20 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  # all users must have a fruitbasket
   after_create :create_fruitbasket
 
   has_many :epicenters, :through => :tshirts
   has_many :tshirts, :dependent => :destroy
 
-  has_many :membershipcards
+  # a user has epicenter memberships through membershipcards
+  # cards will be destroyed on deletion, but not memberships
   has_many :memberships, :through => :membershipcards
-
+  has_many :membershipcards, :dependent => :destroy
+  
   has_many :fruittrees, as: :owner, :dependent => :destroy
   has_one :fruitbasket, as: :owner, :dependent => :destroy
 
-  
   # when user creates account he/she will a fruitbasket
   def create_fruitbasket
     Fruitbasket.create(:owner_id => self.id, :owner_type => 'User')

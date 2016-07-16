@@ -18,7 +18,6 @@ Fruittrees produce a certain amount of fruit per month
 All produce end up in fruitbags in the user's fruitbasket
 """
 
-
 class Fruittree < ActiveRecord::Base
 
   belongs_to :owner, polymorphic: true

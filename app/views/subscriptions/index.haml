@@ -1,17 +1,27 @@
 .container
-  %h1= @epicenter.name
+  %h1
+    = @epicenter.name
+  %p
+    = "#{@epicenter.name} har #{@memberships.count} medlemskaber"
+
 
   .row
     - for membership in @memberships
       .col-md-4
-        .well
-          %h3
-            = membership.name
-          %p
-            %strong= membership.monthly_fee
-            = @epicenter.mother.fruittype.name
-          - if @membership == membership
-            %button.btn.btn-primary{ disabled: true } Dit medlemskab
-          - else
-            = link_to "Skift til #{membership.name}", epicenter_subscription_path(@epicenter, membership), method: :put, class: "btn btn-primary"
-            
+        .thumbnail
+          .caption
+            %h3.header
+              = membership.name
+            %hr/
+            %p
+              = membership.profile
+            %p
+              %strong Månedlig pris:
+              = membership.monthly_fee
+              = @epicenter.mother.fruittype.name
+            %hr/
+            - if @membership == membership
+              %button.btn.btn-danger TODO: Slet medlemskab 
+            - else
+              = link_to "Skift til #{membership.name}", epicenter_subscription_path(@epicenter, membership), method: :put, class: "btn btn-primary"
+              

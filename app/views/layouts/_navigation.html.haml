@@ -11,6 +11,17 @@
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
         = render 'layouts/navigation_links'
-      %ul.nav.navbar-nav.pull-right
-        - if current_user.present?
-          %li= link_to 'Log out', destroy_user_session_path, :method => :delete
+      - if current_user.present?
+        %ul.nav.navbar-nav.navbar-right
+          %li.dropdown
+            %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+              %i.fa.fa-user
+              %span.caret
+            %ul.dropdown-menu
+              %li
+                %a{:href => "#"} Min profil
+              %li
+                = link_to "Mit edlemsskab", epicenter_subscriptions_path(@mother)
+              %li.divider{:role => "separator"}
+              %li= link_to 'Log out', destroy_user_session_path, :method => :delete
+      
