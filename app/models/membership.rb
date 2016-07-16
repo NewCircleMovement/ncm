@@ -10,6 +10,7 @@
 #  updated_at   :datetime         not null
 #  engagement   :integer          default(2)
 #  payment_id   :string
+#  monthly_gain :integer
 #
 
 """
@@ -18,6 +19,7 @@ Users can obtain a membership of any epicenter through membershipcards
 """
 
 class Membership < ActiveRecord::Base
+  validates :name, :monthly_fee, :monthly_gain, :presence => true
 
   has_many :membershipcards
   has_many :users, :through => :membershipcards

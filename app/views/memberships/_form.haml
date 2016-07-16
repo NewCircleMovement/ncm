@@ -1,6 +1,7 @@
 = simple_form_for [@epicenter, @membership] do |f|
   = f.input :name
-  = f.input :monthly_fee
+  = f.input :monthly_fee, label: "Pris for medlemsskab pr. måned"
+  = f.input :monthly_gain, label: "Udbytte af medlemsskab pr. måned"
   
   - if @epicenter == @mother
     = f.input :payment_id, label: "Stripe id for membership"

@@ -20,5 +20,9 @@ class Fruitbasket < ActiveRecord::Base
 
   belongs_to :owner, polymorphic: true
 	has_many :fruitbags
+
+  def find_fruitbag(fruittype)
+    self.fruitbags.find(fruittype_id: fruittype.id)
+  end
 	
 end

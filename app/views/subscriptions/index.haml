@@ -1,0 +1,17 @@
+.container
+  %h1= @epicenter.name
+
+  .row
+    - for membership in @memberships
+      .col-md-4
+        .well
+          %h3
+            = membership.name
+          %p
+            %strong= membership.monthly_fee
+            = @epicenter.mother.fruittype.name
+          - if @membership == membership
+            %button.btn.btn-primary{ disabled: true } Dit medlemskab
+          - else
+            = link_to "Skift til #{membership.name}", epicenter_subscription_path(@epicenter, membership), method: :put, class: "btn btn-primary"
+            

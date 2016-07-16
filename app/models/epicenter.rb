@@ -33,6 +33,7 @@ class Epicenter < ActiveRecord::Base
   has_many :memberships
 
   has_one :fruittype
+  has_one :fruitbasket, as: :owner, :dependent => :destroy
   belongs_to :location # kan fx. være en "gateway (density 2)"
 
   accepts_nested_attributes_for :memberships
@@ -56,6 +57,10 @@ class Epicenter < ActiveRecord::Base
       child.location = location_for_child
       
       if child.save
+        fruitbasket = Fruitbasket.create(:owner_id => self.id, :owner_type => 'Epicenter')
+        Fruitbag.create(:fruitbasket_id => fruitbasket.id, :amount => 0)
+
+        # access points
         caretaker_access = child.location.access_points.build(:name => "caretaker")
         member_access = child.location.access_points.build(:name => "member")
         caretaker_access.save
@@ -64,7 +69,6 @@ class Epicenter < ActiveRecord::Base
         [caretaker_access, member_access].each do |access|
           child.make_tshirt( current_user, access )
         end
-
       end
 
     end
@@ -77,13 +81,19 @@ class Epicenter < ActiveRecord::Base
     users.uniq
   end
 
+  def make_member(user)
+    member_access = self.access_point('member')
+    self.make_tshirt( user, member_access )
+    self.give_fruittree_to( user )
+    self.give_fruitbag_to( user )
+  end
+
   def make_tshirt(user, access_point)
     tshirt = Tshirt.new(:epicenter_id => self.id, :user_id => user.id, :access_point_id => access_point.id)
     tshirt.save
   end
 
   def give_fruittree_to(user)
-    puts "Giving fruittree to"
     Fruittree.find_or_create_by(
       :owner_id => user.id, 
       :owner_type => 'User', 
@@ -91,6 +101,35 @@ class Epicenter < ActiveRecord::Base
       :fruits_per_month => self.monthly_fruits_basis
     )
   end
+
+  def give_fruitbag_to(user)
+    Fruitbag.find_or_create_by(
+      :fruitbasket_id => user.fruitbasket.id,
+      :fruittype_id => self.fruittype.id
+    )
+  end
+
+
+  def give_fruit_to(user, membership)
+    """ give user fruits according to membership, and take residual from epicenter fruitbag """
+    user_fruitbag = user.fruitbasket.find_fruitbag( self.fruittype )
+    epicenter_fruitbag = self.fruitbag
+    
+    user_fruitbag.amount += self.monthly_fruits_basis
+    residual = [0, membership.amount - self.monthly_fruits_basis].max
+    if residual > 0
+      user_fruitbag.amount += residual
+      epicenter_fruitbag.amount -= residual
+    end
+    user_fruitbag.save
+    epicenter_fruitbag.save
+  end
+
+
+  def fruitbag
+    return self.fruitbasket.fruitbags.first
+  end
+
 
   def access_point(role)
     return self.location.access_points.find_by( :name => role )
@@ -112,13 +151,17 @@ class Epicenter < ActiveRecord::Base
     end
   end
 
-  def user_is_member(user)
+  def has_member?(user)
     result = false
     members = users_with_tshirt('member')
     if members.find_by( id: user.id ).present?
       result = true
     end
     return result
+  end
+
+  def get_membership_for(user)
+    return user.memberships.find_by( epicenter_id: self.id )
   end
 
   def video

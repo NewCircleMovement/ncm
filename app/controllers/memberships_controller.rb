@@ -10,6 +10,7 @@
 #  updated_at   :datetime         not null
 #  engagement   :integer          default(2)
 #  payment_id   :string
+#  monthly_gain :integer
 #
 
 class MembershipsController < ApplicationController
@@ -64,7 +65,7 @@ class MembershipsController < ApplicationController
     end
 
     def membership_params
-      params.require(:membership).permit(:name, :monthly_fee, :epicenter_id, :payment_id)
+      params.require(:membership).permit(:name, :monthly_fee, :monthly_gain, :epicenter_id, :payment_id)
     end
 
 end

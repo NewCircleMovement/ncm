@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  after_create :create_fruittree_and_basket
+  after_create :create_fruitbasket
 
   has_many :epicenters, :through => :tshirts
   has_many :tshirts, :dependent => :destroy
@@ -36,12 +36,12 @@ class User < ActiveRecord::Base
   has_one :fruitbasket, as: :owner, :dependent => :destroy
 
   
-  # when user creates account he/she will get a NCM lemon tree
-  def create_fruittree_and_basket
-    ncm = Epicenter.grand_mother
-    ncm.make_tshirt( self, ncm.access_point('member') )
-    ncm.give_fruittree_to( self )
+  # when user creates account he/she will a fruitbasket
+  def create_fruitbasket
     Fruitbasket.create(:owner_id => self.id, :owner_type => 'User')
+  end
+
+  def find_membership(epicenter)
   end
 
 
@@ -49,6 +49,7 @@ class User < ActiveRecord::Base
   def get_membershipcard(membership)
     return Membershipcard.find_by(user_id: self.id, membership_id: membership.id)
   end
+
 
   def update_card(customer, token)
     new_card = customer.sources.create(card: token)
@@ -59,6 +60,7 @@ class User < ActiveRecord::Base
     errors.add :base, "#{e.message}"
     false
   end
+
 
   def get_member(membershipcard)
     if membershipcard && membershipcard.payment_id.present?

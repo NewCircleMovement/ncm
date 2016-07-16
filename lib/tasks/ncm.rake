@@ -40,8 +40,10 @@ namespace :ncm do
         :epicenter_id => mother.id
       )
 
-      # create fruittype for NCM
+      # create fruittype, fruitbasket and fruitbag for NCM
       fruittype = Fruittype.create(:name => 'citron', :monthly_decay => 0.1, :epicenter_id => mother.id)
+      Fruitbasket.find_or_create_by(:owner_id => mother.id, :owner_type => 'Epicenter')
+      Fruitbag.create(:fruittype_id => fruittype.id, :fruitbasket_id = fruitbasket.id)
 
       # create user
       User.skip_callback(:create, :after, :create_fruittree_and_basket)

@@ -13,6 +13,7 @@
 class FruittypesController < ApplicationController
   before_action :set_epicenter
   before_action :set_membership, only: [:edit, :update, :destroy]
+  
 
   def index
   end

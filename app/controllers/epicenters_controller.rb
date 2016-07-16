@@ -58,18 +58,18 @@ class EpicentersController < ApplicationController
     end
   end
 
-  def join_epicenter
-    if @epicenter.user_is_member(current_user)
-      redirect_to epicenters_path, notice: 'Du er allerede medlem'
-    else
-      member_access = @epicenter.access_point('member')
-      member_tshirt = @epicenter.make_tshirt( current_user, member_access )
-      redirect_to epicenters_path, notice: 'Yes! Du er medlem nu.'
-    end
-  end
+  # def join_epicenter
+  #   if @epicenter.has_member?(current_user)
+  #     redirect_to epicenters_path, notice: 'Du er allerede medlem'
+  #   else
+  #     member_access = @epicenter.access_point('member')
+  #     member_tshirt = @epicenter.make_tshirt( current_user, member_access )
+  #     redirect_to epicenters_path, notice: 'Yes! Du er medlem nu.'
+  #   end
+  # end
 
   def leave_epicenter
-    if @epicenter.user_is_member( current_user )
+    if @epicenter.has_member?( current_user )
 
       caretakers = @epicenter.users_with_tshirt('caretaker').map(&:id).uniq
       if caretakers.include? current_user.id and caretakers.count > 1
