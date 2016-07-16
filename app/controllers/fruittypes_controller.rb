@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: fruittypes
+#
+#  id            :integer          not null, primary key
+#  name          :string
+#  monthly_decay :float
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  epicenter_id  :integer
+#
+
 class FruittypesController < ApplicationController
   before_action :set_epicenter
   before_action :set_membership, only: [:edit, :update, :destroy]
@@ -40,7 +52,7 @@ class FruittypesController < ApplicationController
 
   private
     def set_epicenter
-      @epicenter = Epicenter.find(params[:epicenter_id])
+      @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
     end
 
     def set_membership

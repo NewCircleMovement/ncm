@@ -40,8 +40,43 @@ class User < ActiveRecord::Base
   def create_fruittree_and_basket
     ncm = Epicenter.grand_mother
     ncm.make_tshirt( self, ncm.access_point('member') )
-    ncm.give_fruittree( self )
+    ncm.give_fruittree_to( self )
     Fruitbasket.create(:owner_id => self.id, :owner_type => 'User')
   end
+
+
+
+  def get_membershipcard(membership)
+    return Membershipcard.find_by(user_id: self.id, membership_id: membership.id)
+  end
+
+  def update_card(customer, token)
+    new_card = customer.sources.create(card: token)
+    customer.default_source = new_card.id
+    customer.save
+  rescue Stripe::InvalidRequestError => e
+    logger.error "Error while updating card info: #{e.message}"
+    errors.add :base, "#{e.message}"
+    false
+  end
+
+  def get_member(membershipcard)
+    if membershipcard && membershipcard.payment_id.present?
+      # NCM members
+      if membershipcard.membership.epicenter == Epicenter.grand_mother
+        begin
+          return Stripe::Customer.retrieve( membershipcard.payment_id )
+        rescue => error
+          return nil
+        end
+      # all other epicenter members
+      else
+        puts "How to deal with memberinfo for these types?"
+      end
+    else
+      return nil
+    end
+  end
+
 
 end

@@ -2,21 +2,32 @@ source 'https://rubygems.org'
 ruby '2.2.0'
 
 gem 'rails', '4.2.5.1'
+
+# authentication
+gem 'devise'
+gem 'stripe'
+
+# haml, sass, coffee, bootstrap, font-awesome
+gem 'haml-rails'
 gem 'sass-rails', '~> 5.0'
-gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
+gem 'bootstrap-sass'
+gem 'font-awesome-sass'
+
+#db
+gem 'pg'
+
+# better errors
+gem "rails_12factor"
+
+#server
+gem 'thin'
+
+gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
-
-gem 'bootstrap-sass'
-# gem 'bootstrap', '~> 4.0.0.alpha3'
-gem 'font-awesome-sass'
-gem 'devise'
-gem 'haml-rails'
-gem 'high_voltage'
-gem 'pg'
 gem 'simple_form'
-gem 'thin'
+gem 'high_voltage'
 
 group :development do
   gem 'web-console', '~> 2.0'

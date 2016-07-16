@@ -17,11 +17,16 @@
 #  depth_fruits         :integer
 #  mother_id            :integer
 #  monthly_fruits_basis :integer          default(100)
+#  slug                 :string
 #
 
 class EpicentersController < ApplicationController
+  # include SharedMethods
+  
   before_filter :get_mother
   before_action :set_epicenter, only: [:edit, :update, :show, :join_epicenter, :leave_epicenter]
+
+  # validates :slug, uniqueness: true
 
   def index
     @epicenters = @mother.children.where.not(id: @mother_id)
@@ -81,17 +86,17 @@ class EpicentersController < ApplicationController
   end
 
   def members
-    @epicenter = Epicenter.find(params[:epicenter_id])
+    @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
   end
 
   def tshirts
     @tshirt = Tshirt.new
     @temptshirt = TempTshirt.new
-    @epicenter = Epicenter.find(params[:epicenter_id])
+    @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
   end
 
   def give_tshirt
-    @epicenter = Epicenter.find(params[:epicenter_id])
+    @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
     temp = params["temp_tshirt"]
     user = User.find_by_email( temp["email"] )
     access_point = AccessPoint.find_by_id( temp["access_point"] )
@@ -108,13 +113,13 @@ class EpicentersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_epicenter
-      @epicenter = Epicenter.find(params[:id])
+      @epicenter = Epicenter.find_by_slug(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def epicenter_params
       params.require(:epicenter).permit(:name, :description, :max_members, :video_url, :growing, :manifested,
-                                        :depth_fruits, :depth_members,
+                                        :depth_fruits, :depth_members, :slug,
                                         fruittype_attributes: [:name, :monthly_decay],
                                         memberships_attributes: [:name, :monthly_fee, :engagement] )
     end

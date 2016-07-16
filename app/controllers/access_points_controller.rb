@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: access_points
+#
+#  id          :integer          not null, primary key
+#  location_id :integer
+#  name        :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 class AccessPointsController < ApplicationController
   before_action :set_epicenter
   before_action :set_access, only: [:edit, :update, :destroy]
@@ -40,7 +51,7 @@ class AccessPointsController < ApplicationController
 
   private
     def set_epicenter
-      @epicenter = Epicenter.find(params[:epicenter_id])
+      @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
       @location = @epicenter.location
     end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160616155244) do
+ActiveRecord::Schema.define(version: 20160716131924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20160616155244) do
     t.integer  "depth_fruits"
     t.integer  "mother_id"
     t.integer  "monthly_fruits_basis", default: 100
+    t.string   "slug"
   end
 
   create_table "fruitbags", force: :cascade do |t|
@@ -84,6 +85,7 @@ ActiveRecord::Schema.define(version: 20160616155244) do
     t.integer  "membership_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.string   "payment_id"
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -93,6 +95,7 @@ ActiveRecord::Schema.define(version: 20160616155244) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.integer  "engagement",   default: 2
+    t.string   "payment_id"
   end
 
   create_table "tshirts", force: :cascade do |t|

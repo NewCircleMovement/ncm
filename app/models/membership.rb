@@ -9,6 +9,7 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  engagement   :integer          default(2)
+#  payment_id   :string
 #
 
 """
@@ -20,5 +21,14 @@ class Membership < ActiveRecord::Base
 
   has_many :membershipcards
   has_many :users, :through => :membershipcards
+  belongs_to :epicenter
+
+  def payment_plan
+    begin
+      return Stripe::Plan.retrieve(self.payment_id)
+    rescue => error
+      return nil
+    end
+  end
 
 end

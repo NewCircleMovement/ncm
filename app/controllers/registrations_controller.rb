@@ -4,7 +4,7 @@ class RegistrationsController < Devise::RegistrationsController
   protected
 
   def after_sign_up_path_for(resource)
-    '/epicenters' # Or :prefix_to_your_route
+    "/epicenters/#{Epicenter.grand_mother.slug}/subscriptions/new"
   end
 
   # custom fields are :name

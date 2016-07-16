@@ -17,6 +17,7 @@
 #  depth_fruits         :integer
 #  mother_id            :integer
 #  monthly_fruits_basis :integer          default(100)
+#  slug                 :string
 #
 
 # niveau "kan måske slettes... kan evt. sættes af location"
@@ -81,7 +82,7 @@ class Epicenter < ActiveRecord::Base
     tshirt.save
   end
 
-  def give_fruittree(user)
+  def give_fruittree_to(user)
     puts "Giving fruittree to"
     Fruittree.find_or_create_by(
       :owner_id => user.id, 
@@ -140,26 +141,7 @@ class Epicenter < ActiveRecord::Base
     end
   end
 
-  # temporary virtual attributs 
-  def fruittype_name
-    @fruittype_name
+  def to_param
+    self.slug
   end
-  def fruittype_name=(value)
-    @fruittype_name = value
-  end
-
-  def fruittype_decay
-    @fruittype_decay
-  end
-  def fruittype_decay=(value)
-    @fruittype_decay = value
-  end
-
-  def membership_monthly_fruits
-    @membership_monthly_fruits
-  end
-  def membership_monthly_fruits=(value)
-    @membership_monthly_fruits = value
-  end
-
 end

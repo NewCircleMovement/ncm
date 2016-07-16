@@ -1,8 +1,24 @@
+# == Schema Information
+#
+# Table name: memberships
+#
+#  id           :integer          not null, primary key
+#  name         :string
+#  monthly_fee  :integer
+#  epicenter_id :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  engagement   :integer          default(2)
+#  payment_id   :string
+#
+
 class MembershipsController < ApplicationController
   before_action :set_epicenter
   before_action :set_membership, only: [:edit, :update, :destroy]
 
   def index
+    @memberships = @epicenter.memberships
+    @payments = (@epicenter == @mother)
   end
 
   def new
@@ -40,7 +56,7 @@ class MembershipsController < ApplicationController
 
   private
     def set_epicenter
-      @epicenter = Epicenter.find(params[:epicenter_id])
+      @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
     end
 
     def set_membership
@@ -48,7 +64,7 @@ class MembershipsController < ApplicationController
     end
 
     def membership_params
-      params.require(:membership).permit(:name, :monthly_fee, :epicenter_id)
+      params.require(:membership).permit(:name, :monthly_fee, :epicenter_id, :payment_id)
     end
 
 end

@@ -8,8 +8,21 @@
       - for membership in @epicenter.memberships
         .col-md-4
           .well.well-sm
-            %strong= membership.name
-            = link_to "Ret", edit_epicenter_membership_path(@epicenter, membership)
+            %strong name:
+            = membership.name
+            - if @payments
+              %hr/
+              - plan = membership.payment_plan
+              %strong id:
+              = plan.id
+              %br/
+              %strong amount:
+              = plan.amount / 100
+              %br/
+              %strong valuta:
+              = plan.currency
+            %hr/
+            = link_to "Ret", edit_epicenter_membership_path(@epicenter, membership), class: "btn btn-default"
       .col-md-12
         = link_to "Opret medlemsskab", new_epicenter_membership_path(@epicenter), class: "btn btn-primary"  
   - else
