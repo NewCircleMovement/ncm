@@ -58,9 +58,10 @@ namespace :ncm do
       mother.make_tshirt( user, caretaker_access )
       mother.make_tshirt( user, member_access )
 
-      # give tree and fruitbasket to user
+      # give tree, fruitbasket and fruitbag to user
       mother.give_fruittree_to( user )
       Fruitbasket.find_or_create_by(:owner_id => user.id, :owner_type => 'User')
+      mother.give_fruitbag_to( user )
 
     end
   end
