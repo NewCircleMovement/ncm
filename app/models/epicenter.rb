@@ -130,7 +130,6 @@ class Epicenter < ActiveRecord::Base
     return self.fruitbasket.fruitbags.first
   end
 
-
   def access_point(role)
     return self.location.access_points.find_by( :name => role )
   end
@@ -143,6 +142,10 @@ class Epicenter < ActiveRecord::Base
 
   def tshirts_belonging_to_user(user)
     return self.tshirts.where( user_id: user.id )
+  end
+
+  def can_accept_members?
+    return self.fruittype.present? && self.memberships.present?
   end
 
   def cancel_membership(user)

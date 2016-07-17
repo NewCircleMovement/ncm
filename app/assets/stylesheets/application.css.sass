@@ -1,13 +1,20 @@
-@import "bootstrap-sprockets"
 @import "bootstrap"
+@import "bootstrap-sprockets"
 
-@import "1st_load_framework"
+@import "variables"
+@import "bootswatch"
+@import "bootstrap.theme.min"
 
 @import "font-awesome-sprockets"
 @import "font-awesome"
 
+@import "animate"
+
 @import "epicenters"
 @import "pages"
+
+body
+  padding-top: 63px
 
 .btn, .nav-pills > li > a, .well, .alert
   border-radius: 0
@@ -19,6 +26,8 @@
   margin-left: 15px
 .space-right
   margin-right: 15px
+.space-right-sm
+  margin-right: 10px
 
 .header
   margin-top: 0

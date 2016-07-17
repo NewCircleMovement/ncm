@@ -34,6 +34,9 @@ class User < ActiveRecord::Base
   # cards will be destroyed on deletion, but not memberships
   has_many :memberships, :through => :membershipcards
   has_many :membershipcards, :dependent => :destroy
+
+  # membership_changes are used to store membership change requests
+  has_many :membership_changes, :dependent => :destroy
   
   has_many :fruittrees, as: :owner, :dependent => :destroy
   has_one :fruitbasket, as: :owner, :dependent => :destroy
@@ -43,13 +46,20 @@ class User < ActiveRecord::Base
     Fruitbasket.create(:owner_id => self.id, :owner_type => 'User')
   end
 
-  def find_membership(epicenter)
+  def membership_for(epicenter)
+    return self.memberships.find_by(epicenter_id: epicenter.id)
   end
 
+  def get_membershipcard(epicenter)
+    return Membershipcard.find_by(user_id: self.id, epicenter_id: epicenter.id)
+  end
 
+  def has_member_tshirt?(epicenter)
+    self.tshirts.pluck(:epicenter_id).include? epicenter.id
+  end
 
-  def get_membershipcard(membership)
-    return Membershipcard.find_by(user_id: self.id, membership_id: membership.id)
+  def requested_change(epicenter)
+    return MembershipChange.find_by(user_id: self.id, epicenter_id: epicenter.id)
   end
 
 
@@ -67,7 +77,7 @@ class User < ActiveRecord::Base
   def get_member(membershipcard)
     if membershipcard && membershipcard.payment_id.present?
       # NCM members
-      if membershipcard.membership.epicenter == Epicenter.grand_mother
+      if membershipcard.membership.present? && membershipcard.membership.epicenter == Epicenter.grand_mother
         begin
           return Stripe::Customer.retrieve( membershipcard.payment_id )
         rescue => error

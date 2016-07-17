@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   resources :users
 
   resources :epicenters do
-    resources :subscriptions
+    resources :subscriptions do
+      get "/cancel_change" => "subscriptions#cancel_change"
+    end
 
     resources :memberships
     resources :fruittypes

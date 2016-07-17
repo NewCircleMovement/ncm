@@ -1,5 +1,12 @@
+- unless @epicenter.can_accept_members?
+  .alert.alert-danger
+    .container
+      %i.fa.fa-exclamation-circle.space-right-sm
+      Epicenteret kan endnu ikke modtage medlemmer
+
+
 = render layout: "edit_epicenter" do
-  %h3
+  %h3.header
     = @epicenter.name
     %small.pull-right
       %a{"aria-controls" => "settings", "data-toggle" => "tab", :href => "#settings", :role => "tab"} Ret
@@ -9,7 +16,10 @@
   .tab-content
     #about.tab-pane.active{:role => "tabpanel"} 
       .well
-        = @epicenter.description
+        - if @epicenter.description.present?
+          = @epicenter.description
+        - else
+          Du mangler at give en beskrivelse af epicenteret
       %hr/
       - if @epicenter.memberships.present?
         %i.fa.fa-check-circle-o.space-right 

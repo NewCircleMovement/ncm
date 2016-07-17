@@ -11,6 +11,7 @@
 #  engagement   :integer          default(2)
 #  payment_id   :string
 #  monthly_gain :integer
+#  profile      :text
 #
 
 """

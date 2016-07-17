@@ -4,7 +4,17 @@ class SubscriptionsController < ApplicationController
 
   def index
     @memberships = @epicenter.memberships
-    @membership = @epicenter.get_membership_for(current_user)
+    
+    if current_user.has_member_tshirt?(@epicenter)
+      @membership = @epicenter.get_membership_for(current_user)
+      @change = current_user.membership_changes.find_by(epicenter_id: @epicenter)
+      if @change
+        @new_membership = Membership.find(@change.new_membership_id)
+      end
+    else
+      flash[:notice] = "Du er ikke længere aktivt medlem af #{@epicenter.name}"
+      redirect_to epicenter_subscriptions_path( @epicenter )
+    end
   end
 
   def new
@@ -20,7 +30,7 @@ class SubscriptionsController < ApplicationController
     success = false
     
     @membership = Membership.find(params[:membership_id])
-    membershipcard = current_user.get_membershipcard(@membership)
+    membershipcard = current_user.get_membershipcard( @epicenter )
 
     # subscription to "new circle movement"
     if @epicenter == @mother
@@ -47,12 +57,12 @@ class SubscriptionsController < ApplicationController
         )
         membershipcard = Membershipcard.where(
           user_id: current_user.id, 
-          membership_id: @membership.id, 
+          epicenter_id: @epicenter.id
         ).first_or_create
+        membershipcard.membership_id = @membership.id
         membershipcard.payment_id = member.id
         membershipcard.save
         success = true
-        flash[:success] = "Du er nu medlem af New Circle Movement"
       end
     
     # subscription to all other epicenters
@@ -61,13 +71,15 @@ class SubscriptionsController < ApplicationController
       # TODO: make some form of payment to epicenter
       membershipcard = Membershipcard.where(
         user_id: current_user.id, 
-        membership_id: @membership.id, 
+        epicenter_id: @epicenter.id, 
       ).first_or_create
+      membershipcard.membership_id = @membership.id
+      membershipcard.save
       success = true
     end
 
     if success
-      @epicenter.make_member( current_user)
+      @epicenter.make_member( current_user )
       @epicenter.give_fruit_to( current_user, @membership )
       flash[:success] = "Du er nu medlem af #{@epicenter.name}"
       # TODO: redirect to epicenter profile page
@@ -87,15 +99,28 @@ class SubscriptionsController < ApplicationController
   end
 
   def update
+    change = MembershipChange.find_or_create_by(user_id: current_user.id, epicenter_id: @epicenter.id)
+    @old_membership = current_user.membership_for(@epicenter)
+    @new_membership = Membership.find(params[:id])
+    change.old_membership_id = @old_membership.id
+    change.new_membership_id = @new_membership.id
+    change.save
+    flash[:success] = "Dit medlemskab vil blive ændret til #{@new_membership.name}"
+    redirect_to epicenter_subscriptions_path(@epicenter)
+  end
 
-    puts "we are in update"
-    flash[:success] = "Du har ændret dit medlemsskab til"
-    puts epicenters_path(@epicenter)
-    redirect_to epicenter_path(@epicenter)
+
+  def cancel_change
+    change = current_user.requested_change(@epicenter)
+    change.destroy
+    flash[:success] = "Dit medlemskab vil ikke længere blive ændret"
+    redirect_to epicenter_subscriptions_path(@epicenter)
   end
 
 
   def destroy
+
+    puts params
     success = false
 
     # begin
@@ -110,6 +135,7 @@ class SubscriptionsController < ApplicationController
     # rescue Stripe::InvalidRequestError
     #   flash[:error] = "You do not appear to have any active subscriptions"
     # end
+    flash[:success] = "Du er ikke længere medlem af #{@epicenter.name}"
     redirect_to epicenters_path
   end
 

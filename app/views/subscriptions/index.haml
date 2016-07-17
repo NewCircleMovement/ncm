@@ -1,27 +1,44 @@
+- if @change
+  .alert.alert-warning
+    .container
+      %i.fa.fa-exclamation-circle.space-right-sm
+      Dit ønske om at skifte til 
+      %strong
+        = @new_membership.name 
+        medlemskab
+      = "af #{@epicenter.name} vil træde i kraft"
+      
+      .pull-right
+        = link_to "Fortryd", epicenter_subscription_cancel_change_path(@epicenter, @new_membership)
+        
+
 .container
   %h1
     = @epicenter.name
   %p
-    = "#{@epicenter.name} har #{@memberships.count} medlemskaber"
-
+    = "#{@epicenter.name} har #{@memberships.count} medlemmer"
 
   .row
-    - for membership in @memberships
-      .col-md-4
-        .thumbnail
-          .caption
-            %h3.header
-              = membership.name
-            %hr/
-            %p
-              = membership.profile
-            %p
-              %strong Månedlig pris:
-              = membership.monthly_fee
-              = @epicenter.mother.fruittype.name
-            %hr/
-            - if @membership == membership
-              %button.btn.btn-danger TODO: Slet medlemskab 
-            - else
-              = link_to "Skift til #{membership.name}", epicenter_subscription_path(@epicenter, membership), method: :put, class: "btn btn-primary"
+    - if @epicenter.can_accept_members?
+      - for membership in @memberships
+        .col-md-4
+          .panel.panel-default
+            .panel-body
+              %h3.header
+                = membership.name
+              %hr/
+              %p
+                = membership.profile
+              %p
+                %strong Månedlig pris:
+                = membership.monthly_fee
+                = @epicenter.mother.fruittype.name
+              %hr/
+              - if @membership == membership && 
+                = link_to "Afslut medlemskab", epicenter_subscription_path(@epicenter, membership), :method => :delete, :class => 'btn btn-danger'
+              - else
+                = link_to "Skift til #{membership.name}", epicenter_subscription_path(@epicenter, membership), method: :put, class: "btn btn-primary #{membership == @new_membership ? 'disabled' : ''}"
+    - else
+      .col-md-12
+        %p Dette epicenter kan ikke modtagere medlemmer endnu
               
