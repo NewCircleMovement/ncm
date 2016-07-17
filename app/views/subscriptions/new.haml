@@ -9,9 +9,9 @@
     - if @epicenter.can_accept_members?
       - for membership in @memberships
         .col-md-4
-          .well
-            = membership.name
-            = render partial: 'form', locals: {membership: membership}
+          .panel.panel-default
+            .panel-body
+              = render partial: 'form', locals: {membership: membership}
     - else
       .col-md-12
         %p Dette epicenter kan endnu ikke modtage medlemmer

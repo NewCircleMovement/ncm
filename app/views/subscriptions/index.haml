@@ -1,5 +1,5 @@
 - if @change
-  .alert.alert-warning
+  .alert.alert-info
     .container
       %i.fa.fa-exclamation-circle.space-right-sm
       Dit ønske om at skifte til 
@@ -7,7 +7,6 @@
         = @new_membership.name 
         medlemskab
       = "af #{@epicenter.name} vil træde i kraft"
-      
       .pull-right
         = link_to "Fortryd", epicenter_subscription_cancel_change_path(@epicenter, @new_membership)
         

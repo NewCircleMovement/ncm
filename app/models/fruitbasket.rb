@@ -22,7 +22,19 @@ class Fruitbasket < ActiveRecord::Base
 	has_many :fruitbags
 
   def find_fruitbag(fruittype)
-    self.fruitbags.find(fruittype_id: fruittype.id)
+    self.fruitbags.find_or_create_by(fruittype_id: fruittype.id, fruitbasket_id: self.id)
+  end
+
+  def receive_fruit(fruittype, amount)
+    fruitbag = self.find_fruitbag(fruittype)
+    fruitbag.amount += amount
+    fruitbag.save
+  end
+
+  def give_fruit(fruittype, amount)
+    fruitbag = self.find_fruitbag(fruittype)
+    fruitbag.amount -= amount
+    fruitbag.save
   end
 	
 end

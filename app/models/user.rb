@@ -92,5 +92,14 @@ class User < ActiveRecord::Base
     end
   end
 
+  def fruits(epicenter)
+    fruitbag = self.fruitbasket.fruitbags.find_by(fruittype_id: epicenter.fruittype.id)
+    if fruitbag
+      return fruitbag.amount
+    else
+      return nil
+    end
+  end
+
 
 end

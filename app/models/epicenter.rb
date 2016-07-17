@@ -109,20 +109,18 @@ class Epicenter < ActiveRecord::Base
     )
   end
 
+  def delete_member(user)
+    self.tshirts.find_by(user_id: user.id).delete_all
+    Fruittree.find_by(owner_id: user.id, owner_type: "User", fruittype_id: self.fruittype_id)
+  end
 
-  def give_fruit_to(user, membership)
-    """ give user fruits according to membership, and take residual from epicenter fruitbag """
-    user_fruitbag = user.fruitbasket.find_fruitbag( self.fruittype )
-    epicenter_fruitbag = self.fruitbag
-    
-    user_fruitbag.amount += self.monthly_fruits_basis
-    residual = [0, membership.amount - self.monthly_fruits_basis].max
-    if residual > 0
-      user_fruitbag.amount += residual
-      epicenter_fruitbag.amount -= residual
-    end
-    user_fruitbag.save
-    epicenter_fruitbag.save
+
+  def give_fruit_to(user)
+    """ give user fruits according to membership, and take residual amount from epicenter fruitbag """
+    membership = self.get_membership_for(user)
+    user.fruitbasket.receive_fruit( self.fruittype, membership.monthly_gain )
+    residual_amount = [0, membership.monthly_gain - self.monthly_fruits_basis].max
+    self.fruitbasket.give_fruit( self.fruittype, residual_amount )
   end
 
 

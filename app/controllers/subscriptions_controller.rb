@@ -12,9 +12,13 @@ class SubscriptionsController < ApplicationController
         @new_membership = Membership.find(@change.new_membership_id)
       end
     else
+      puts "redirect attempt", epicenter_subscriptions_path( @epicenter )
       flash[:notice] = "Du er ikke længere aktivt medlem af #{@epicenter.name}"
-      redirect_to epicenter_subscriptions_path( @epicenter )
+      redirect_to epicenters_path
     end
+  end
+
+  def show
   end
 
   def new
@@ -40,29 +44,64 @@ class SubscriptionsController < ApplicationController
       
       if member # already has membershipcard with payment info
         if current_user.update_card( member, token )
-          Stripe::Subscription.create(
-            :customer => member.id,
-            :plan => @membership.payment_id
-          )
-          success = true
+          begin
+            # first create active subscription to get payment
+            subscription = Stripe::Subscription.create(
+              :customer => member.id,
+              :plan => @membership.payment_id
+            )
+            # delete active subscription
+            subscription.delete
+            # create new subscription with trial period to begin payment cycle at 1st in month
+            Stripe::Subscription.create(
+              :customer => member.id,
+              :plan => @membership.payment_id,
+              :trial_end => Time.now.end_of_month.to_i
+            )
+            success = true
+          rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
+            flash[:danger] = "Din betaling blev desværre ikke gennemført. Prøv venligst igen"
+          end          
           flash[:success] = "Du er nu igen aktivt medlem af New Circle Movement"
         else
           flash[:warning] = "Der var et problem med din gentilmelding. Prøv venligst igen."
         end
       else # create new customer and attach to new/existing membershipcard
-        member = Stripe::Customer.create(
-          card: token,
-          plan: @membership.payment_id, 
-          email: current_user.email
-        )
-        membershipcard = Membershipcard.where(
-          user_id: current_user.id, 
-          epicenter_id: @epicenter.id
-        ).first_or_create
-        membershipcard.membership_id = @membership.id
-        membershipcard.payment_id = member.id
-        membershipcard.save
-        success = true
+        begin
+          puts "///////////////////////////////////////////////"
+          # first create customer, subscription and membershipcard
+          member = Stripe::Customer.create(
+            card: token,
+            plan: @membership.payment_id, 
+            email: current_user.email
+          )
+          membershipcard = Membershipcard.where(
+            user_id: current_user.id, 
+            epicenter_id: @epicenter.id
+          ).first_or_create
+          membershipcard.membership_id = @membership.id
+          membershipcard.payment_id = member.id
+          membershipcard.save
+
+          puts "member payment created"
+          # then delete the subscription
+          
+          member.subscriptions.first.delete
+          puts "subscription deleted"
+          # then create new subscription with trial_end (end of month)
+          Stripe::Subscription.create(
+            :customer => member.id,
+            :plan => @membership.payment_id,
+            :trial_end => Time.now.end_of_month.to_i
+          )
+          puts "new trial subscription created"
+          # find or create user's membershipcard
+          
+
+          success = true
+        rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
+          flash[:danger] = "Din betaling blev desværre ikke gennemført. Prøv venligst igen"
+        end
       end
     
     # subscription to all other epicenters
@@ -80,7 +119,7 @@ class SubscriptionsController < ApplicationController
 
     if success
       @epicenter.make_member( current_user )
-      @epicenter.give_fruit_to( current_user, @membership )
+      @epicenter.give_fruit_to( current_user )
       flash[:success] = "Du er nu medlem af #{@epicenter.name}"
       # TODO: redirect to epicenter profile page
     end
@@ -119,25 +158,26 @@ class SubscriptionsController < ApplicationController
 
 
   def destroy
-
-    puts params
-    success = false
-
-    # begin
-    #   subscription = Stripe::Subscription.retrieve( params[:id] )
-    #   if subscription.delete
-    #     current_user.subscribed = false
-    #     current_user.save
-    #     flash[:success] = "You have successfully unsubscribed"
-    #   else
-    #     flash[:error] = "There was a problem with your unsubscription"
-    #   end
-    # rescue Stripe::InvalidRequestError
-    #   flash[:error] = "You do not appear to have any active subscriptions"
-    # end
+    if @epicenter == @mother
+      begin
+        card = current_user.get_membershipcard(@epicenter)
+        member = current_user.get_member(card)
+        if member.delete
+          current_user.destroy
+          flash[:success] = "Du er ikke længere aktiv medlem af New Ciccle Movement"
+        else
+          flash[:error] = "Der var et problem med at slette dit abonnement"
+        end
+      rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
+        flash[:error] = "Du ser ikke ud til at være aktivt tilmeldt"
+      end  
+    else
+      @epicenter.delete_member(current_user)
+    end
     flash[:success] = "Du er ikke længere medlem af #{@epicenter.name}"
     redirect_to epicenters_path
   end
+
 
   private
 

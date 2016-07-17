@@ -7,12 +7,23 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      = link_to 'Home', root_path, class: 'navbar-brand'
+      = link_to 'New Circle Movement', root_path, class: 'navbar-brand'
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
         = render 'layouts/navigation_links'
       - if current_user.present?
         %ul.nav.navbar-nav.navbar-right
+          %li
+            %a
+              - if @epicenter.present?
+                - if @epicenter.has_member?(current_user)
+                  = current_user.fruits(@epicenter)
+                  = @epicenter.fruittype.name
+              - else
+                - if @mother.has_member?(current_user)
+                  %i.fa.fa-lemon-o
+                  = current_user.fruits(@mother)
+                  = @mother.fruittype.name
           %li.dropdown
             %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
               %i.fa.fa-user

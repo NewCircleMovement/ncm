@@ -12,7 +12,7 @@
 
 class FruittypesController < ApplicationController
   before_action :set_epicenter
-  before_action :set_membership, only: [:edit, :update, :destroy]
+  before_action :set_fruittype, only: [:edit, :update, :destroy]
   
 
   def index
@@ -38,7 +38,7 @@ class FruittypesController < ApplicationController
   end
 
   def update
-    if @fruittype.update(membership_params)
+    if @fruittype.update(fruittype_params)
       redirect_to epicenter_fruittypes_path(@epicenter), notice: 'Frugttypen blev opdateret.'
     else
       render action: 'edit'
@@ -56,7 +56,7 @@ class FruittypesController < ApplicationController
       @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
     end
 
-    def set_membership
+    def set_fruittype
       @fruittype = Fruittype.find(params[:id])
     end
 
