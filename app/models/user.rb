@@ -73,6 +73,19 @@ class User < ActiveRecord::Base
     false
   end
 
+  # returns a user's fruit expensives per month in a given epicenter
+  def monthly_engagement( epicenter )
+    engagement = 0
+    self.memberships.each do |membership|
+      if membership.monthly_fee_fruittype.id == epicenter.fruittype.id
+        puts membership.name
+        puts membership.monthly_fee
+        engagement += membership.monthly_fee
+      end
+    end
+    return engagement
+  end
+
 
   def get_member(membershipcard)
     if membershipcard && membershipcard.payment_id.present?
@@ -93,9 +106,13 @@ class User < ActiveRecord::Base
   end
 
   def fruits(epicenter)
-    fruitbag = self.fruitbasket.fruitbags.find_by(fruittype_id: epicenter.fruittype.id)
-    if fruitbag
-      return fruitbag.amount
+    if epicenter.fruittype.present?
+      fruitbag = self.fruitbasket.fruitbags.find_by(fruittype_id: epicenter.fruittype.id)
+      if fruitbag
+        return fruitbag.amount
+      else
+        return nil
+      end
     else
       return nil
     end

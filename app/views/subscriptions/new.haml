@@ -3,10 +3,10 @@
   
   %p
     %strong Medlemmer
-    = @memberships.count
+    = @epicenter.users_with_tshirt('member').count
 
   .row
-    - if @epicenter.can_accept_members?
+    - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
       - for membership in @memberships
         .col-md-4
           .panel.panel-default

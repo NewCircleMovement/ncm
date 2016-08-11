@@ -4,7 +4,9 @@
   = f.input :video_url
   = f.input :depth_members
   = f.input :depth_fruits
-  = f.input :monthly_fruits_basis
+  -# temporary omitted monthly fruit basis (monthly fruits to members)
+  -# TODO: move monthly fruits to "fruittype" model
+  -# = f.input :monthly_fruits_basis
   
   = f.submit "Gem", :class => 'btn btn-primary'
   - if action_name == 'new'

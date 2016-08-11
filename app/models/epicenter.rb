@@ -46,15 +46,16 @@ class Epicenter < ActiveRecord::Base
   
   # create new epicenter
   def make_child(epicenter_params, current_user)
-  
+
     # first create and save a location for the epicenter
     location_for_child = Location.new(:name => epicenter_params[:name], :density => 2)
 
     if location_for_child.save
-      
+
       child = Epicenter.new(epicenter_params)
       child.mother_id = self.id
       child.location = location_for_child
+      child.slug = child.to_slug
       
       if child.save
         fruitbasket = Fruitbasket.create(:owner_id => self.id, :owner_type => 'Epicenter')
@@ -66,9 +67,7 @@ class Epicenter < ActiveRecord::Base
         caretaker_access.save
         member_access.save
 
-        [caretaker_access, member_access].each do |access|
-          child.make_tshirt( current_user, access )
-        end
+        child.make_tshirt( current_user, caretaker_access )
       end
 
     end
@@ -110,8 +109,9 @@ class Epicenter < ActiveRecord::Base
   end
 
   def delete_member(user)
-    self.tshirts.find_by(user_id: user.id).delete_all
-    Fruittree.find_by(owner_id: user.id, owner_type: "User", fruittype_id: self.fruittype_id)
+    self.tshirts.where(user_id: user.id).delete_all
+    fruittree = Fruittree.find_by(owner_id: user.id, owner_type: "User", fruittype_id: self.fruittype.id)
+    fruittree.destroy
   end
 
 
@@ -120,7 +120,7 @@ class Epicenter < ActiveRecord::Base
     membership = self.get_membership_for(user)
     user.fruitbasket.receive_fruit( self.fruittype, membership.monthly_gain )
     residual_amount = [0, membership.monthly_gain - self.monthly_fruits_basis].max
-    self.fruitbasket.give_fruit( self.fruittype, residual_amount )
+    self.fruitbasket.give_fruit_to( self.fruittype, residual_amount )
   end
 
 
@@ -142,8 +142,14 @@ class Epicenter < ActiveRecord::Base
     return self.tshirts.where( user_id: user.id )
   end
 
+  def all_caretakers_are_members?
+    caretaker_ids = self.users_with_tshirt('caretaker').pluck(:id)
+    member_ids = self.users_with_tshirt('member').pluck(:id)
+    return (caretaker_ids - member_ids).empty?
+  end
+
   def can_accept_members?
-    return self.fruittype.present? && self.memberships.present?
+    return self.memberships.present? && self.all_caretakers_are_members?
   end
 
   def cancel_membership(user)
@@ -161,8 +167,27 @@ class Epicenter < ActiveRecord::Base
     return result
   end
 
+  def has_caretaker?(user)
+    result = false
+    caretakers = users_with_tshirt('caretaker')
+    if caretakers.find_by( id: user.id ).present?
+      result = true
+    end
+    return result
+  end
+
   def get_membership_for(user)
     return user.memberships.find_by( epicenter_id: self.id )
+  end
+
+  def mother_fruit
+    fruit = nil
+    if self == Epicenter.grand_mother
+      fruit = Fruittype.where(:epicenter_id => nil).first
+    else
+      fruit = self.mother.fruittype
+    end
+    return fruit
   end
 
   def video
@@ -187,5 +212,28 @@ class Epicenter < ActiveRecord::Base
 
   def to_param
     self.slug
+  end
+
+  def to_slug
+    #strip the string
+    ret = self.name.strip.downcase
+
+    #blow away apostrophes
+    ret.gsub! /['`]/,""
+
+    # @ --> at, and & --> and
+    ret.gsub! /\s*@\s*/, " at "
+    ret.gsub! /\s*&\s*/, " and "
+
+    #replace all non alphanumeric, underscore or periods with underscore
+    ret.gsub! /\s*[^A-Za-z0-9\.\-]\s*/, '_'  
+
+    #convert double underscores to single
+    ret.gsub! /_+/,"_"
+
+    #strip off leading/trailing underscore
+    ret.gsub! /\A[_\.]+|[_\.]+\z/,""
+
+    ret
   end
 end

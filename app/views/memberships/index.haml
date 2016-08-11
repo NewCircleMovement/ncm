@@ -10,8 +10,8 @@
           .well.well-sm
             %strong name:
             = membership.name
-            - if @payments
-              %hr/
+            %hr/
+            - if @hard_currency
               - plan = membership.payment_plan
               %strong id:
               = plan.id
@@ -21,6 +21,12 @@
               %br/
               %strong valuta:
               = plan.currency
+            - else        
+              %strong amount:
+              = membership.monthly_fee
+              %br/
+              %strong valuta:
+              = @epicenter.mother.fruittype.name
             %hr/
             = link_to "Ret", edit_epicenter_membership_path(@epicenter, membership), class: "btn btn-default"
       .col-md-12

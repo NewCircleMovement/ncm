@@ -22,9 +22,11 @@ class Fruittype < ActiveRecord::Base
   belongs_to :epicenter
 
   def update_epicenter_fruitbag
-    fruitbag = self.epicenter.fruitbasket.fruitbags.first
-    fruitbag.fruittype_id = self.id
-    fruitbag.save
+    unless self.epicenter_id == nil
+      fruitbag = self.epicenter.fruitbasket.fruitbags.first
+      fruitbag.fruittype_id = self.id
+      fruitbag.save
+    end
   end
 
 end

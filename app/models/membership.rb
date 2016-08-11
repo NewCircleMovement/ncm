@@ -20,11 +20,20 @@ Users can obtain a membership of any epicenter through membershipcards
 """
 
 class Membership < ActiveRecord::Base
-  validates :name, :monthly_fee, :monthly_gain, :presence => true
+  validates :name, :monthly_fee, :presence => true
 
   has_many :membershipcards
   has_many :users, :through => :membershipcards
   belongs_to :epicenter
+
+  def monthly_fee_fruittype
+    return self.epicenter.mother_fruit
+  end
+
+  def monthly_gain_fruittype
+    return self.epicenter.fruittype
+  end
+
 
   def payment_plan
     begin

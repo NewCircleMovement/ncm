@@ -16,7 +16,7 @@
           %li
             %a
               - if @epicenter.present?
-                - if @epicenter.has_member?(current_user)
+                - if @epicenter.has_member?(current_user) && @epicenter.fruittype.present?
                   = current_user.fruits(@epicenter)
                   = @epicenter.fruittype.name
               - else

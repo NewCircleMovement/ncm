@@ -20,7 +20,7 @@ class MembershipsController < ApplicationController
 
   def index
     @memberships = @epicenter.memberships
-    @payments = (@epicenter == @mother)
+    @hard_currency = (@epicenter == @mother)
   end
 
   def new

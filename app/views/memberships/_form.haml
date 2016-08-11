@@ -1,7 +1,8 @@
 = simple_form_for [@epicenter, @membership] do |f|
   = f.input :name
-  = f.input :monthly_fee, label: "Pris for medlemsskab pr. måned"
-  = f.input :monthly_gain, label: "Udbytte af medlemsskab pr. måned"
+  = f.input :monthly_fee, label: "Pris for medlemsskab pr. måned (#{@epicenter.mother_fruit.name})"
+  - if @epicenter.fruittype.present?
+    = f.input :monthly_gain, label: "Udbytte af medlemsskab pr. måned (#{@epicenter.fruittype.name})"
   = f.input :profile, label: "Giv medlemskabet en profil"
   
   - if @epicenter == @mother

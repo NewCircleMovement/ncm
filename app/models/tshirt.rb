@@ -18,7 +18,7 @@ class Tshirt < ActiveRecord::Base
 	"""
 
 	belongs_to :user
-	belongs_to :ecicenter
+	belongs_to :epicenter
 	belongs_to :access_point
 	belongs_to :membership # why this?
 

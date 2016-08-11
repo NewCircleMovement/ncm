@@ -44,6 +44,7 @@ class EpicentersController < ApplicationController
 
     @epicenter = @mother.make_child( epicenter_params, current_user )
     if @epicenter
+      puts edit_epicenter_path(@epicenter.id)
       redirect_to edit_epicenter_path(@epicenter)
     else
       render action: 'new'
@@ -119,7 +120,7 @@ class EpicentersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def epicenter_params
       params.require(:epicenter).permit(:name, :description, :max_members, :video_url, :growing, :manifested,
-                                        :depth_fruits, :depth_members, :slug,
+                                        :depth_fruits, :depth_members, :slug, :monthly_fruits_basis,
                                         fruittype_attributes: [:name, :monthly_decay],
                                         memberships_attributes: [:name, :monthly_fee, :engagement] )
     end

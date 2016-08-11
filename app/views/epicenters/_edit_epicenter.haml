@@ -9,5 +9,12 @@
         %li{ class: "#{action_name == 'members' ? 'active' : ''}" }= link_to "Medlemmer", epicenter_members_path(@epicenter)
         %li{ class: "#{action_name == 'tshirts' ? 'active' : ''}" }= link_to "Tshirts", epicenter_tshirts_path(@epicenter)
 
+      .alert.alert-danger
+        - unless @epicenter.has_member?( current_user )
+          %p Det er påkrævet at alle caretakers er medlem
+          %p
+            = link_to "Bliv medlem", "", class: "btn btn-primary"
+
+
     .col-md-9
       = yield

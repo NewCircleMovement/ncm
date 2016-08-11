@@ -42,6 +42,7 @@ class SubscriptionsController < ApplicationController
       token = params[:stripeToken]
       member = current_user.get_member( membershipcard )
       
+      
       if member # already has membershipcard with payment info
         if current_user.update_card( member, token )
           begin
@@ -96,7 +97,6 @@ class SubscriptionsController < ApplicationController
           )
           puts "new trial subscription created"
           # find or create user's membershipcard
-          
 
           success = true
         rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
@@ -106,18 +106,47 @@ class SubscriptionsController < ApplicationController
     
     # subscription to all other epicenters
     else 
+      payment_succeeded = false
       puts "create non-NCM Epicenter subscription"
       # TODO: make some form of payment to epicenter
-      membershipcard = Membershipcard.where(
-        user_id: current_user.id, 
-        epicenter_id: @epicenter.id, 
-      ).first_or_create
-      membershipcard.membership_id = @membership.id
-      membershipcard.save
-      success = true
+      
+      # determine fruittype for epicenter
+      fruittype = @epicenter.mother_fruit
+
+      # check if user has enough fruits
+      enough_fruit = (current_user.fruitbasket.fruit_amount( fruittype ) >= @membership.monthly_fee)
+
+      # check if user has enough monhtly engagement (fruit income)
+      monthly_engagement = current_user.monthly_engagement( @epicenter.mother )
+      monthly_gain = @epicenter.mother.get_membership_for( current_user ).monthly_gain
+      enough_engagement = ( monthly_gain >= monthly_engagement )
+      
+      # overfør frugt fra bruger til epicenter
+      if enough_fruit && enough_engagement
+        current_user.fruitbasket.give_fruit( @epicenter.fruitbasket, fruittype, @membership.monthly_fee )
+
+        payment_succeeded = true  
+      end
+
+      
+      if payment_succeeded
+        membershipcard = Membershipcard.where(
+          user_id: current_user.id, 
+          epicenter_id: @epicenter.id, 
+        ).first_or_create
+        membershipcard.membership_id = @membership.id
+        membershipcard.save
+        success = true
+      else
+        success = false
+      end
     end
 
     if success
+      if @epicenter == @mother
+        current_user.name = params['stripeBillingName']
+        current_user.save
+      end
       @epicenter.make_member( current_user )
       @epicenter.give_fruit_to( current_user )
       flash[:success] = "Du er nu medlem af #{@epicenter.name}"
