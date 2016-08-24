@@ -21,9 +21,9 @@
                   = @epicenter.fruittype.name
               - else
                 - if @mother.has_member?(current_user)
-                  %i.fa.fa-lemon-o
+                  %i.fa.fa-tint
                   = current_user.fruits(@mother)
-                  = @mother.fruittype.name
+                  -# = @mother.fruittype.name
           %li.dropdown
             %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
               %i.fa.fa-user

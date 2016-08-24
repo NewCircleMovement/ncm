@@ -21,6 +21,7 @@ class Fruittype < ActiveRecord::Base
 
   belongs_to :epicenter
 
+  # TODO: do we need this function
   def update_epicenter_fruitbag
     unless self.epicenter_id == nil
       fruitbag = self.epicenter.fruitbasket.fruitbags.first
