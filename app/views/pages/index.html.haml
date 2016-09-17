@@ -1,11 +1,11 @@
 .jumbotron
   .container
     .row
-      .col-md-12
+      .col-md-offset-3.col-md-6
         .text-center
           %h1 Vil du ændre verden?
           %p 
-            Lad fællesskabet støtte dig i at gøre din drøm til virkelighed
+            Bak op om gode projekter, eller Lad fællesskabet støtte dig i at gøre din drøm til virkelighed
           - unless user_signed_in?
             = link_to "Bliv medlem", new_user_registration_path, :class => 'btn btn-primary btn-lg'
 
