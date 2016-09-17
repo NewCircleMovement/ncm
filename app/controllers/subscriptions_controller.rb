@@ -38,7 +38,6 @@ class SubscriptionsController < ApplicationController
 
     # subscription to "new circle movement"
     if @epicenter == @mother
-      puts "//////////////////////////////////////////////////////////"
       puts "create NCM subscription"
       token = params[:stripeToken]
 
@@ -70,7 +69,6 @@ class SubscriptionsController < ApplicationController
         end
       else # create new customer and attach to new/existing membershipcard
         begin
-          puts "///////////////////////////////////////////////"
           # first create customer, subscription and membershipcard
           member = Stripe::Customer.create(
             card: token,

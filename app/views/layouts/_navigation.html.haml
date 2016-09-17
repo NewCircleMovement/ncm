@@ -7,12 +7,12 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      = link_to 'New Circle Movement', root_path, class: 'navbar-brand'
+      = link_to 'New Circle Movement', root_path, class: 'navbar-brand space-right'
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
         = render 'layouts/navigation_links'
-      - if current_user.present?
-        %ul.nav.navbar-nav.navbar-right
+      %ul.nav.navbar-nav.navbar-right
+        - if current_user.present?      
           %li
             %a
               - if @epicenter.present?
@@ -35,4 +35,6 @@
                 = link_to "Mit edlemsskab", epicenter_subscriptions_path(@mother)
               %li.divider{:role => "separator"}
               %li= link_to 'Log out', destroy_user_session_path, :method => :delete
-      
+        - else
+          %li
+            = link_to "Login", new_user_session_path

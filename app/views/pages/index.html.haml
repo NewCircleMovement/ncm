@@ -1,4 +1,16 @@
+.jumbotron
+  .container
+    .row
+      .col-md-12
+        .text-center
+          %h1 Vil du ændre verden?
+          %p 
+            Lad fællesskabet støtte dig i at gøre din drøm til virkelighed
+          - unless user_signed_in?
+            = link_to "Bliv medlem", new_user_registration_path, :class => 'btn btn-primary btn-lg'
+
 .container.top
+
   - if user_signed_in?
     .row
       .col-md-6
@@ -11,14 +23,15 @@
         = link_to "Støt epicenter", epicenters_path, :class => 'btn btn-primary btn-lg'
 
   - else
-
     .row
-      .col-md-3
-        = link_to "Login", new_user_session_path, :class => 'btn btn-primary btn-lg'
-      .col-md-3
-        = link_to "Bliv medlem", new_user_registration_path, :class => 'btn btn-primary btn-lg'
-      .col-md-3
-        - if current_user
-          = link_to "Opret epicenter", new_epicenter_path, :class => 'btn btn-primary btn-lg'
-        - else
-          = link_to "About", "", :class => "btn btn-primary btn-lg"
+      - for epicenter in @epicenters
+        .col-md-4
+          .card
+            .content
+              %h4
+                %strong= epicenter.name
+              %p
+                = epicenter.description
+              %p
+                = link_to "Læs mere", epicenter, :class => "btn btn-default"
+      
