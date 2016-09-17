@@ -41,8 +41,16 @@ namespace :ncm do
       membership = Membership.create(
         :name => 'basis', 
         :monthly_fee => 108,
+        :monthly_gain => 100,
         :engagement => 2,
         :epicenter_id => mother.id
+      )
+      Stripe::Plan.create(
+        :name => "Engagement 1",
+        :id => "1",
+        :amount => 10800,
+        :interval => "month",
+        :currency => "dkk"
       )
 
       puts "create fruitbasket"

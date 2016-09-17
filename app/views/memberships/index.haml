@@ -13,14 +13,15 @@
             %hr/
             - if @hard_currency
               - plan = membership.payment_plan
-              %strong id:
-              = plan.id
-              %br/
-              %strong amount:
-              = plan.amount / 100
-              %br/
-              %strong valuta:
-              = plan.currency
+              - if plan
+                %strong id:
+                = plan.id
+                %br/
+                %strong amount:
+                = plan.amount / 100
+                %br/
+                %strong valuta:
+                = plan.currency
             - else        
               %strong amount:
               = membership.monthly_fee

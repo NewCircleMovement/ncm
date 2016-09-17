@@ -1,5 +1,9 @@
 .container
-  %h1= @epicenter.name
+  %h1
+    = @epicenter.name
+    - if not signed_in?
+      .pull-right
+        = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-primary'
   %p
     %strong Caretaker
     - for caretaker in @epicenter.users_with_tshirt("caretaker")

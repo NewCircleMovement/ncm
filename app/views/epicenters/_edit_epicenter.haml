@@ -13,8 +13,7 @@
         - unless @epicenter.has_member?( current_user )
           %p Det er påkrævet at alle caretakers er medlem
           %p
-            = link_to "Bliv medlem", "", class: "btn btn-primary"
-
+            = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-primary'
 
     .col-md-9
       = yield

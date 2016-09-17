@@ -58,7 +58,7 @@ class Epicenter < ActiveRecord::Base
       child.slug = child.to_slug
       
       if child.save
-        fruitbasket = Fruitbasket.create(:owner_id => self.id, :owner_type => 'Epicenter')
+        fruitbasket = Fruitbasket.create(:owner_id => child.id, :owner_type => 'Epicenter')
         Fruitbag.create(:fruitbasket_id => fruitbasket.id, :amount => 0)
 
         # access points
@@ -149,7 +149,7 @@ class Epicenter < ActiveRecord::Base
   end
 
   def can_accept_members?
-    return self.memberships.present? && self.all_caretakers_are_members?
+    return self.memberships.present? && self.all_caretakers_are_members? && self.fruittype.present?
   end
 
   def cancel_membership(user)

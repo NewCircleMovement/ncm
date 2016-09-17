@@ -38,10 +38,11 @@ class SubscriptionsController < ApplicationController
 
     # subscription to "new circle movement"
     if @epicenter == @mother
+      puts "//////////////////////////////////////////////////////////"
       puts "create NCM subscription"
       token = params[:stripeToken]
+
       member = current_user.get_member( membershipcard )
-      
       
       if member # already has membershipcard with payment info
         if current_user.update_card( member, token )
@@ -76,6 +77,8 @@ class SubscriptionsController < ApplicationController
             plan: @membership.payment_id, 
             email: current_user.email
           )
+          puts member
+
           membershipcard = Membershipcard.where(
             user_id: current_user.id, 
             epicenter_id: @epicenter.id
@@ -83,12 +86,17 @@ class SubscriptionsController < ApplicationController
           membershipcard.membership_id = @membership.id
           membershipcard.payment_id = member.id
           membershipcard.save
-
           puts "member payment created"
-          # then delete the subscription
           
-          member.subscriptions.first.delete
-          puts "subscription deleted"
+          # then delete the subscription
+          puts "member subscription", member.subscriptions
+          puts member.subscriptions.first
+          if member.subscriptions.first
+            member.subscriptions.first.delete
+            puts "subscription deleted"
+          end
+          
+          puts "now create new trial subscription"
           # then create new subscription with trial_end (end of month)
           Stripe::Subscription.create(
             :customer => member.id,
@@ -193,7 +201,7 @@ class SubscriptionsController < ApplicationController
         member = current_user.get_member(card)
         if member.delete
           current_user.destroy
-          flash[:success] = "Du er ikke længere aktiv medlem af New Ciccle Movement"
+          flash[:success] = "Du er ikke længere aktiv medlem af New Circle Movement"
         else
           flash[:error] = "Der var et problem med at slette dit abonnement"
         end

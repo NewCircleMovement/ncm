@@ -7,6 +7,8 @@
         %span.label.label-default Ingen medlemskaber
       - unless @epicenter.all_caretakers_are_members?
         %span.label.label-default Ikke alle caretakers er medlem
+      - unless @epicenter.fruittype.present?
+        %span.label.label-default Frugttype ikke oprettet
 
 
 = render layout: "edit_epicenter" do

@@ -24,6 +24,8 @@
           .panel.panel-default
             .panel-body
               %h3.header
+                - if @epicenter == @mother
+                  Engagement
                 = membership.name
               %hr/
               %p
@@ -31,7 +33,10 @@
               %p
                 %strong Månedlig pris:
                 = membership.monthly_fee
-                = @epicenter.mother.fruittype.name
+                - if @epicenter == @mother
+                  kroner
+                - else
+                  = @epicenter.mother.fruittype.name
               %hr/
               - if @membership == membership && 
                 = link_to "Afslut medlemskab", epicenter_subscription_path(@epicenter, membership), :method => :delete, :class => 'btn btn-danger'
