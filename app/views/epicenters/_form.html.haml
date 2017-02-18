@@ -6,7 +6,8 @@
   = f.input :depth_fruits
   -# temporary omitted monthly fruit basis (monthly fruits to members)
   -# TODO: move monthly fruits to "fruittype" model
-  -# = f.input :monthly_fruits_basis
+  = f.input :monthly_fruits_basis, :label => "Frugtræernes produktion pr. måned"
+  %span.help-block Den frugt som alle medlemmer får hver måned fra deres træ
   
   = f.submit "Gem", :class => 'btn btn-primary'
   - if action_name == 'new'

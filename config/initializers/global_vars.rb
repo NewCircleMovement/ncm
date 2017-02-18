@@ -1,0 +1,4 @@
+TREE = 3
+PLANT = 2
+SPROUT = 1
+SEED = 0

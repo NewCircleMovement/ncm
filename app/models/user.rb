@@ -118,5 +118,22 @@ class User < ActiveRecord::Base
     end
   end
 
+  def harvest_fruittree( epicenter )
+    fruittype = epicenter.fruittype
+    
+    fruittree = self.fruittrees.where(:fruittype_id => fruittype.id).first
+    fruitbag = self.fruitbasket.fruitbags.where(:fruittype_id => fruittype.id).first
+
+    harvest = fruittree.fruits_per_month
+
+    fruitbag.amount += harvest
+    fruittree.yield += harvest
+    
+    fruitbag.save
+    fruittree.save
+
+    return fruittree.fruits_per_month
+  end
+
 
 end

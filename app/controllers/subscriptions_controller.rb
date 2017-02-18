@@ -32,6 +32,7 @@ class SubscriptionsController < ApplicationController
 
   def create
     success = false
+    no_success_message = ""
     
     @membership = Membership.find(params[:membership_id])
     membershipcard = current_user.get_membershipcard( @epicenter )
@@ -70,39 +71,30 @@ class SubscriptionsController < ApplicationController
       else # create new customer and attach to new/existing membershipcard
         begin
           # first create customer, subscription and membershipcard
-          member = Stripe::Customer.create(
+          stripe_customer = Stripe::Customer.create(
             card: token,
             plan: @membership.payment_id, 
             email: current_user.email
           )
-          puts member
-
-          membershipcard = Membershipcard.where(
-            user_id: current_user.id, 
-            epicenter_id: @epicenter.id
-          ).first_or_create
-          membershipcard.membership_id = @membership.id
-          membershipcard.payment_id = member.id
-          membershipcard.save
-          puts "member payment created"
+          puts "--------------- member payment created -----------------"
+          puts stripe_customer
           
           # then delete the subscription
-          puts "member subscription", member.subscriptions
-          puts member.subscriptions.first
-          if member.subscriptions.first
-            member.subscriptions.first.delete
+          puts "stripe subscription", stripe_customer.subscriptions
+          puts stripe_customer.subscriptions.first
+          if stripe_customer.subscriptions.first
+            stripe_customer.subscriptions.first.delete
             puts "subscription deleted"
           end
           
           puts "now create new trial subscription"
           # then create new subscription with trial_end (end of month)
           Stripe::Subscription.create(
-            :customer => member.id,
+            :customer => stripe_customer.id,
             :plan => @membership.payment_id,
             :trial_end => Time.now.end_of_month.to_i
           )
           puts "new trial subscription created"
-          # find or create user's membershipcard
 
           success = true
         rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
@@ -112,39 +104,15 @@ class SubscriptionsController < ApplicationController
     
     # subscription to all other epicenters
     else 
-      payment_succeeded = false
       puts "create non-NCM Epicenter subscription"
+      stripe_customer = false
+     
       # TODO: make some form of payment to epicenter
-      
-      # determine fruittype for epicenter
-      fruittype = @epicenter.mother_fruit
-
-      # check if user has enough fruits
-      enough_fruit = (current_user.fruitbasket.fruit_amount( fruittype ) >= @membership.monthly_fee)
-
-      # check if user has enough monhtly engagement (fruit income)
-      monthly_engagement = current_user.monthly_engagement( @epicenter.mother )
-      monthly_gain = @epicenter.mother.get_membership_for( current_user ).monthly_gain
-      enough_engagement = ( monthly_gain >= monthly_engagement )
-      
-      # overfør frugt fra bruger til epicenter
-      if enough_fruit && enough_engagement
-        current_user.fruitbasket.give_fruit( @epicenter.fruitbasket, fruittype, @membership.monthly_fee )
-
-        payment_succeeded = true  
-      end
-
-      
-      if payment_succeeded
-        membershipcard = Membershipcard.where(
-          user_id: current_user.id, 
-          epicenter_id: @epicenter.id, 
-        ).first_or_create
-        membershipcard.membership_id = @membership.id
-        membershipcard.save
+      if @epicenter.validate_and_pay_new_membership( current_user, @membership )
         success = true
       else
         success = false
+        no_success_message = "Du har ikke nok beholdning og/eller månedlig tilførsel af #{@epicenter.mother.fruittype.name}"
       end
     end
 
@@ -153,12 +121,14 @@ class SubscriptionsController < ApplicationController
         current_user.name = params['stripeBillingName']
         current_user.save
       end
+      @epicenter.make_membershipcard( current_user, @membership, stripe_customer )
       @epicenter.make_member( current_user )
-      @epicenter.give_fruit_to( current_user )
+      @epicenter.harvest_time_for( current_user )
       flash[:success] = "Du er nu medlem af #{@epicenter.name}"
       # TODO: redirect to epicenter profile page
+    else
+      flash[:warning] = no_success_message
     end
-      
     redirect_to epicenters_path
   end
 

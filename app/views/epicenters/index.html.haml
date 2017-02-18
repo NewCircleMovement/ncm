@@ -28,7 +28,7 @@
                 = link_to "Bliv medlem", new_epicenter_subscription_path( epicenter ), :class => 'btn btn-primary'
             - else
               = link_to "Bliv medlem", new_epicenter_subscription_path( epicenter ), :class => 'btn btn-primary'
-              = link_to "Bliv medlem", new_user_registration_path, :class => 'btn btn-primary'
+              -# = link_to "Bliv medlem", new_user_registration_path, :class => 'btn btn-primary'
             - if current_user
               - if epicenter.users_with_tshirt('caretaker').pluck(:id).include? current_user.id
                 = link_to "edit", edit_epicenter_path(epicenter), :class => "btn btn-default"

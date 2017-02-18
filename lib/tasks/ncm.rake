@@ -1,7 +1,30 @@
+
 namespace :ncm do
 
   desc "Make new circle movement epicenter"
   task :make_mother => :environment do
+    STRIPE_PLANS = [
+      {
+        name: "Engagement 1",
+        id: "1",
+        amount: 5400,
+        interval: "month",
+        currency: "dkk"
+      }, {
+        name: "Engagement 2",
+        id: "2",
+        amount: 10800,
+        interval: "month",
+        currency: "dkk"
+      }, {
+        name: "Engagement 3",
+        id: "3",
+        amount: 16200,
+        interval: "month",
+        currency: "dkk"
+      }
+    ]
+
     puts "make mother"
 
     # first create the location for "ncm"
@@ -22,9 +45,9 @@ namespace :ncm do
       slug: "new_circle_movement",
       description: "Mother", 
       video_url: "", 
-      max_members: 1000, 
-      growing: false, 
-      manifested: false, 
+      max_members: 10000, 
+      growing: true, 
+      manifested: true, 
       niveau: nil, 
       depth_members: nil, 
       depth_fruits: nil 
@@ -38,26 +61,46 @@ namespace :ncm do
       mother.mother_id = mother.id
 
       # create basis membership object for NCM
+      Membership.create(
+        :name => 'Engagement 1', 
+        :monthly_fee => 54,
+        :monthly_gain => 50,
+        :engagement => 1,
+        :payment_id => 1,
+        :epicenter_id => mother.id
+      )
+
       membership = Membership.create(
-        :name => 'basis', 
+        :name => 'Engagement 2', 
         :monthly_fee => 108,
         :monthly_gain => 100,
         :engagement => 2,
+        :payment_id => 2,
         :epicenter_id => mother.id
       )
-      Stripe::Plan.create(
-        :name => "Engagement 1",
-        :id => "1",
-        :amount => 10800,
-        :interval => "month",
-        :currency => "dkk"
+
+      Membership.create(
+        :name => 'Engagement 3', 
+        :monthly_fee => 162,
+        :monthly_gain => 150,
+        :engagement => 3,
+        :payment_id => 3,
+        :epicenter_id => mother.id
       )
 
-      puts "create fruitbasket"
-      fruitbasket = Fruitbasket.find_or_create_by(:owner_id => mother.id, :owner_type => 'Epicenter')
-      fruitbag = Fruitbag.create(:fruitbasket_id => fruitbasket.id)
+      # create stripe plans
+      STRIPE_PLANS.each do |plan|
+        plan_exists = Stripe::Plan.retrieve(plan[:id])
+        if not plan_exists
+          Stripe::Plan.create(plan)
+        end
+      end
 
       # create fruittype, fruitbasket and fruitbag for NCM
+      puts "create ncm fruitbasket and bag"
+      fruitbasket = Fruitbasket.find_or_create_by(:owner_id => mother.id, :owner_type => 'Epicenter')
+      fruitbag = Fruitbag.create(:fruitbasket_id => fruitbasket.id)
+      
       puts "create fruittype - kroner"
       fruittype_kr = Fruittype.create(:name => 'kroner', :monthly_decay => 0.0, :epicenter_id => nil)
 
@@ -75,12 +118,12 @@ namespace :ncm do
 
       # make user member
       puts "create membershipcard"
-      Membershipcard.find_or_create_by(:user_id => user.id, :membership_id => membership.id)
+      # Membershipcard.find_or_create_by(:user_id => user.id, :membership_id => membership.id)
 
       # give tshirts to user
       puts "create tshirts"
       mother.make_tshirt( user, caretaker_access )
-      mother.make_tshirt( user, member_access )
+      # mother.make_tshirt( user, member_access )
 
       # give tree, fruitbasket and fruitbag to user
       puts "give fruittree"

@@ -25,6 +25,12 @@ class Fruitbasket < ActiveRecord::Base
     self.fruitbags.find_or_create_by(fruittype_id: fruittype.id, fruitbasket_id: self.id)
   end
 
+  def show_content
+    self.fruitbags.each do |bag|
+      puts "#{Fruittype.find(bag.fruittype_id).name}: #{bag.amount}"
+    end
+  end
+
   def fruit_amount(fruittype)
     amount = 0
     fruitbag = self.fruitbags.find_by(fruittype_id: fruittype.id, fruitbasket_id: self.id)

@@ -43,6 +43,37 @@ class Epicenter < ActiveRecord::Base
   def self.grand_mother
     return Epicenter.where(:name => "New Circle Movement").first
   end
+
+
+  # only mother should call this function
+  def harvest_time
+    # only harvst for epicenters with status "tree"
+    if self.status == TREE
+
+      self.members.each do |member|
+        self.harvest_time_for(member)
+      end
+      
+      self.children.each do |child|
+        child.harvest_time
+      end
+
+    end
+  end
+
+
+  def status
+    if self.manifested && self.growing
+      status = TREE
+    elsif self.manifested && !self.growing
+      status = PLANT
+    elsif !self.manifested && self.growing
+      status = SPROUT
+    else
+      status = SEED
+    end
+    return status
+  end
   
   # create new epicenter
   def make_child(epicenter_params, current_user)
@@ -80,6 +111,38 @@ class Epicenter < ActiveRecord::Base
     users.uniq
   end
 
+  def validate_and_pay_new_membership(user, membership)
+    result = false
+    fruittype = self.mother_fruit
+
+    # check if user has enough fruits
+    enough_fruit = (user.fruitbasket.fruit_amount( fruittype ) >= membership.monthly_fee)
+
+    # check if user has enough monhtly engagement (fruit income)
+    monthly_engagement = user.monthly_engagement( self.mother )
+    monthly_gain = self.mother.get_membership_for( user ).monthly_gain
+    enough_engagement = ( monthly_gain >= monthly_engagement )
+      
+    # overfør frugt fra bruger til epicenter
+    if enough_fruit && enough_engagement
+      user.fruitbasket.give_fruit( self.fruitbasket, fruittype, membership.monthly_fee )
+      result = true
+    end
+    return result
+  end
+
+  def make_membershipcard(user, membership, stripe_customer=nil)
+    membershipcard = Membershipcard.where(
+      user_id: user.id, 
+      epicenter_id: self.id, 
+    ).first_or_create
+    membershipcard.membership_id = membership.id
+    if stripe_customer
+      membershipcard.payment_id = stripe_customer.id
+    end
+    membershipcard.save
+  end
+
   def make_member(user)
     member_access = self.access_point('member')
     self.make_tshirt( user, member_access )
@@ -108,19 +171,30 @@ class Epicenter < ActiveRecord::Base
     )
   end
 
+  def ensure_tree_for_all_members
+    self.members.each do |member|
+      fruittree = member.fruittrees.where(:fruittype_id => self.fruittype.id).first
+      if not fruittree
+        puts "Giving new fruittree to #{member.id}, #{member.email}"
+        give_fruittree_to(member)
+      end
+    end
+  end
+
   def delete_member(user)
     self.tshirts.where(user_id: user.id).delete_all
     fruittree = Fruittree.find_by(owner_id: user.id, owner_type: "User", fruittype_id: self.fruittype.id)
     fruittree.destroy
   end
 
-
-  def give_fruit_to(user)
+  def harvest_time_for(user)
     """ give user fruits according to membership, and take residual amount from epicenter fruitbag """
     membership = self.get_membership_for(user)
-    user.fruitbasket.receive_fruit( self.fruittype, membership.monthly_gain )
-    residual_amount = [0, membership.monthly_gain - self.monthly_fruits_basis].max
-    self.fruitbasket.give_fruit_to( self.fruittype, residual_amount )
+
+    user_harvest = user.harvest_fruittree(self)
+    missing_fruit = [0, membership.monthly_gain - user_harvest].max
+
+    self.fruitbasket.give_fruit_to( self.fruittype, missing_fruit )
   end
 
 
@@ -177,6 +251,11 @@ class Epicenter < ActiveRecord::Base
   end
 
   def get_membership_for(user)
+    membership = user.memberships.find_by( epicenter_id: self.id )
+    # puts "epicenter id", self.id
+    # puts "user id", user.id
+    # puts membership
+    # puts membership.monthly_gain
     return user.memberships.find_by( epicenter_id: self.id )
   end
 

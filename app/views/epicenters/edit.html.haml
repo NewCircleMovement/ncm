@@ -28,21 +28,21 @@
           Du mangler at give en beskrivelse af epicenteret
       %hr/
       - if @epicenter.memberships.present?
-        %i.fa.fa-check-circle-o.space-right 
+        %i.fa.fa-check.space-right 
         Medlemsskaber oprettet
       - else
         %i.fa.fa-ban.space-right
         Ingen medlemsskaber oprettet
       %hr/
       - if @epicenter.all_caretakers_are_members?
-        %i.fa.fa-check-circle-o.space-right 
+        %i.fa.fa-check.space-right 
         Alle caretakers er medlemmer
       - else
         %i.fa.fa-ban.space-right
         Ikke alle caretakers er medlemmer
       %hr/
       - if @epicenter.fruittype.present?
-        %i.fa.fa-check-circle-o.space-right 
+        %i.fa.fa-check.space-right 
         %strong= @epicenter.fruittype.name
         frugttype oprettet
       - else

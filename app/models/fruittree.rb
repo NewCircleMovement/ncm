@@ -14,7 +14,7 @@
 """
 Every user has a fruittree for every epicenter to which he belongs
 The fruittree has a fruittype to its corresponding epicenter
-Fruittrees produce a certain amount of fruit per month
+Fruittrees produce a certain amount of fruits per month
 All produce end up in fruitbags in the user's fruitbasket
 """
 
