@@ -4,5 +4,9 @@ class PagesController < ApplicationController
     @epicenters = Epicenter.all
   end
 
+  def info
+    @epicenters = Epicenter.all
+    @users = User.all
+  end
 
 end

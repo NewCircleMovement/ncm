@@ -63,7 +63,7 @@ class EpicentersController < ApplicationController
   #   if @epicenter.has_member?(current_user)
   #     redirect_to epicenters_path, notice: 'Du er allerede medlem'
   #   else
-  #     member_access = @epicenter.access_point('member')
+  #     member_access = @epicenter.get_access_point('member')
   #     member_tshirt = @epicenter.make_tshirt( current_user, member_access )
   #     redirect_to epicenters_path, notice: 'Yes! Du er medlem nu.'
   #   end

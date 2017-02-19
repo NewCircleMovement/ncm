@@ -59,6 +59,7 @@ namespace :ncm do
     
     if mother.save
       mother.mother_id = mother.id
+      mother.save
 
       # create basis membership object for NCM
       Membership.create(

@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     post '/give_tshirt' => 'epicenters#give_tshirt'
   end
 
+  get '/info' => 'pages#info'
   get '/join_epicenter' => 'epicenters#join_epicenter'
   get '/leave_epicenter' => 'epicenters#leave_epicenter'
 end

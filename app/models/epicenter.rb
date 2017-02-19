@@ -44,24 +44,60 @@ class Epicenter < ActiveRecord::Base
     return Epicenter.where(:name => "New Circle Movement").first
   end
 
+  def all_children(children_array = [])
+    children_array += self.children
+    children.each do |child|
+      if child != Epicenter.grand_mother
+        return child.all_children(children_array)
+      end
+    end
+    return children_array
+  end
 
-  # only mother should call this function
+  # once a month members will harvest fruits from their epicenter trees
+  # the epicenter will provide any fruit in excess of what can be harvested according to memberships
+  # only MOTHER should call this function
   def harvest_time
     # only harvst for epicenters with status "tree"
-    if self.status == TREE
-
+    if self.status == TREE  
       self.members.each do |member|
         self.harvest_time_for(member)
       end
       
       self.children.each do |child|
-        child.harvest_time
+        unless child == Epicenter.grand_mother
+          child.harvest_time
+        end
       end
 
     end
   end
 
+  def harvest_time_for(user)
+    """ give user fruits according to membership, 
+    and take residual amount from epicenter fruitbag """
+    membership = self.get_membership_for(user)
+    user_harvest = user.harvest_fruittree(self)
+    missing_fruit = [0, membership.monthly_gain - user_harvest].max
+    self.fruitbasket.give_fruit_to( user.fruitbasket, self.fruittype, missing_fruit )
+  end
 
+  # once a month members will show engagement to their epicenters
+  # only MOTHER should call this function
+  def engagement_time
+    self.members.each do |member|
+      member.show_engagement_to(self)
+    end
+
+    self.children.each do |child|
+      unless child == Epicenter.grand_mother
+        child.engagement_time
+      end
+    end
+  end
+
+
+  # returns the STATUS of the epicenter (tree, plant, sprout, seed)
   def status
     if self.manifested && self.growing
       status = TREE
@@ -106,11 +142,18 @@ class Epicenter < ActiveRecord::Base
     return child
   end
 
-
+  ##42 Should return all members with ONLY "member" tshirts
+  # check how to select through association attribute
   def members
-    users.uniq
+    access_point = self.get_access_point("member")
+    users = self.users.joins(:tshirts).where(:tshirts => { :access_point_id => access_point.id })
+    return users.uniq
   end
 
+
+  # pays for new membership and ensures that the new members has:
+  # 1. the required fruit to become member
+  # 2. the required monthly engagement (new monthly fruit) to be able to pay in the future (next month)
   def validate_and_pay_new_membership(user, membership)
     result = false
     fruittype = self.mother_fruit
@@ -125,12 +168,15 @@ class Epicenter < ActiveRecord::Base
       
     # overfør frugt fra bruger til epicenter
     if enough_fruit && enough_engagement
-      user.fruitbasket.give_fruit( self.fruitbasket, fruittype, membership.monthly_fee )
+      user.fruitbasket.give_fruit_to( self.fruitbasket, fruittype, membership.monthly_fee )
       result = true
     end
     return result
   end
 
+
+  # every member has a membershipcard (which binds new members to a specific epicenter mebership)
+  # the membershipcard also has the stripe_id (if NCM)
   def make_membershipcard(user, membership, stripe_customer=nil)
     membershipcard = Membershipcard.where(
       user_id: user.id, 
@@ -143,17 +189,22 @@ class Epicenter < ActiveRecord::Base
     membershipcard.save
   end
 
+
+  # makes a new member of an epicenter (member tshirt, fruittree and fruitbag)
   def make_member(user)
-    member_access = self.access_point('member')
+    member_access = self.get_access_point('member')
     self.make_tshirt( user, member_access )
     self.give_fruittree_to( user )
     self.give_fruitbag_to( user )
   end
 
+
+  # makes a new tshirt with specific access point, e.g. 'member' or 'caretaker'
   def make_tshirt(user, access_point)
     tshirt = Tshirt.new(:epicenter_id => self.id, :user_id => user.id, :access_point_id => access_point.id)
     tshirt.save
   end
+
 
   def give_fruittree_to(user)
     Fruittree.find_or_create_by(
@@ -164,6 +215,7 @@ class Epicenter < ActiveRecord::Base
     )
   end
 
+
   def give_fruitbag_to(user)
     Fruitbag.find_or_create_by(
       :fruitbasket_id => user.fruitbasket.id,
@@ -171,6 +223,8 @@ class Epicenter < ActiveRecord::Base
     )
   end
 
+
+  # ensures that all members of an epicenter has the required fruittree
   def ensure_tree_for_all_members
     self.members.each do |member|
       fruittree = member.fruittrees.where(:fruittype_id => self.fruittype.id).first
@@ -181,30 +235,22 @@ class Epicenter < ActiveRecord::Base
     end
   end
 
+
   def delete_member(user)
     self.tshirts.where(user_id: user.id).delete_all
     fruittree = Fruittree.find_by(owner_id: user.id, owner_type: "User", fruittype_id: self.fruittype.id)
     fruittree.destroy
   end
 
-  def harvest_time_for(user)
-    """ give user fruits according to membership, and take residual amount from epicenter fruitbag """
-    membership = self.get_membership_for(user)
-
-    user_harvest = user.harvest_fruittree(self)
-    missing_fruit = [0, membership.monthly_gain - user_harvest].max
-
-    self.fruitbasket.give_fruit_to( self.fruittype, missing_fruit )
-  end
-
-
   def fruitbag
     return self.fruitbasket.fruitbags.first
   end
 
-  def access_point(role)
+
+  def get_access_point(role)
     return self.location.access_points.find_by( :name => role )
   end
+
 
   def users_with_tshirt(role)
     tshirts = self.tshirts.joins(:access_point).where('access_points.name' => [role.downcase])
@@ -212,9 +258,11 @@ class Epicenter < ActiveRecord::Base
     return User.where(id: user_ids)
   end
 
+
   def tshirts_belonging_to_user(user)
     return self.tshirts.where( user_id: user.id )
   end
+
 
   def all_caretakers_are_members?
     caretaker_ids = self.users_with_tshirt('caretaker').pluck(:id)
@@ -222,15 +270,18 @@ class Epicenter < ActiveRecord::Base
     return (caretaker_ids - member_ids).empty?
   end
 
+
   def can_accept_members?
     return self.memberships.present? && self.all_caretakers_are_members? && self.fruittype.present?
   end
+
 
   def cancel_membership(user)
     tshirts_belonging_to_user( user ).each do |tshirt|
       tshirt.destroy
     end
   end
+
 
   def has_member?(user)
     result = false
@@ -240,6 +291,7 @@ class Epicenter < ActiveRecord::Base
     end
     return result
   end
+
 
   def has_caretaker?(user)
     result = false
@@ -251,23 +303,21 @@ class Epicenter < ActiveRecord::Base
   end
 
   def get_membership_for(user)
-    membership = user.memberships.find_by( epicenter_id: self.id )
-    # puts "epicenter id", self.id
-    # puts "user id", user.id
-    # puts membership
-    # puts membership.monthly_gain
     return user.memberships.find_by( epicenter_id: self.id )
   end
+
 
   def mother_fruit
     fruit = nil
     if self == Epicenter.grand_mother
-      fruit = Fruittype.where(:epicenter_id => nil).first
+      fruit = Fruittype.where(:name => "kroner").first
     else
       fruit = self.mother.fruittype
     end
+    puts "----------------- returning this fruittype", fruit
     return fruit
   end
+
 
   def video
     if video_url.present?
@@ -281,6 +331,7 @@ class Epicenter < ActiveRecord::Base
     return ""
   end
 
+
   def test_if_ncm
     if self.id == self.mother_id
       self.mother_id = nil
@@ -289,9 +340,11 @@ class Epicenter < ActiveRecord::Base
     end
   end
 
+
   def to_param
     self.slug
   end
+
 
   def to_slug
     #strip the string

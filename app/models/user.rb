@@ -73,17 +73,24 @@ class User < ActiveRecord::Base
     false
   end
 
+
   # returns a user's fruit expensives per month in a given epicenter
   def monthly_engagement( epicenter )
-    engagement = 0
-    self.memberships.each do |membership|
-      if membership.monthly_fee_fruittype.id == epicenter.fruittype.id
-        puts membership.name
-        puts membership.monthly_fee
-        engagement += membership.monthly_fee
-      end
-    end
-    return engagement
+    membership = get_membership(epicenter)
+    return membership.monthly_fee
+  end
+
+
+  # returns a user's membership for a specific epicenter
+  def get_membership(epicenter)
+    return self.memberships.where(:epicenter_id => epicenter.id).first
+  end
+
+
+  def show_engagement_to(epicenter)
+    engagement = self.monthly_engagement(epicenter)
+    fruittype = epicenter.mother_fruit
+    self.fruitbasket.give_fruit_to(epicenter.fruitbasket, fruittype, engagement)
   end
 
 

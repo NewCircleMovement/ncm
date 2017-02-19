@@ -22,7 +22,7 @@ class Fruitbasket < ActiveRecord::Base
 	has_many :fruitbags
 
   def find_fruitbag(fruittype)
-    self.fruitbags.find_or_create_by(fruittype_id: fruittype.id, fruitbasket_id: self.id)
+    return self.fruitbags.find_or_create_by(fruittype_id: fruittype.id, fruitbasket_id: self.id)
   end
 
   def show_content
@@ -39,26 +39,28 @@ class Fruitbasket < ActiveRecord::Base
     end
   end
 
-  def receive_fruit(fruittype, amount)
-    fruitbag = self.find_fruitbag(fruittype)
-    fruitbag.amount += amount
-    fruitbag.save
-  end
+  # def receive_fruit(fruittype, amount)
+  #   fruitbag = self.find_fruitbag(fruittype)
+  #   fruitbag.amount += amount
+  #   fruitbag.save
+  # end 
 
-  ### when becoming member a user will receive fruits
-  def give_fruit_to(fruittype, amount)
-    receiver_bag = self.find_fruitbag(fruittype)
-    receiver_bag.amount -= amount
-    receiver_bag.save
-  end
-
-  def give_fruit(receiver_basket, fruittype, amount)
+  def give_fruit_to(receiver_basket, fruittype, amount)
     donor_bag = self.find_fruitbag(fruittype)
-    donor_bag.amount -= amount
-    donor_bag.save
-    receiver_bag = receiver_basket.find_fruitbag(fruittype)
-    receiver_bag.amount += amount
-    receiver_bag.save
+
+    owner_is_user = self.owner.class == User
+    has_too_little_fruit = donor_bag.amount < amount
+    
+    unless owner_is_user and has_too_little_fruit and fruittype.name != "kroner"
+      donor_bag.amount -= amount
+      donor_bag.save
+      receiver_bag = receiver_basket.find_fruitbag(fruittype)
+      receiver_bag.amount += amount
+      receiver_bag.save
+    end 
+
+    ##42 TODO
+    ## if payment cannot be made, this should be logged in a logging object
   end
 	
 end
