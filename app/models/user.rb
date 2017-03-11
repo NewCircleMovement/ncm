@@ -74,12 +74,40 @@ class User < ActiveRecord::Base
   end
 
 
-  # returns a user's fruit expensives per month in a given epicenter
+  # returns a user's fruit expences per month in a given epicenter
   def monthly_engagement( epicenter )
     membership = get_membership(epicenter)
     return membership.monthly_fee
   end
 
+
+  # returns a user's fruit harvest per month in a given epicenter
+  def monthly_harvest( epicenter )
+    membership = get_membership(epicenter)
+    return membership.monthly_gain
+  end
+
+
+  # returns a users membership for all epicenters of same mother 
+  # (optional exception of specific epicenter)
+  def all_memberships( epicenter, exception=nil )
+    if exception
+      exception_id = exception.id
+    else
+      exception_id = -1
+    end
+    return self.memberships.where(:id => epicenter.id).where.not(:id => exception_id)
+  end
+
+
+  def sum_of_all_engagements(epicenter, exception=nil)
+    result = 0
+    memberships = self.all_memberships(epicenter, exception)
+    memberships.each do |membership|
+      result += membership.monthly_fee
+    end
+    return result
+  end
 
   # returns a user's membership for a specific epicenter
   def get_membership(epicenter)
@@ -126,12 +154,18 @@ class User < ActiveRecord::Base
   end
 
   def harvest_fruittree( epicenter )
+    membership = self.get_membership( epicenter )
+
     fruittype = epicenter.fruittype
     
     fruittree = self.fruittrees.where(:fruittype_id => fruittype.id).first
     fruitbag = self.fruitbasket.fruitbags.where(:fruittype_id => fruittype.id).first
 
+    # make sure that users cannot harvest more than their membership gain
     harvest = fruittree.fruits_per_month
+    if harvest > membership.monthly_gain
+      harvest = membership.monthly_gain
+    end
 
     fruitbag.amount += harvest
     fruittree.yield += harvest

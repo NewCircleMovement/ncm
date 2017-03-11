@@ -39,9 +39,9 @@
                   = @epicenter.mother.fruittype.name
               %hr/
               - if @membership == membership && 
-                = link_to "Afslut medlemskab", epicenter_subscription_path(@epicenter, membership), :method => :delete, :class => 'btn btn-danger'
+                = link_to "Afslut medlemskab", epicenter_subscription_path(@epicenter, membership), :method => :delete, :class => 'btn btn-danger', data: { confirm: 'Er du sikker?' }
               - else
-                = link_to "Skift til #{membership.name}", epicenter_subscription_path(@epicenter, membership), method: :put, class: "btn btn-primary #{membership == @new_membership ? 'disabled' : ''}"
+                = link_to "Skift til #{membership.name}", epicenter_subscription_path(@epicenter, membership), method: :put, class: "btn btn-primary", data: { confirm: 'Er du sikker?' }
     - else
       .col-md-12
         %p Dette epicenter kan ikke modtagere medlemmer endnu

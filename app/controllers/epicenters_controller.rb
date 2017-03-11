@@ -24,12 +24,18 @@ class EpicentersController < ApplicationController
   # include SharedMethods
   
   before_filter :get_mother
+  before_filter :has_ncm_permission, only: [:new, :edit, :update]
   before_action :set_epicenter, only: [:edit, :update, :show, :join_epicenter, :leave_epicenter]
 
   # validates :slug, uniqueness: true
 
   def index
-    @epicenters = @mother.children.where.not(id: @mother_id)
+    if current_user and not current_user.get_membership(@mother)
+      @epicenters = Epicenter.all
+    else
+      @epicenters = @mother.children.where.not(id: @mother_id)
+    end
+    
   end
 
   def show
@@ -110,6 +116,7 @@ class EpicentersController < ApplicationController
   def get_mother
     @mother = Epicenter.grand_mother
   end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

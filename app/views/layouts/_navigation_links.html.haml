@@ -1,8 +1,9 @@
 %li
   = link_to "Epicentre", epicenters_path
 
+
 - if current_user
   - if @mother.users_with_tshirt('caretaker').pluck(:id).include? current_user.id
-    = link_to "edit", edit_epicenter_path(@mother), :class => "btn btn-default"
+    %li= link_to "edit", edit_epicenter_path(@mother), :class => "btn btn-default"
 
   

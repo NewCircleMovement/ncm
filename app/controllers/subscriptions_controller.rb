@@ -34,6 +34,10 @@ class SubscriptionsController < ApplicationController
     success = false
     no_success_message = ""
     
+    puts "------------------------------ NEW MEMBERSHIP "
+    puts params
+
+    # find the epicenter membership that the user wants
     @membership = Membership.find(params[:membership_id])
     membershipcard = current_user.get_membershipcard( @epicenter )
 
@@ -107,11 +111,8 @@ class SubscriptionsController < ApplicationController
       puts "create non-NCM Epicenter subscription"
       stripe_customer = false
      
-      # TODO: make some form of payment to epicenter
-      if @epicenter.validate_and_pay_new_membership( current_user, @membership )
-        success = true
-      else
-        success = false
+      success = @epicenter.validate_and_pay_new_membership( current_user, @membership )
+      unless success
         no_success_message = "Du har ikke nok beholdning og/eller månedlig tilførsel af #{@epicenter.mother.fruittype.name}"
       end
     end
@@ -143,14 +144,62 @@ class SubscriptionsController < ApplicationController
   end
 
   def update
-    change = MembershipChange.find_or_create_by(user_id: current_user.id, epicenter_id: @epicenter.id)
-    @old_membership = current_user.membership_for(@epicenter)
-    @new_membership = Membership.find(params[:id])
-    change.old_membership_id = @old_membership.id
-    change.new_membership_id = @new_membership.id
-    change.save
-    flash[:success] = "Dit medlemskab vil blive ændret til #{@new_membership.name}"
-    redirect_to epicenter_subscriptions_path(@epicenter)
+    success = false
+    
+    old_membership = current_user.membership_for(@epicenter)
+    new_membership = Membership.find(params[:id])
+
+    membershipcard = current_user.get_membershipcard( @epicenter )
+
+    # change subscription to "new circle movement"
+    if @epicenter == @mother  
+      puts "mother stuff---------------------------------------------------"
+
+      customer = Stripe::Customer.retrieve( membershipcard.payment_id )
+      subscription = customer['subscriptions']['data'][0]
+      subscription.plan = new_membership.id.to_s
+
+      # update the users subscription and charge the monthly fee for new fruits
+      if subscription.save
+        payment = Stripe::Charge.create(
+          :amount => new_membership.monthly_fee * 100,
+          :currency => 'dkk',
+          :customer => customer.id,
+          :description => "Membership change from #{old_membership.name} to #{new_membership.name}"
+        )
+        success = true
+      else
+        no_success_message = "Der skete desvære en fejl. Betalingen blev ikke gennemført (subs171)"
+      end
+
+    # change subscription to all other epicenters
+    else 
+      success = @epicenter.validate_and_pay_new_membership( current_user, new_membership )
+      unless success 
+        no_success_message = "Du har ikke nok beholdning og/eller månedlig tilførsel af #{@epicenter.mother.fruittype.name}"
+      end
+    end
+
+    if success
+      # update membershipcard
+      membershipcard.membership_id = new_membership.id
+
+      puts "--------------------------------"
+      puts "new membership", membershipcard.membership.monthly_gain
+
+      if membershipcard.save
+        @epicenter.harvest_time_for( current_user )
+        flash[:success] = "Du er nu #{new_membership.name} medlem af #{@epicenter.name}"        
+      else 
+        flash[:error] = "Der skete desværre en fejl (142). Kontakt venligst NCM"
+      end
+      redirect_path = epicenter_path(@epicenter)
+
+    else
+      flash[:warning] = no_success_message
+      redirect_path = epicenter_subscriptions_path(@epicenter)
+    end
+    redirect_to redirect_path
   end
 
 

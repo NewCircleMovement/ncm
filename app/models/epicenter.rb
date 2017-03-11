@@ -21,8 +21,9 @@
 #
 
 # niveau "kan måske slettes... kan evt. sættes af location"
+require 'blueprint'
 
-class Epicenter < ActiveRecord::Base
+class Epicenter < Blueprint
   before_destroy :test_if_ncm
 
   belongs_to :mother, :class_name => "Epicenter", :foreign_key => 'mother_id'
@@ -75,8 +76,10 @@ class Epicenter < ActiveRecord::Base
 
   def harvest_time_for(user)
     """ give user fruits according to membership, 
-    and take residual amount from epicenter fruitbag """
+        and take residual amount from epicenter fruitbag """
     membership = self.get_membership_for(user)
+
+    puts "do we have the right membership =>", membership.monthly_gain
     user_harvest = user.harvest_fruittree(self)
     missing_fruit = [0, membership.monthly_gain - user_harvest].max
     self.fruitbasket.give_fruit_to( user.fruitbasket, self.fruittype, missing_fruit )
@@ -159,13 +162,23 @@ class Epicenter < ActiveRecord::Base
     fruittype = self.mother_fruit
 
     # check if user has enough fruits
-    enough_fruit = (user.fruitbasket.fruit_amount( fruittype ) >= membership.monthly_fee)
+    enough_fruit = (user.fruitbasket.fruit_amount( fruittype ) >= membership.monthly_fee )
+    puts "user has enough fruits: ", enough_fruit
 
     # check if user has enough monhtly engagement (fruit income)
-    monthly_engagement = user.monthly_engagement( self.mother )
-    monthly_gain = self.mother.get_membership_for( user ).monthly_gain
-    enough_engagement = ( monthly_gain >= monthly_engagement )
+    # 1: the user receives a monthly harvest from NCM (Tinkuy's mother)
+    # 2: harvest must be larger than user membership for Tinkuy/BASIS cost 100 "waterdrops" (monthly price)
+    # 3: and harvest must be larger than the tinkuy monthly membership cost
+    # 4: and harvest must be larger than other monthly engagements (of the same mother)
+    monthly_mother_harvest = self.mother.get_membership_for( user ).monthly_gain
+    monthly_epicenter_price = membership.monthly_fee
+    monthly_other_engagements = user.sum_of_all_engagements(self.mother, exception=self)
+    enough_engagement = ( monthly_mother_harvest >= monthly_epicenter_price + monthly_other_engagements )
       
+    puts "Monthly harvest", monthly_mother_harvest
+    puts "Monthly price for new membership", monthly_epicenter_price
+    puts "Monthly price for other engagements", monthly_other_engagements
+
     # overfør frugt fra bruger til epicenter
     if enough_fruit && enough_engagement
       user.fruitbasket.give_fruit_to( self.fruitbasket, fruittype, membership.monthly_fee )
@@ -201,8 +214,7 @@ class Epicenter < ActiveRecord::Base
 
   # makes a new tshirt with specific access point, e.g. 'member' or 'caretaker'
   def make_tshirt(user, access_point)
-    tshirt = Tshirt.new(:epicenter_id => self.id, :user_id => user.id, :access_point_id => access_point.id)
-    tshirt.save
+    tshirt = Tshirt.where(:epicenter_id => self.id, :user_id => user.id, :access_point_id => access_point.id).first_or_create
   end
 
 
@@ -272,7 +284,9 @@ class Epicenter < ActiveRecord::Base
 
 
   def can_accept_members?
-    return self.memberships.present? && self.all_caretakers_are_members? && self.fruittype.present?
+    return self.memberships.present? && 
+      self.all_caretakers_are_members? && 
+      self.fruittype.present?
   end
 
 

@@ -3,12 +3,12 @@
     .container
       %i.fa.fa-exclamation-circle.space-right-sm
       Epicenteret kan endnu ikke modtage medlemmer
+      - unless @epicenter.fruittype.present?
+        %span.label.label-default Frugttype ikke oprettet
       - unless @epicenter.memberships.present?
         %span.label.label-default Ingen medlemskaber
       - unless @epicenter.all_caretakers_are_members?
         %span.label.label-default Ikke alle caretakers er medlem
-      - unless @epicenter.fruittype.present?
-        %span.label.label-default Frugttype ikke oprettet
 
 
 = render layout: "edit_epicenter" do
@@ -26,20 +26,7 @@
           = @epicenter.description
         - else
           Du mangler at give en beskrivelse af epicenteret
-      %hr/
-      - if @epicenter.memberships.present?
-        %i.fa.fa-check.space-right 
-        Medlemsskaber oprettet
-      - else
-        %i.fa.fa-ban.space-right
-        Ingen medlemsskaber oprettet
-      %hr/
-      - if @epicenter.all_caretakers_are_members?
-        %i.fa.fa-check.space-right 
-        Alle caretakers er medlemmer
-      - else
-        %i.fa.fa-ban.space-right
-        Ikke alle caretakers er medlemmer
+      
       %hr/
       - if @epicenter.fruittype.present?
         %i.fa.fa-check.space-right 
@@ -48,6 +35,24 @@
       - else
         %i.fa.fa-ban.space-right 
         Ingen frugttype oprettet
+        
+      %hr/
+      - if @epicenter.memberships.present?
+        %i.fa.fa-check.space-right 
+        Medlemsskaber oprettet
+      - else
+        %i.fa.fa-ban.space-right
+        Ingen medlemsskaber oprettet
+      
+      %hr/
+      - if @epicenter.all_caretakers_are_members?
+        %i.fa.fa-check.space-right 
+        Alle caretakers er medlemmer
+      - else
+        %i.fa.fa-ban.space-right
+        Ikke alle caretakers er medlemmer
+      
+
     #settings.tab-pane{:role => "tabpanel"}
       = render :partial => "form"
       %a{"aria-controls" => "about", "data-toggle" => "tab", :href => "#about", :role => "tab"}
