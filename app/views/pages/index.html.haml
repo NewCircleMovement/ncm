@@ -1,26 +1,32 @@
-.jumbotron
+.jumbotron.home
   .container
     .row
       .col-md-offset-3.col-md-6
         .text-center
           %h1 Vil du ændre verden?
           %p 
-            Bak op om gode projekter, eller Lad fællesskabet støtte dig i at gøre din drøm til virkelighed
+            Bak op om gode projekter, eller lad fællesskabet støtte dig i at gøre din drøm til virkelighed
           - unless user_signed_in?
             = link_to "Bliv medlem", new_user_registration_path, :class => 'btn btn-primary btn-lg'
 
 .container.top
-
   - if user_signed_in?
     .row
-      .col-md-6
-        %h1 Opret epicenter
-        %p Noget om at oprette
+      .col-md-6.engagement-box
+        %h1.header Engager dig
+        %p 
+          Verden har brug for dit engagement.
+          %br/ 
+          Find et eller flere projekter som du ønsker at engagere dig i.
+        = link_to "Find epicenter", epicenters_path, :class => 'btn btn-primary btn-lg'
+      .col-md-6.engagement-box
+        %h1.header Opret epicenter
+        %p
+          Hvad brænder du for?
+          %br/ 
+          Opret dit project her og skab jeres community.
         = link_to "Opret epicenter", new_epicenter_path, :class => 'btn btn-primary btn-lg'
-      .col-md-6
-        %h1 Støt epicenter
-        %p Noget om at støtte
-        = link_to "Støt epicenter", epicenters_path, :class => 'btn btn-primary btn-lg'
+      
 
   - else
     .row
@@ -34,4 +40,36 @@
                 = epicenter.description
               %p
                 = link_to "Læs mere", epicenter, :class => "btn btn-default"
+.container
+  %hr/
+  .row
+    .col-md-4
+      %h2= @left_info.title
+      %p= @left_info.body
+    .col-md-4
+      %h2= @right_info.title
+      %p= @right_info.body
+
+    .col-md-4
+      %h2 Overblik
+      %p Her finder du et overblik over New Circle Movements medlemmer og projekter
       
+      %table.table.table-condensed
+        %tr
+          %td Medlemmer
+          %td 5
+        %tr
+          %td Realiserede projekter
+          %td= @projects_count
+        %tr
+          %td Spirer
+          %td= @sprouts_count
+        %tr
+          %td Frø
+          %td= @seed_count
+        %tr
+          %td Udbetalt sidste måned
+          %td
+
+
+

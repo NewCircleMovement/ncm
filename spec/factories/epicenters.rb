@@ -17,6 +17,7 @@
 #  depth_fruits         :integer
 #  mother_id            :integer
 #  monthly_fruits_basis :integer          default(100)
+#  slug                 :string
 #
 
 FactoryGirl.define do

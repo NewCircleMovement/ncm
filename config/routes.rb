@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     resources :memberships
     resources :fruittypes
     resources :access_points
+    resources :information
     
     namespace :members do
 

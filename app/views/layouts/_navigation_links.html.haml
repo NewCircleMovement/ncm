@@ -1,5 +1,8 @@
-%li
-  = link_to "Epicentre", epicenters_path
+- if @epicenter.present?
+            
+- else
+  %li
+    = link_to "Epicentre", epicenters_path
 
 
 - if current_user

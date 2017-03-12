@@ -24,6 +24,8 @@
 require 'blueprint'
 
 class Epicenter < Blueprint
+  mount_uploader :image, ImageUploader
+
   before_destroy :test_if_ncm
 
   belongs_to :mother, :class_name => "Epicenter", :foreign_key => 'mother_id'
@@ -32,6 +34,7 @@ class Epicenter < Blueprint
   has_many :users, :through => :tshirts
   has_many :tshirts, :dependent => :destroy
   has_many :memberships
+  has_many :information, as: :owner
 
   has_one :fruittype
   has_one :fruitbasket, as: :owner, :dependent => :destroy
@@ -338,7 +341,7 @@ class Epicenter < Blueprint
       # <iframe width="560" height="315" src="https://www.youtube.com/embed/AiZFoxjQFcI" frameborder="0" allowfullscreen></iframe>
       if video_url.include? "youtube"
         id = video_url.split('watch?v=')[1]
-        embed_link = "<iframe width='560' height='315' src='https://www.youtube.com/embed/#{id}' frameborder='0' allowfullscreen></iframe>"
+        embed_link = "<iframe width='100%' src='https://www.youtube.com/embed/#{id}' frameborder='0' allowfullscreen></iframe>"
         return embed_link
       end
     end

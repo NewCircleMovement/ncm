@@ -1,0 +1,13 @@
+%h3.header= action_name == 'new' ? "Opret ny information" : "Rediger information"
+
+= simple_form_for [@epicenter, @info] do |f|
+  .row
+    .col-md-10
+      = f.input :title, label: "Titel"
+    .col-md-2
+      = f.input :position, label: "Position"
+  = f.input :body, label: "Indhold"
+  = f.submit "Gem", class: 'btn btn-primary'
+  - if action_name == 'new'
+    = link_to "Fortryd", :back, class: "btn btn-default"
+

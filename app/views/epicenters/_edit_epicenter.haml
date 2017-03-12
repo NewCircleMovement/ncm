@@ -9,6 +9,7 @@
           %li{ class: "#{controller_name == 'memberships' ? 'active' : ''}" }= link_to "Medlemskaber", epicenter_memberships_path(@epicenter)
         %li{ class: "#{action_name == 'members' ? 'active' : ''}" }= link_to "Medlemmer", epicenter_members_path(@epicenter)
         %li{ class: "#{action_name == 'tshirts' ? 'active' : ''}" }= link_to "Tshirts", epicenter_tshirts_path(@epicenter)
+        %li{ class: "#{controller_name == 'information' ? 'active' : ''}" }= link_to "Information", epicenter_information_index_path(@epicenter)
 
       .alert.alert-danger
         - unless @epicenter.has_member?( current_user )

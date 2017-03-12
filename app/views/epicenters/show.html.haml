@@ -1,13 +1,58 @@
-.container
-  %h1
-    = @epicenter.name
-    - if not signed_in?
-      .pull-right
-        = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-primary'
-  %p
-    %strong Caretaker
-    - for caretaker in @epicenter.users_with_tshirt("caretaker")
-      = caretaker.email
+.jumbotron.epicenter
+  .image
+    - if @epicenter.image
+      = image_tag(@epicenter.image, width: "100%", height: "250")
+    .text-wrap
+      .text 
+        %h1= @epicenter.name
+        - if @epicenter.tagline.present?
+          %p= @epicenter.tagline
 
-  %p= @epicenter.description
-  = @epicenter.video.html_safe
+        - unless current_user.present? && current_user.get_membership(@epicenter)
+          = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
+
+.container
+  - if not signed_in?
+    .pull-right
+      = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-primary'
+
+  
+
+  .row
+    .col-md-8
+      - if @left_info
+        %h2= @left_info.title
+        %p= @left_info.body
+
+      .video-wrapper
+        = @epicenter.video.html_safe
+
+      - if @right_info
+        %h2= @right_info.title
+        %p= @right_info.body
+
+    .col-md-4
+      %h2 Overblik
+      %p 
+        Her finder du et overblik over 
+        = "#{@epicenter.name}s"
+        medlemmer og projekter
+      
+      %table.table.table-condensed
+        %tr
+          %td Medlemmer
+          %td= @epicenter.members.count
+        %tr
+          %td Realiserede projekter
+          %td= @projects_count
+        %tr
+          %td Spirer
+          %td= @sprouts_count
+        %tr
+          %td Frø
+          %td= @seed_count
+
+      %h4 
+        %strong Caretakers
+      - for caretaker in @epicenter.users_with_tshirt("caretaker")
+        = caretaker.name

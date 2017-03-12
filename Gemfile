@@ -17,6 +17,12 @@ gem 'font-awesome-sass'
 #db
 gem 'pg'
 
+# images and aws S3 upload
+gem 'carrierwave'
+gem 'carrierwave-aws'
+gem 'mini_magick'
+# gem 'figaro'
+
 # better errors
 gem "rails_12factor"
 

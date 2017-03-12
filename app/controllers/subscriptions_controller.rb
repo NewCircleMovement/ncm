@@ -126,11 +126,12 @@ class SubscriptionsController < ApplicationController
       @epicenter.make_member( current_user )
       @epicenter.harvest_time_for( current_user )
       flash[:success] = "Du er nu medlem af #{@epicenter.name}"
-      # TODO: redirect to epicenter profile page
+      redirect_path = epicenter_path(@epicenter)
     else
       flash[:warning] = no_success_message
+      redirect_path =  new_epicenter_subscription_path(@epicenter)
     end
-    redirect_to epicenters_path
+    redirect_to redirect_path
   end
 
 
@@ -194,7 +195,6 @@ class SubscriptionsController < ApplicationController
         flash[:error] = "Der skete desværre en fejl (142). Kontakt venligst NCM"
       end
       redirect_path = epicenter_path(@epicenter)
-
     else
       flash[:warning] = no_success_message
       redirect_path = epicenter_subscriptions_path(@epicenter)

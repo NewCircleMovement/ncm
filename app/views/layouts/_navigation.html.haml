@@ -7,7 +7,11 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      = link_to 'New Circle Movement', root_path, class: 'navbar-brand space-right'
+      - if @epicenter.present?
+        = link_to @epicenter.name, epicenter_path(@epicenter), class: 'navbar-brand space-right'
+      - else
+        = link_to @mother.name, root_path, class: 'navbar-brand space-right'
+
     .collapse.navbar-collapse
       %ul.nav.navbar-nav
         = render 'layouts/navigation_links'
@@ -23,7 +27,7 @@
                 - if @mother.has_member?(current_user)
                   %i.fa.fa-tint
                   = current_user.fruits(@mother)
-                  -# = @mother.fruittype.name
+                  = @mother.fruittype.name
           %li.dropdown
             %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
               %i.fa.fa-user
@@ -32,7 +36,7 @@
               %li
                 %a{:href => "#"} Min profil
               %li
-                = link_to "Mit edlemsskab", epicenter_subscriptions_path(@mother)
+                = link_to "Mit medlemsskab", epicenter_subscriptions_path(@mother)
               %li.divider{:role => "separator"}
               %li= link_to 'Log out', destroy_user_session_path, :method => :delete
         - else

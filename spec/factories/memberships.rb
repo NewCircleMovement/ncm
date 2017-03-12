@@ -9,6 +9,9 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  engagement   :integer          default(2)
+#  payment_id   :string
+#  monthly_gain :integer
+#  profile      :text
 #
 
 FactoryGirl.define do

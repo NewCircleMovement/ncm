@@ -39,6 +39,8 @@ class EpicentersController < ApplicationController
   end
 
   def show
+    @left_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:left] ).first
+    @right_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:right] ).first
   end
 
   def new
@@ -126,7 +128,7 @@ class EpicentersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def epicenter_params
-      params.require(:epicenter).permit(:name, :description, :max_members, :video_url, :growing, :manifested,
+      params.require(:epicenter).permit(:name, :description, :image, :tagline, :max_members, :video_url, :growing, :manifested,
                                         :depth_fruits, :depth_members, :slug, :monthly_fruits_basis,
                                         fruittype_attributes: [:name, :monthly_decay],
                                         memberships_attributes: [:name, :monthly_fee, :engagement] )
