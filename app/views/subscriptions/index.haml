@@ -15,7 +15,7 @@
   %h1
     = @epicenter.name
   %p
-    = "#{@epicenter.name} har #{@memberships.count} medlemmer"
+    = "#{@epicenter.name} har #{@epicenter.members.count} medlemmer"
 
   .row
     - if @epicenter.can_accept_members?
