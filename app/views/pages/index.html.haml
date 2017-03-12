@@ -43,12 +43,14 @@
 .container
   %hr/
   .row
-    .col-md-4
-      %h2= @left_info.title
-      %p= @left_info.body
-    .col-md-4
-      %h2= @right_info.title
-      %p= @right_info.body
+    - if @left_info.present?
+      .col-md-4
+        %h2= @left_info.title
+        %p= @left_info.body
+    - if @right_info.present?
+      .col-md-4
+        %h2= @right_info.title
+        %p= @right_info.body
 
     .col-md-4
       %h2 Overblik
