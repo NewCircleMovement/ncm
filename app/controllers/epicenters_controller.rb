@@ -22,10 +22,12 @@
 
 class EpicentersController < ApplicationController
   # include SharedMethods
-  
-  before_filter :get_mother
-  before_filter :has_ncm_permission, only: [:new, :edit, :update]
+  before_action :authenticate_user!, only: [:new, :edit, :update]
   before_action :set_epicenter, only: [:edit, :update, :show, :join_epicenter, :leave_epicenter]
+
+  before_filter :get_mother
+  before_filter :has_edit_permission, only: [:edit, :update]
+
 
   # validates :slug, uniqueness: true
 
@@ -121,6 +123,16 @@ class EpicentersController < ApplicationController
 
 
   private
+    
+    def has_edit_permission
+      if current_user
+        unless @epicenter.has_caretaker?(current_user)
+          redirect_to :back, notice: "Du er ikke medlem af new circle movement"
+        end
+      end
+    end
+
+
     # Use callbacks to share common setup or constraints between actions.
     def set_epicenter
       @epicenter = Epicenter.find_by_slug(params[:id])

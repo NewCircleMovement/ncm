@@ -10,36 +10,36 @@
             = link_to "Bliv medlem", new_user_registration_path, :class => 'btn btn-primary btn-lg'
 
 .container.top
-  - if user_signed_in?
-    .row
-      .col-md-6.engagement-box
-        %h1.header Engager dig
-        %p 
-          Verden har brug for dit engagement.
-          %br/ 
-          Find et eller flere projekter som du ønsker at engagere dig i.
-        = link_to "Find epicenter", epicenters_path, :class => 'btn btn-primary btn-lg'
-      .col-md-6.engagement-box
-        %h1.header Opret epicenter
-        %p
-          Hvad brænder du for?
-          %br/ 
-          Opret dit project her og skab jeres community.
-        = link_to "Opret epicenter", new_epicenter_path, :class => 'btn btn-primary btn-lg'
+  -# - if user_signed_in?
+  .row
+    .col-md-6.engagement-box
+      %h1.header Engager dig
+      %p 
+        Verden har brug for dit engagement.
+        %br/ 
+        Find et eller flere projekter som du ønsker at engagere dig i.
+      = link_to "Find epicenter", epicenters_path, :class => 'btn btn-primary btn-lg'
+    .col-md-6.engagement-box
+      %h1.header Opret epicenter
+      %p
+        Hvad brænder du for?
+        %br/ 
+        Opret dit project her og skab jeres community.
+      = link_to "Opret epicenter", new_epicenter_path, :class => 'btn btn-primary btn-lg'
       
 
-  - else
-    .row
-      - for epicenter in @epicenters
-        .col-md-4
-          .card
-            .content
-              %h4
-                %strong= epicenter.name
-              %p
-                = epicenter.description
-              %p
-                = link_to "Læs mere", epicenter, :class => "btn btn-default"
+  -# - else
+  -#   .row
+  -#     - for epicenter in @epicenters
+  -#       .col-md-4
+  -#         .card
+  -#           .content
+  -#             %h4
+  -#               %strong= epicenter.name
+  -#             %p
+  -#               = epicenter.description
+  -#             %p
+  -#               = link_to "Læs mere", epicenter, :class => "btn btn-default"
 .container
   %hr/
   .row

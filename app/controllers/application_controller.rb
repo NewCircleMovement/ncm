@@ -14,12 +14,4 @@ class ApplicationController < ActionController::Base
     @mother = Epicenter.grand_mother
   end
 
-  def has_ncm_permission
-    if current_user
-      unless current_user.get_membership(@mother)
-        redirect_to :back, notice: "Du er ikke medlem af new circle movement"
-      end
-    end
-  end
-
 end
