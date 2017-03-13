@@ -27,19 +27,6 @@
         Opret dit project her og skab jeres community.
       = link_to "Opret epicenter", new_epicenter_path, :class => 'btn btn-primary btn-lg'
       
-
-  -# - else
-  -#   .row
-  -#     - for epicenter in @epicenters
-  -#       .col-md-4
-  -#         .card
-  -#           .content
-  -#             %h4
-  -#               %strong= epicenter.name
-  -#             %p
-  -#               = epicenter.description
-  -#             %p
-  -#               = link_to "Læs mere", epicenter, :class => "btn btn-default"
 .container
   %hr/
   .row
@@ -59,7 +46,7 @@
       %table.table.table-condensed
         %tr
           %td Medlemmer
-          %td 5
+          %td= @mother.members.count
         %tr
           %td Realiserede projekter
           %td= @projects_count

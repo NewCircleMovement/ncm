@@ -12,12 +12,6 @@
           = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
 
 .container
-  - if not signed_in?
-    .pull-right
-      = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-primary'
-
-  
-
   .row
     .col-md-8
       - if @left_info
