@@ -1,6 +1,24 @@
-= render layout: "edit_epicenter" do
-  %h3
-    Medlemmer
-  - for user in @epicenter.users_with_tshirt('member')
-    = user.name
-    = user.email
+= render layout: "show_epicenter" do
+  .container
+    %h2
+      Medlemmer
+      %span.label.label-primary
+        = @members.count
+    %table.table.table-stribed
+      %thead
+        %tr
+          %th #
+          %th Navn
+          %th Roller
+          %th Medlem siden
+      %body
+        - @members.each_with_index do |user, index|
+          %tr
+            %td= index + 1
+            %td= user.name
+            %td
+              - user.get_tshirts(@epicenter).each do |tshirt|
+                %span.label.label-primary= tshirt.access_point.name
+            %td
+              - member_since = user.get_membershipcard(@epicenter).created_at
+              = l(member_since, format: '%B %d, %Y')

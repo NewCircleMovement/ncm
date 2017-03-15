@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     namespace :members do
 
     end
+    get '/edit_members' => 'epicenter#edit_members'
     get '/members' => 'epicenters#members'
     get '/tshirts' => 'epicenters#tshirts'
     post '/give_tshirt' => 'epicenters#give_tshirt'

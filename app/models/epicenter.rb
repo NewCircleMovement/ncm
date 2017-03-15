@@ -116,6 +116,19 @@ class Epicenter < Blueprint
     end
     return status
   end
+
+  def status_text
+    case self.status
+    when SEED
+      return "Frø"
+    when SPROUT
+      return "Spire"
+    when PLANT
+      return "Plante"
+    when TREE
+      return "Træ"
+    end
+  end
   
   # create new epicenter
   def make_child(epicenter_params, current_user)

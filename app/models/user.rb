@@ -54,6 +54,10 @@ class User < ActiveRecord::Base
     return Membershipcard.find_by(user_id: self.id, epicenter_id: epicenter.id)
   end
 
+  def get_tshirts(epicenter)
+    return Tshirt.where(user_id: self.id, epicenter_id: epicenter.id)
+  end
+
   def has_member_tshirt?(epicenter)
     self.tshirts.pluck(:epicenter_id).include? epicenter.id
   end

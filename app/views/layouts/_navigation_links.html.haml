@@ -1,8 +1,11 @@
+
 - if @epicenter.present?
+  %li= link_to "Medlemmer", epicenter_members_path(@epicenter)
             
 - else
-  %li
-    = link_to "Epicentre", epicenters_path
+  %li= link_to "Epicentre", epicenters_path
+  %li= link_to "Medlemmer", epicenter_members_path(@mother)
+  
 
 - if current_user
   - if @mother.users_with_tshirt('caretaker').pluck(:id).include? current_user.id

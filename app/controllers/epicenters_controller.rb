@@ -96,8 +96,13 @@ class EpicentersController < ApplicationController
     end
   end
 
+  def edit_members
+    @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+  end
+
   def members
     @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+    @members = @epicenter.users_with_tshirt('member').order(:name)
   end
 
   def tshirts

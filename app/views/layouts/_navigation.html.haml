@@ -8,6 +8,8 @@
         %span.icon-bar
         %span.icon-bar
       - if @epicenter.present? && @epicenter.id
+        = link_to root_path, class: "home-link" do
+          %i.fa.fa-chevron-circle-left
         = link_to @epicenter.name, epicenter_path(@epicenter), class: 'navbar-brand space-right'
       - else
         = link_to @mother.name, root_path, class: 'navbar-brand space-right'

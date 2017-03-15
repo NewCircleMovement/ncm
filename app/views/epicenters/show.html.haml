@@ -18,8 +18,9 @@
         %h2= @left_info.title
         %p= @left_info.body
 
-      .video-wrapper
-        = @epicenter.video.html_safe
+      - if @epicenter.video.present?
+        .video-wrapper
+          = @epicenter.video.html_safe
 
       - if @right_info
         %h2= @right_info.title
