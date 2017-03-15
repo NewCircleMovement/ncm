@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
   end
 
   def get_tshirts(epicenter)
-    return Tshirt.where(user_id: self.id, epicenter_id: epicenter.id)
+    return Tshirt.where(user_id: self.id, epicenter_id: epicenter.id).includes(:access_point).order("access_points.name desc")
   end
 
   def has_member_tshirt?(epicenter)
