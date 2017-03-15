@@ -1,5 +1,5 @@
 
-- if @epicenter.present?
+- if @epicenter.present? and @epicenter.id
   %li= link_to "Medlemmer", epicenter_members_path(@epicenter)
             
 - else

@@ -1,18 +1,24 @@
 = simple_form_for @epicenter do |f|
-  = f.input :name
-  = f.input :tagline
-  = f.input :description
+  .form-group
+    = f.input :name, input_html: { :class => 'form-control' } 
+  .form-group
+    = f.input :tagline, input_html: { :class => 'form-control' } 
+  .form-group
+    = f.input :description, input_html: { :class => 'form-control' } 
+  
   .row
     .col-md-6
-      = f.input :video_url
+      .form-group
+        = f.input :video_url
     .col-md-6
-      = f.input :image
+      .form-group
+        = f.input :image
   .row
-    .col-md-4
+    .col-md-3
       = f.input :depth_members
-    .col-md-4
+    .col-md-3
       = f.input :depth_fruits
-    .col-md-4
+    .col-md-6
       = f.input :monthly_fruits_basis, :label => "Frugtræernes produktion pr. måned"
   -# temporary omitted monthly fruit basis (monthly fruits to members)
   -# TODO: move monthly fruits to "fruittype" model
