@@ -1,14 +1,20 @@
-
 - if @epicenter.present? and @epicenter.id
-  %li= link_to "Medlemmer", epicenter_members_path(@epicenter)
-            
+  - if current_user and @epicenter.has_caretaker?(current_user)
+    %li
+      = link_to edit_epicenter_path(@epicenter) do
+        %span.badge 
+          %i.fa.fa-heart
+          Caretaker
+  %li= link_to "Medlemmer", epicenter_members_path(@epicenter)      
 - else
+  - if current_user and @mother.has_caretaker?(current_user)
+    %li
+      = link_to edit_epicenter_path(@mother) do
+        %span.badge 
+          %i.fa.fa-heart
+          Caretaker
+
+
   %li= link_to "Epicentre", epicenters_path
   %li= link_to "Medlemmer", epicenter_members_path(@mother)
-  
 
-- if current_user
-  - if @mother.users_with_tshirt('caretaker').pluck(:id).include? current_user.id
-    %li= link_to "edit", edit_epicenter_path(@mother), :class => "btn btn-default"
-
-  
