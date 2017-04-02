@@ -49,8 +49,8 @@ namespace :ncm do
       growing: true, 
       manifested: true, 
       niveau: nil, 
-      depth_members: nil, 
-      depth_fruits: nil 
+      depth_members: 100, 
+      depth_fruits: 30000 
     }
 
     puts "create mother epicenter_id"
@@ -58,6 +58,7 @@ namespace :ncm do
     mother.location = location
     
     if mother.save
+      puts "mother was saved"
       mother.mother_id = mother.id
       mother.save
 
