@@ -1,31 +1,39 @@
 = simple_form_for @epicenter do |f|
   .form-group
-    = f.input :name, input_html: { :class => 'form-control' } 
+    = f.input :name, label: "Navn", input_html: { :class => 'form-control' } 
   .form-group
     = f.input :tagline, input_html: { :class => 'form-control' } 
   .form-group
-    = f.input :description, input_html: { :class => 'form-control' } 
+    = f.input :description, label: "Beskrivelse", input_html: { :class => 'form-control' } 
   
   .row
     .col-md-6
       .form-group
-        = f.input :video_url
+        = f.input :video_url, label: "Link til projekt video, e.g. youtube"
     .col-md-6
       .form-group
-        = f.input :image
+        = f.input :image, label: "Baggrundsbillede (optimalt format: 250px høj, og fuld bredde)"
   .row
     .col-md-3
-      = f.input :depth_members
+      = f.input :depth_members, label: "Minimum antal medlemmer", input_html: { :class => 'form-control', :value => @depth_members }
     .col-md-3
-      = f.input :depth_fruits
-    .col-md-6
-      = f.input :monthly_fruits_basis, :label => "Frugtræernes produktion pr. måned"
-  -# temporary omitted monthly fruit basis (monthly fruits to members)
-  -# TODO: move monthly fruits to "fruittype" model
-  %span.help-block Den frugt som alle medlemmer får hver måned fra deres træ
+      -# TODO ##42: minimum frutis should come from epicenter's mother's fruit
+      -# #{@epicenter.mother_fruit.name}
+      = f.input :depth_fruits, label: "Minimum antal vanddråber", input_html: { :class => 'form-control', :value => @depth_fruits } 
+
+    - unless action_name == "new"
+      .col-md-6
+        = f.input :monthly_fruits_basis, :label => "Frugtræernes produktion pr. måned"
+        %span.help-block Den frugt som alle medlemmer får hver måned fra deres træ
   
   = f.submit "Gem", :class => 'btn btn-primary'
   - if action_name == 'new'
     = link_to "Fortryd", :back, class: "btn btn-default"
   - else
-    = link_to "Fortryd", edit_epicenter_path(@epicenter), class: "btn btn-default"
+    = link_to "Fortryd", epicenters_path, class: "btn btn-default"
+
+-# %i.fa.fa-info-circle{"data-placement" => "top", "data-toggle" => "tooltip", :href => "#", :title => "Hooray!"}
+
+<script>
+$(document).ready(function(){$('[data-toggle="tooltip"]').tooltip();});
+</script>

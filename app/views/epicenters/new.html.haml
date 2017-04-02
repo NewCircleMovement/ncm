@@ -4,4 +4,21 @@
     .col-md-8
       .well
         = render :partial => "form"
-  
+    .col-md-4
+      .well
+        %h3.header 
+          Hvornår får dit projekt støtte?
+        %p
+          Dit projekt får støtte i det øjeblik din "epicenter spire" bryder igennem jordoverfladen.
+        %p
+          Din spire bryder igennem når minimumsstøtten er opfyldt i form af 
+          %strong medlemmer
+          = "(minimum #{MIN_DEPTH_MEMBERS}) og"
+          %strong vanddråber
+          = "(minimum #{MIN_DEPTH_FRUITS})"
+          som medlemmerne giver.
+        
+        %h3 Hvad er dine minimumskrav?
+        %p Du kan sætte din egen påkrævede minimumsstøtte.
+        %p
+          Du har et fremragende projekt. Men hvornår vil du dedikere tid til at føre det ud i livet? Med andre ord, hvor stor opbakning har du og projektet brug for?

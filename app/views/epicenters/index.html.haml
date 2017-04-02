@@ -1,35 +1,61 @@
 .container.top
   .row
-    .col-md-8
-      - @epicenters.each do |epicenter|
+    - @epicenters.each do |epicenter|
+      .col-md-4
         .panel.panel-default
+          .panel-image
+            - if epicenter.image.present?
+              = image_tag(epicenter.image)
+            - elsif epicenter.mother.image.present?
+              = image_tag(epicenter.mother.image)
+            - else
+              = image_tag(@mother.image)
           .panel-body
             %h3.header
               = link_to epicenter.name, epicenter
             %p
-              %strong Status:
+              - if epicenter.tagline.present?
+                = epicenter.tagline
+              - else
+                Her kommer der en tagline
+          .panel-info
+            .info-box
+              - case epicenter.status
+                - when SEED
+                  %i.fa.fa-circle{ class: "seed" }
+                - when SPROUT
+                  %i.fa.fa-fire{ class: "sprout" }
+                - when PLANT
+                  %i.fa.fa-plant{ class: "plant" }
+                - when TREE
+                  %i.fa.fa-tree{ class: "tree" }
+              %br/
               = epicenter.status_text
-            %p
-              %strong Medlemmer:
+            .info-box
+              %i.fa.fa-users.members
+              %br/
               = epicenter.members.count
-            %p
-              %strong Frugter i frugtkurven:
-              frugter
-            %p
-              %strong Medlemsskab per måned:
-              - if epicenter.memberships.first.present?
-                = epicenter.memberships.first.monthly_fee
-              = epicenter.mother.fruittype.name
+            .info-box
+              %i.fa.fa-tint.waterdrop
+              %br/
+              = epicenter.fruitbasket.fruit_amount( epicenter.mother.fruittype ) || 0
 
+          .clearfix
+          .panel-body
+            .progress
+              .progress-bar.progress-bar-basic{ :style => "width: #{epicenter.progress}%" }
+
+            = link_to "Vis mere", epicenter_path( epicenter ), :class => 'btn btn-danger'
+            -# - if current_user
+            -#   - if epicenter.has_member?( current_user )
+            -#     = link_to "Rediger medlemskab", epicenter_subscriptions_path( epicenter ), :class => 'btn btn-danger'
+            -#   - else
+            -#     = link_to "Bliv medlem", new_epicenter_subscription_path( epicenter ), :class => 'btn btn-primary'
+            -# - else
+            -#   = link_to "Bliv medlem", new_epicenter_subscription_path( epicenter ), :class => 'btn btn-primary'
             - if current_user
               - if epicenter.has_member?( current_user )
-                = link_to "Rediger medlemskab", epicenter_subscriptions_path( epicenter ), :class => 'btn btn-danger'
-              - else
-                = link_to "Bliv medlem", new_epicenter_subscription_path( epicenter ), :class => 'btn btn-primary'
-            - else
-              = link_to "Bliv medlem", new_epicenter_subscription_path( epicenter ), :class => 'btn btn-primary'
-              -# = link_to "Bliv medlem", new_user_registration_path, :class => 'btn btn-primary'
-            - if current_user
+                Du er medlem  
               - if epicenter.users_with_tshirt('caretaker').pluck(:id).include? current_user.id
-                = link_to "edit", edit_epicenter_path(epicenter), :class => "btn btn-default"
+                = link_to "edit", edit_epicenter_path(epicenter), :class => "btn btn-default pull-right"
     .col-md-4

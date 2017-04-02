@@ -28,6 +28,12 @@ class Epicenter < Blueprint
 
   before_destroy :test_if_ncm
 
+  validates :name, :depth_members, :depth_fruits, :presence => true
+  validates :depth_members,
+    numericality: { only_integer: true, greater_than: 99 }
+  validates :depth_fruits, 
+    numericality: { only_integer: true, greater_than: 29999 }
+
   belongs_to :mother, :class_name => "Epicenter", :foreign_key => 'mother_id'
   has_many :children, :class_name => "Epicenter", :foreign_key => 'mother_id', :dependent => :destroy
 
@@ -128,6 +134,16 @@ class Epicenter < Blueprint
     when TREE
       return "Træ"
     end
+  end
+
+  def progress
+    progress_members = [self.members.count.to_f / self.depth_members, 1].min
+
+    collected_fruits = self.fruitbasket.fruit_amount( self.mother_fruit )
+    progress_fruits = [collected_fruits.to_f / self.depth_fruits, 1].min
+
+    progress = ((progress_members + progress_fruits) / 2 * 100).to_i
+    return progress
   end
   
   # create new epicenter
@@ -337,6 +353,7 @@ class Epicenter < Blueprint
   end
 
 
+  ## does not work in "new" action because mother is not known
   def mother_fruit
     fruit = nil
     if self == Epicenter.grand_mother
@@ -344,7 +361,6 @@ class Epicenter < Blueprint
     else
       fruit = self.mother.fruittype
     end
-    puts "----------------- returning this fruittype", fruit
     return fruit
   end
 

@@ -25,6 +25,7 @@ class EpicentersController < ApplicationController
   before_action :authenticate_user!, only: [:new, :edit, :update]
   before_action :set_epicenter, only: [:edit, :update, :show, :join_epicenter, :leave_epicenter]
 
+
   before_filter :get_mother
   before_filter :has_edit_permission, only: [:edit, :update]
 
@@ -47,14 +48,18 @@ class EpicentersController < ApplicationController
 
   def new
     @epicenter = Epicenter.new
+    set_minimum_requirements(@epicenter)
   end 
+
+  def edit
+    set_minimum_requirements(@epicenter)
+  end
 
   def create
     @mother = Epicenter.find(@mother_id)
 
     @epicenter = @mother.make_child( epicenter_params, current_user )
-    if @epicenter
-      puts edit_epicenter_path(@epicenter.id)
+    if @epicenter.save
       redirect_to edit_epicenter_path(@epicenter)
     else
       render action: 'new'
@@ -124,6 +129,20 @@ class EpicentersController < ApplicationController
 
   def get_mother
     @mother = Epicenter.grand_mother
+  end
+
+  def set_minimum_requirements(epicenter)
+    if epicenter.depth_fruits
+      @depth_fruits = @epicenter.depth_fruits 
+    else 
+      @depth_fruits = MIN_DEPTH_FRUITS
+    end
+
+    if epicenter.depth_members
+      @depth_members = @epicenter.depth_members
+    else
+      @depth_members = MIN_DEPTH_MEMBERS
+    end
   end
 
 
