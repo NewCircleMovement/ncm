@@ -28,7 +28,7 @@ class Epicenter < Blueprint
 
   before_destroy :test_if_ncm
 
-  validates :name, :depth_members, :depth_fruits, :presence => true
+  validates :name, :tagline, :depth_members, :depth_fruits, :presence => true
   validates :depth_members,
     numericality: { only_integer: true, greater_than: 99 }
   validates :depth_fruits, 
