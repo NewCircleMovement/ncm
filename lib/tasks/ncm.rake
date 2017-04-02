@@ -43,7 +43,8 @@ namespace :ncm do
     params = {  
       name: "New Circle Movement",
       slug: "new_circle_movement",
-      description: "Mother", 
+      description: "Mother",
+      tagline: "Bak op om gode projekter, eller lad fællesskabet støtte dig i at gøre din drøm til virkelighed."
       video_url: "", 
       max_members: 10000, 
       growing: true, 
