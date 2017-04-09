@@ -24,16 +24,18 @@ class MembershipsController < ApplicationController
   end
 
   def new
-    @membership = Membership.new
+    @membership = @epicenter.memberships.build
+    puts "/// new membership"
+    puts @membership
   end
 
   def edit
   end
 
-
   def create
-    @membership = Membership.new(membership_params)
-    @membership.epicenter_id = @epicenter.id
+    # @membership = Membership.new(membership_params)
+    # @membership.epicenter_id = @epicenter.id
+    @membership = @epicenter.memberships.build(membership_params)
     if @membership.save
       redirect_to epicenter_memberships_path(@epicenter), notice: 'Medlemskabet blev oprettet'
     else
