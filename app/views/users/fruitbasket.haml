@@ -1,0 +1,17 @@
+= render layout: "edit_user" do
+  %h3.header Din frugtkurv
+  %table.table
+    %thead
+      %tr
+        %th Epicenter
+        %th Frugttype
+        %th Månedlig tilførsel
+        %th Beholdning
+    %tbody
+      - @user.memberships.each do |membership|
+        %tr
+          %td
+            = link_to membership.epicenter.name, membership.epicenter
+          %td= membership.epicenter.fruittype.name
+          %td= membership.monthly_gain
+          %td= current_user.fruitbasket.fruit_amount( membership.epicenter.fruittype )

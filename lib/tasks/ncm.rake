@@ -92,6 +92,7 @@ namespace :ncm do
       )
 
       # create stripe plans
+      puts "Create stripe plans"
       STRIPE_PLANS.each do |plan|
         plan_exists = Stripe::Plan.retrieve(plan[:id])
         if not plan_exists
@@ -105,7 +106,8 @@ namespace :ncm do
       fruitbag = Fruitbag.create(:fruitbasket_id => fruitbasket.id)
       
       puts "create fruittype - kroner"
-      fruittype_kr = Fruittype.create(:name => 'kroner', :monthly_decay => 0.0, :epicenter_id => nil)
+      fruittype_kr = Fruittype.new(:name => 'kroner', :monthly_decay => 0.0, :epicenter_id => nil)
+      fruittype_kr.save(validate: false) # ensure existence of KRONER 
 
       puts "create fruittype - vanddråber"
       fruittype_ncm = Fruittype.create(:name => 'vanddråber', :monthly_decay => 0.1, :epicenter_id => mother.id)

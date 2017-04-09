@@ -36,7 +36,7 @@
               %span.caret
             %ul.dropdown-menu
               %li
-                %a{:href => "#"} Min profil
+                = link_to "Min profil", edit_user_path(current_user)
               %li
                 = link_to "Mit medlemsskab", epicenter_subscriptions_path(@mother)
               %li.divider{:role => "separator"}

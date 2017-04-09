@@ -27,12 +27,10 @@
         %span.help-block Den frugt som alle medlemmer får hver måned fra deres træ
   
   = f.submit "Gem", :class => 'btn btn-primary'
-  - if action_name == 'new'
-    = link_to "Fortryd", :back, class: "btn btn-default"
-  - else
-    = link_to "Fortryd", epicenters_path, class: "btn btn-default"
-
--# %i.fa.fa-info-circle{"data-placement" => "top", "data-toggle" => "tooltip", :href => "#", :title => "Hooray!"}
+  -# - if action_name == 'new'
+  -#   = link_to "Fortryd", :back, class: "btn btn-default"
+  -# - else
+  -#   = link_to "Fortryd", epicenters_path, class: "btn btn-default"
 
 <script>
 $(document).ready(function(){$('[data-toggle="tooltip"]').tooltip();});

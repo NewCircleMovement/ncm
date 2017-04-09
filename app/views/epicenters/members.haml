@@ -4,21 +4,46 @@
       Medlemmer
       %span.label.label-primary
         = @members.count
-    %table.table.table-stribed
-      %thead
-        %tr
-          %th #
-          %th Navn
-          %th Roller
-          %th Medlem siden
-      %body
-        - @members.each_with_index do |user, index|
-          %tr
-            %td= index + 1
-            %td= user.name
-            %td
-              - user.get_tshirts(@epicenter).each do |tshirt|
-                %span.label.label-primary= tshirt.access_point.name
-            %td
-              - member_since = user.get_membershipcard(@epicenter).created_at
-              = l(member_since, format: '%B %d, %Y')
+
+    .row
+      - @members.each do |user|
+        .col-md-4
+          .panel.panel-default.panel-user
+            .panel-image-left
+              image
+            .panel-info-right
+              %h4
+                - if user.first_name.present? and user.last_name.present?
+                  = "#{user.first_name} #{user.last_name}"
+                - else
+                  = user.name
+              %p.grey
+                %small 
+                  Medlem siden:
+                  - member_since = user.get_membershipcard(@epicenter).created_at
+                  = l(member_since, format: '%B %d, %Y')
+              %p
+                - user.get_tshirts(@epicenter).each do |tshirt|
+                  - if tshirt.access_point.name != 'member'
+                    %span.label.label-primary
+                      = tshirt.access_point.name
+            
+
+    -# %table.table.table-stribed
+    -#   %thead
+    -#     %tr
+    -#       %th #
+    -#       %th Navn
+    -#       %th Roller
+    -#       %th Medlem siden
+    -#   %body
+    -#     - @members.each_with_index do |user, index|
+    -#       %tr
+    -#         %td= index + 1
+    -#         %td= user.name
+    -#         %td
+    -#           - user.get_tshirts(@epicenter).each do |tshirt|
+    -#             %span.label.label-primary= tshirt.access_point.name
+    -#         %td
+    -#           - member_since = user.get_membershipcard(@epicenter).created_at
+    -#           = l(member_since, format: '%B %d, %Y')

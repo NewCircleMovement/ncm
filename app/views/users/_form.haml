@@ -1,0 +1,16 @@
+= simple_form_for @user do |f|
+  .row
+    .col-md-6
+      .form-group
+        = f.input :first_name, label: "Fornavn", input_html: { :class => 'form-control' } 
+    .col-md-6
+      .form-group
+        = f.input :last_name, label: "Efternavn", input_html: { :class => 'form-control' } 
+    .col-md-12
+      .form-group
+        = f.input :profile_text, label: "Profil tekst", input_html: { :class => 'form-control' } 
+      -# .form-group
+      -#   = f.input :image, label: "Profilbillede"
+
+
+      = f.submit "Gem", :class => 'btn btn-primary'
