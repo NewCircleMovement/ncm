@@ -1,6 +1,18 @@
 
 namespace :ncm do
 
+  desc "harvest and engage"
+  task :harvest_and_engage => :environment do
+    Time.zone = 'Copenhagen'
+    today = Date.today
+    
+    if today == today.end_of_month
+      Epicenter.grand_mother.harvest_time
+      Epicenter.grand_mother.engagement_time
+    end
+
+  end
+
   desc "Make new circle movement epicenter"
   task :make_mother => :environment do
     STRIPE_PLANS = [
