@@ -1,4 +1,50 @@
-.container
-  <h3>User</h3>
-  <p>Name: <%= @user.name if @user.name %></p>
-  <p>Email: <%= @user.email if @user.email %></p>
+.container.top
+  .row
+    .col-md-4
+      - if @user.image.present?
+        = image_tag(@user.image_url(:profile))
+      - else
+        %i.fa.fa-user
+    .col-md-8
+      %h1.header
+        - if @user.first_name.present? and @user.last_name.present?
+          = "#{@user.first_name} #{@user.last_name}"
+        - else
+          = @user.name
+      %p.grey
+        %small 
+          Medlem siden:
+          - member_since = @user.get_membershipcard(@mother).created_at
+          = l(member_since, format: '%B %d, %Y')
+      %hr/
+      %p
+        %strong Profil tekst
+      - if @user.profile_text.present?
+        - if @show_profile
+          = @user.profile_text
+        - else
+          Du skal være medlem af mindst et af de samme epicentre som
+          = @user.name
+          for at læse profilen (udover New Circle Movement)
+
+      - else
+        %p 
+          - if @user == current_user
+            Du
+          - else
+            = @user.name
+          har endnu ikke skrevet en profil
+
+
+      %hr/
+      %p
+        %strong Medlemskaber
+      - @user.memberships.each do |membership|
+        %p
+          = link_to membership.epicenter.name, membership.epicenter
+      -#   - user.get_tshirts(@epicenter).each do |tshirt|
+      -#     - if tshirt.access_point.name != 'member'
+      -#       %span.label.label-primary
+      -#         = tshirt.access_point.name
+%hr/
+

@@ -9,8 +9,8 @@
     .col-md-12
       .form-group
         = f.input :profile_text, label: "Profil tekst", input_html: { :class => 'form-control' } 
-      -# .form-group
-      -#   = f.input :image, label: "Profilbillede"
-
+      .form-group
+        = f.input :image, label: "Profilbillede"
+      -# 320
 
       = f.submit "Gem", :class => 'btn btn-primary'

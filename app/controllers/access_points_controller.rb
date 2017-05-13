@@ -28,7 +28,7 @@ class AccessPointsController < ApplicationController
     @access = AccessPoint.new(access_point_params)
     @access.location_id = @location.id
     if @access.save
-      redirect_to epicenter_access_points_path(@epicenter), notice: 'Access point blev oprettet'
+      redirect_to epicenter_access_points_path(@epicenter), notice: 'Rollen blev oprettet'
     else
       render action: 'new'
     end
@@ -37,7 +37,7 @@ class AccessPointsController < ApplicationController
 
   def update
     if @access.update(access_point_params)
-      redirect_to epicenter_access_points_path(@epicenter), notice: 'Access point blev opdateret.'
+      redirect_to epicenter_access_points_path(@epicenter), notice: 'Rollen blev opdateret.'
     else
       render action: 'edit'
     end
@@ -60,7 +60,7 @@ class AccessPointsController < ApplicationController
     end
 
     def access_point_params
-      params.require(:access_point).permit(:name, :monthly_decay, :location_id)
+      params.require(:access_point).permit(:name, :menu_item, :menu_title, :profile, :monthly_decay, :location_id)
     end
 
 end

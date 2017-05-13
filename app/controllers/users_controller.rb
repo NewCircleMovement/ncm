@@ -16,6 +16,10 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  name                   :string
+#  first_name             :string
+#  last_name              :string
+#  image                  :string
+#  profile_text           :text
 #
 
 class UsersController < ApplicationController
@@ -30,6 +34,15 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+
+    if @user == current_user
+      @show_profile = true
+    else
+      profile_memberships = @user.epicenters.map(&:id).uniq
+      users_memberships = current_user.epicenters.map(&:id).uniq
+      @show_profile = (profile_memberships & users_memberships).count >= 2
+    end
+    
   end
 
   def edit

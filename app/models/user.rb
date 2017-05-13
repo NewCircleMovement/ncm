@@ -16,10 +16,14 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  name                   :string
+#  first_name             :string
+#  last_name              :string
+#  image                  :string
+#  profile_text           :text
 #
 
 class User < ActiveRecord::Base
-  mount_uploader :image, ImageUploader
+  mount_uploader :image, ImageUploaderUser
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

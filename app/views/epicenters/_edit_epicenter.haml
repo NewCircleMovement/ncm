@@ -6,7 +6,7 @@
       %ul.nav.nav-pills.nav-stacked
         %li{ class: "#{controller_name == 'epicenters' && action_name != 'members' && action_name != 'tshirts' ? 'active' : ''}" }= link_to "Epicenter", edit_epicenter_path(@epicenter)
         %li{ class: "#{controller_name == 'fruittypes' ? 'active' : ''}" }= link_to "Frugttype", epicenter_fruittypes_path(@epicenter)
-        %li{ class: "#{controller_name == 'access_points' ? 'active' : ''}" }= link_to "Access points", epicenter_access_points_path(@epicenter)
+        %li{ class: "#{controller_name == 'access_points' ? 'active' : ''}" }= link_to "Roller", epicenter_access_points_path(@epicenter)
         - if @epicenter.fruittype.present?
           %li{ class: "#{controller_name == 'memberships' ? 'active' : ''}" }= link_to "Medlemskaber", epicenter_memberships_path(@epicenter)
         %li{ class: "#{action_name == 'members' ? 'active' : ''}" }= link_to "Medlemmer", epicenter_members_path(@epicenter)

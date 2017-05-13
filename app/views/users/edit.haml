@@ -15,6 +15,13 @@
       - else
         %i.fa.fa-ban.space-right 
         Intet navn angivet
+
+      %hr/
+      - if @user.image.present?
+        = image_tag(@user.image_url(:thumbnail))
+      - else
+        %i.fa.fa-ban.space-right 
+        Intet foto
         
       %hr/
       %a.btn.btn-info{"aria-controls" => "settings", "data-toggle" => "tab", :href => "#settings", :role => "tab"} Ret oplysninger

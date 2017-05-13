@@ -18,6 +18,8 @@
 #  mother_id            :integer
 #  monthly_fruits_basis :integer          default(100)
 #  slug                 :string
+#  image                :string
+#  tagline              :string
 #
 
 class EpicentersController < ApplicationController
@@ -106,8 +108,23 @@ class EpicentersController < ApplicationController
   end
 
   def members
+    puts "-----------------------------------------------------"
+    puts params
     @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
-    @members = @epicenter.users_with_tshirt('member').order(:name)
+    
+    if tshirt_name = params['tshirt']
+      if params['title']
+        @title = params['title']
+      else
+        @title = tshirt_name
+      end
+    else
+      tshirt_name = 'member'
+      @title = 'Medlemmer'
+    end
+    @members = @epicenter.users_with_tshirt( tshirt_name ).where.not(:image => nil).order(:name)
+    @nophoto = @epicenter.users_with_tshirt( tshirt_name ).where(:image => nil).order(:name)  
+    
   end
 
   def tshirts

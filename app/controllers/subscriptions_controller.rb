@@ -47,8 +47,9 @@ class SubscriptionsController < ApplicationController
       token = params[:stripeToken]
 
       member = current_user.get_member( membershipcard )
-      
+
       if member # already has membershipcard with payment info
+        puts "using old membership card"
         if current_user.update_card( member, token )
           begin
             # first create active subscription to get payment
@@ -74,6 +75,7 @@ class SubscriptionsController < ApplicationController
         end
       else # create new customer and attach to new/existing membershipcard
         begin
+          puts "new customer and new membership card"
           # first create customer, subscription and membershipcard
           stripe_customer = Stripe::Customer.create(
             card: token,
@@ -101,8 +103,12 @@ class SubscriptionsController < ApplicationController
           puts "new trial subscription created"
 
           success = true
-        rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
-          flash[:danger] = "Din betaling blev desværre ikke gennemført. Prøv venligst igen"
+        rescue Stripe::InvalidRequestError => e
+          flash[:danger] = "Betalingen blev desværre ikke gennemført (Invalid Request). Prøv venligst igen"
+          puts e
+        rescue Stripe::APIConnectionError => e
+          flash[:danger] = "Betalingen blev ikke gennemført på grund af netforbindelsen. Prøv venligst igen"
+          puts e
         end
       end
     

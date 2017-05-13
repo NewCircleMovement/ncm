@@ -18,13 +18,15 @@
 #  mother_id            :integer
 #  monthly_fruits_basis :integer          default(100)
 #  slug                 :string
+#  image                :string
+#  tagline              :string
 #
 
 # niveau "kan måske slettes... kan evt. sættes af location"
 require 'blueprint'
 
 class Epicenter < Blueprint
-  mount_uploader :image, ImageUploader
+  mount_uploader :image, ImageUploaderEpicenter
 
   before_destroy :test_if_ncm
 

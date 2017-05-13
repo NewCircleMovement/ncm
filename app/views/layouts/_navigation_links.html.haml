@@ -5,7 +5,10 @@
         %span.badge 
           %i.fa.fa-heart
           Caretaker
-  %li= link_to "Medlemmer", epicenter_members_path(@epicenter)      
+  %li= link_to "Medlemmer", epicenter_members_path(@epicenter)
+  - @epicenter.location.access_points.where(:menu_item => true).each do |item|
+    %li
+      = link_to item.menu_title, epicenter_members_path(@epicenter, :tshirt => item.name, :title => item.menu_title)
 
 - else
   - if current_user and @mother.has_caretaker?(current_user)
@@ -17,4 +20,5 @@
 
   %li= link_to "Epicentre", epicenters_path
   %li= link_to "Medlemmer", epicenter_members_path(@mother)
+
 

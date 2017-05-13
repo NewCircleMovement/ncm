@@ -1,4 +1,4 @@
-class ImageUploader < CarrierWave::Uploader::Base
+class ImageUploaderUser < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
@@ -30,8 +30,12 @@ class ImageUploader < CarrierWave::Uploader::Base
   # end
 
   # Create different versions of your uploaded files:
-  version :panel do
-    process resize_to_fit: [358, 92]
+  version :thumbnail do
+    process resize_to_fill: [100, 100]
+  end
+
+  version :profile do
+    process :resize_to_fill => [340, 340]
   end
 
   # Add a white list of extensions which are allowed to be uploaded.
