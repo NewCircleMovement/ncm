@@ -18,6 +18,8 @@
 #  mother_id            :integer
 #  monthly_fruits_basis :integer          default(100)
 #  slug                 :string
+#  image                :string
+#  tagline              :string
 #
 
 # niveau "kan måske slettes... kan evt. sættes af location"
@@ -33,8 +35,11 @@ class Epicenter < Blueprint
 
   has_many :users, :through => :tshirts
   has_many :tshirts, :dependent => :destroy
+  has_many :epipages, :dependent => :destroy
   has_many :memberships
   has_many :information, as: :owner
+  has_many :resources, as: :owner
+
 
   has_one :fruittype
   has_one :fruitbasket, as: :owner, :dependent => :destroy
@@ -175,12 +180,13 @@ class Epicenter < Blueprint
     # 4: and harvest must be larger than other monthly engagements (of the same mother)
     monthly_mother_harvest = self.mother.get_membership_for( user ).monthly_gain
     monthly_epicenter_price = membership.monthly_fee
-    monthly_other_engagements = user.sum_of_all_engagements(self.mother, exception=self)
-    enough_engagement = ( monthly_mother_harvest >= monthly_epicenter_price + monthly_other_engagements )
+    monthly_current_engagements = user.sum_of_all_engagements(self.mother.fruittype)
+    enough_engagement = ( monthly_mother_harvest >= monthly_epicenter_price + monthly_current_engagements )
       
-    puts "Monthly harvest", monthly_mother_harvest
+    puts "Monthly mother harvest", monthly_mother_harvest
     puts "Monthly price for new membership", monthly_epicenter_price
-    puts "Monthly price for other engagements", monthly_other_engagements
+    puts "Monthly price for other engagements", monthly_current_engagements
+    
 
     # overfør frugt fra bruger til epicenter
     if enough_fruit && enough_engagement
@@ -188,6 +194,7 @@ class Epicenter < Blueprint
       result = true
     end
     return result
+
   end
 
 

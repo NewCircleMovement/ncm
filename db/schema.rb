@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170312160549) do
+ActiveRecord::Schema.define(version: 20170722144451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,13 @@ ActiveRecord::Schema.define(version: 20170312160549) do
     t.string   "slug"
     t.string   "image"
     t.string   "tagline"
+  end
+
+  create_table "epipages", force: :cascade do |t|
+    t.string   "menu_title"
+    t.integer  "epicenter_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "fruitbags", force: :cascade do |t|
@@ -85,6 +92,8 @@ ActiveRecord::Schema.define(version: 20170312160549) do
     t.text     "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "kind"
+    t.string   "slug"
   end
 
   create_table "locations", force: :cascade do |t|
@@ -133,6 +142,18 @@ ActiveRecord::Schema.define(version: 20170312160549) do
     t.string   "payment_id"
     t.integer  "monthly_gain"
     t.text     "profile"
+  end
+
+  create_table "resources", force: :cascade do |t|
+    t.string   "kind"
+    t.boolean  "bookable"
+    t.string   "title"
+    t.text     "body"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "calender_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "tshirts", force: :cascade do |t|

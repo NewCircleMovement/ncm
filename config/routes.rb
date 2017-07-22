@@ -9,14 +9,17 @@ Rails.application.routes.draw do
       get "/cancel_change" => "subscriptions#cancel_change"
     end
 
+    resources :epipages
     resources :memberships
     resources :fruittypes
     resources :access_points
     resources :information
+    resources :resources
     
     namespace :members do
 
     end
+
     get '/members' => 'epicenters#members'
     get '/tshirts' => 'epicenters#tshirts'
     post '/give_tshirt' => 'epicenters#give_tshirt'

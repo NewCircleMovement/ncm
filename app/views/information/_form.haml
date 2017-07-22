@@ -2,10 +2,13 @@
 
 = simple_form_for [@epicenter, @info] do |f|
   .row
-    .col-md-10
+    .col-md-2
+      = f.input :kind, label: "Type", :collection => ['Text', 'Url', 'Video', 'Menu']
+    .col-md-8
       = f.input :title, label: "Titel"
     .col-md-2
       = f.input :position, label: "Position"
+  = f.input :string, label: "Stuff"
   = f.input :body, label: "Indhold"
   = f.submit "Gem", class: 'btn btn-primary'
   - if action_name == 'new'

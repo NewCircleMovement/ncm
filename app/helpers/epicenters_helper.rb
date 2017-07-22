@@ -18,6 +18,8 @@
 #  mother_id            :integer
 #  monthly_fruits_basis :integer          default(100)
 #  slug                 :string
+#  image                :string
+#  tagline              :string
 #
 
 module EpicentersHelper

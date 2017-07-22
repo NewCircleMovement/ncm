@@ -100,9 +100,20 @@ class User < ActiveRecord::Base
   end
 
 
-  def sum_of_all_engagements(epicenter, exception=nil)
+  def all_memberships_of_fee_fruittype(fruittype)
+    memberships = []
+    self.memberships.each do |membership|
+      if membership.monthly_fee_fruittype == fruittype
+        memberships.push(membership)
+      end
+    end
+    return memberships
+  end
+
+
+  def sum_of_all_engagements(fruittype)
     result = 0
-    memberships = self.all_memberships(epicenter, exception)
+    memberships = self.all_memberships_of_fee_fruittype(fruittype)
     memberships.each do |membership|
       result += membership.monthly_fee
     end

@@ -18,7 +18,7 @@ development:
   encoding: unicode
   database: ncm_development
   pool:     5
-  username: ncm
+  username: 
   password:
   template: template0
 
@@ -46,7 +46,7 @@ test:
   encoding: unicode
   database: ncm_test
   pool:     5
-  username: ncm
+  username: 
   password:
   template: template0
 
@@ -56,6 +56,6 @@ production:
   encoding: unicode
   database: ncm_production
   pool:     5
-  username: ncm
+  username: 
   password:
   template: template0

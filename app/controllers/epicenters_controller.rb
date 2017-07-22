@@ -18,6 +18,8 @@
 #  mother_id            :integer
 #  monthly_fruits_basis :integer          default(100)
 #  slug                 :string
+#  image                :string
+#  tagline              :string
 #
 
 class EpicentersController < ApplicationController
@@ -43,6 +45,7 @@ class EpicentersController < ApplicationController
   def show
     @left_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:left] ).first
     @right_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:right] ).first
+    @menu_items = @epicenter.information.where(:kind => 'Menu')
   end
 
   def new

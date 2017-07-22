@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: information
+#
+#  id         :integer          not null, primary key
+#  owner_id   :integer
+#  owner_type :string
+#  string     :string
+#  position   :integer
+#  title      :string
+#  body       :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class InformationController < ApplicationController
   before_action :set_epicenter
   before_action :set_info, only: [:edit, :update, :destroy]
@@ -8,6 +23,7 @@ class InformationController < ApplicationController
   end
 
   def show
+    @menu_items = @epicenter.information.where(:kind => 'Menu')
   end
 
   def new
@@ -19,6 +35,7 @@ class InformationController < ApplicationController
 
   def create
     @info = @epicenter.information.build(information_params)
+    @info.slug = @info.title.parameterize
     if @info.save
       redirect_to epicenter_information_index_path(@epicenter), notice: 'Informationen blev oprettet'
     else
@@ -27,6 +44,7 @@ class InformationController < ApplicationController
   end
 
   def update
+
     if @info.update(information_params)
       redirect_to epicenter_information_index_path(@epicenter), notice: 'Informationen blev opdateret.'
     else
@@ -48,11 +66,11 @@ class InformationController < ApplicationController
     end
 
     def set_info
-      @info = Information.find(params[:id])
+      @info = Information.find_by(slug: params[:id])
     end
 
     def information_params
-      params.require(:information).permit(:title, :body, :position)
+      params.require(:information).permit(:title, :body, :position, :kind)
     end
 
 end

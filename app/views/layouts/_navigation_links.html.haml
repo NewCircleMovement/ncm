@@ -1,5 +1,9 @@
 - if @epicenter.present?
-            
+  - if @menu_items
+    - @menu_items.each do |menu|
+      %li= link_to menu.title, epicenter_information_path(@epicenter, menu)
+  / %li
+  /   = link_to "Medlemmer", epicenter_users_path
 - else
   %li
     = link_to "Epicentre", epicenters_path
@@ -8,4 +12,3 @@
   - if @mother.users_with_tshirt('caretaker').pluck(:id).include? current_user.id
     %li= link_to "edit", edit_epicenter_path(@mother), :class => "btn btn-default"
 
-  
