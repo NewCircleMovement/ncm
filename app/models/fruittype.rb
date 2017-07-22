@@ -19,6 +19,12 @@ class Fruittype < ActiveRecord::Base
   after_create :update_epicenter_fruitbag
   after_update :update_epicenter_fruitbag
 
+  validates :name, :presence => true
+  validates :monthly_decay, 
+    presence:true, 
+    numericality: { only_float: true, greater_than: 0 }, 
+    :inclusion => { :in => 0..1 }
+
   belongs_to :epicenter
 
   # TODO: do we need this function

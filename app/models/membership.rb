@@ -20,7 +20,10 @@ Users can obtain a membership of any epicenter through membershipcards
 """
 
 class Membership < ActiveRecord::Base
-  validates :name, :monthly_fee, :presence => true
+  validates :name, :presence => true
+  validates :monthly_fee, :monthly_gain, 
+    presence:true, 
+    numericality: {only_integer: true, greater_than: 0}
 
   has_many :membershipcards
   has_many :users, :through => :membershipcards

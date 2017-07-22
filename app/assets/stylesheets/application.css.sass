@@ -17,6 +17,7 @@
 body
   padding-top: 50px
 
+
 .btn, .nav-pills > li > a, .well, .alert
   border-radius: 0
 
@@ -26,6 +27,16 @@ body
 
 .navbar
   box-shadow: 0 2px 5px #111E0D
+  .home-link
+    color: white
+    float: left
+    line-height: 50px
+    height: 50px
+    font-size: 25px
+    margin-right: 15px
+    color: darken(#DB6837, 15)
+    &:hover
+      color: white
   
 
 .container.top
@@ -47,6 +58,27 @@ body
   margin-bottom: 0
 
 // changes to bootstrap
+$waterdrop: #4784C9
+$seed: #66494C
+$sprout: lighten($seed, 20)
+$plant: #ABD377
+$tree: darken($plant, 20)
+$members: #E27D20
 
+.waterdrop
+  color: $waterdrop
+.seed
+  color: $seed
+.sprout
+  color: $sprout
+.plant
+  color: $plant
+.tree
+  color: $tree
+.members
+  color: $members
+.progress-bar-basic
+  color: #3B5B86
+  background: #3B5B86
 .panel, .form-control
   border-radius: 0

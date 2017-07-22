@@ -21,6 +21,9 @@ ActiveRecord::Schema.define(version: 20170722144451) do
     t.string   "name"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.boolean  "menu_item"
+    t.string   "menu_title"
+    t.text     "profile"
   end
 
   create_table "epicenters", force: :cascade do |t|
@@ -179,6 +182,10 @@ ActiveRecord::Schema.define(version: 20170722144451) do
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
     t.string   "name"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "image"
+    t.text     "profile_text"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

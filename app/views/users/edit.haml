@@ -1,0 +1,33 @@
+= render layout: "edit_user" do
+
+  / Tab panes
+  .tab-content
+    #about.tab-pane.active{:role => "tabpanel"} 
+      .well
+        Her kommer der noget info om brugeren
+      
+      %hr/
+      - if @user.first_name.present? and @user.last_name.present?
+        %i.fa.fa-check.space-right 
+        %strong Navn:
+        = @user.first_name
+        = @user.last_name
+      - else
+        %i.fa.fa-ban.space-right 
+        Intet navn angivet
+
+      %hr/
+      - if @user.image.present?
+        = image_tag(@user.image_url(:thumbnail))
+      - else
+        %i.fa.fa-ban.space-right 
+        Intet foto
+        
+      %hr/
+      %a.btn.btn-info{"aria-controls" => "settings", "data-toggle" => "tab", :href => "#settings", :role => "tab"} Ret oplysninger
+      
+
+    #settings.tab-pane{:role => "tabpanel"}
+      = render :partial => "form"
+      %a{"aria-controls" => "about", "data-toggle" => "tab", :href => "#about", :role => "tab"}
+        Tilbage

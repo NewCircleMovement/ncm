@@ -1,6 +1,37 @@
-= render layout: "edit_epicenter" do
-  %h3
-    Medlemmer
-  - for user in @epicenter.users_with_tshirt('member')
-    = user.name
-    = user.email
+= render layout: "show_epicenter" do
+  .container
+    %h2
+      = @title
+      %span.label.label-primary
+        = @members.count + @nophoto.count
+
+    .row
+      - [@members, @nophoto].each do |members|
+        - members.each do |user|
+          = link_to user do
+            .col-md-4
+              .panel.panel-default.panel-user
+                .panel-image-left
+                  - if user.image.present?
+                    = image_tag(user.image_url(:thumbnail))
+                  - else
+                    .icon
+                      %i.fa.fa-user
+                  
+                .panel-info-right
+                  %h4
+                    - if user.first_name.present? and user.last_name.present?
+                      = "#{user.first_name} #{user.last_name}"
+                    - else
+                      = user.name
+                  %p.grey
+                    %small 
+                      Medlem siden:
+                      - member_since = user.get_membershipcard(@epicenter).created_at
+                      = l(member_since, format: '%B %d, %Y')
+                  %p
+                    - user.get_tshirts(@epicenter).each do |tshirt|
+                      - if tshirt.access_point.name != 'member'
+                        %span.label.label-primary
+                          = tshirt.access_point.name
+                

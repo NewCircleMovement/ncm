@@ -2,7 +2,10 @@ Rails.application.routes.draw do
   root to: 'pages#index'
   devise_for :users, controllers: { registrations: "registrations" }
   
-  resources :users
+  resources :users do
+    get '/memberships' => 'users#memberships'
+    get '/fruitbasket' => 'users#fruitbasket'
+  end
 
   resources :epicenters do
     resources :subscriptions do
@@ -20,6 +23,7 @@ Rails.application.routes.draw do
 
     end
 
+    get '/edit_members' => 'epicenter#edit_members'
     get '/members' => 'epicenters#members'
     get '/tshirts' => 'epicenters#tshirts'
     post '/give_tshirt' => 'epicenters#give_tshirt'

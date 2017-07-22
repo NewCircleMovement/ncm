@@ -1,7 +1,11 @@
 = simple_form_for [@epicenter, @access] do |f|
-  = f.input :name, label: "Navn på access point"
+  = f.input :name, label: "Navn på rollen"
+  .well
+    = f.input :menu_item, label: "Gør rollen aktiv i epicenteres menu"
+    = f.input :menu_title, label: "Menu punktets navn"
   
   = f.submit "Gem", class: 'btn btn-primary'
+  
   - if action_name == 'new'
     = link_to "Fortryd", :back, class: "btn btn-default"
 

@@ -1,4 +1,6 @@
 .container.top
+  %h1.header
+    = @epicenter.name  
   .row
     .col-md-3
       %ul.nav.nav-pills.nav-stacked
@@ -9,6 +11,9 @@
         %li{ class: "#{controller_name == 'fruittypes' ? 'active' : ''}" }= link_to "Frugttype", epicenter_fruittypes_path(@epicenter)
         
         %li{ class: "#{controller_name == 'access_points' ? 'active' : ''}" }= link_to "Access points", epicenter_access_points_path(@epicenter)
+
+        %li{ class: "#{controller_name == 'access_points' ? 'active' : ''}" }= link_to "Roller", epicenter_access_points_path(@epicenter)
+
         - if @epicenter.fruittype.present?
           %li{ class: "#{controller_name == 'memberships' ? 'active' : ''}" }= link_to "Medlemskaber", epicenter_memberships_path(@epicenter)
         
@@ -19,10 +24,26 @@
         %li{ class: "#{controller_name == 'information' ? 'active' : ''}" }= link_to "Information", epicenter_information_index_path(@epicenter)
 
       .alert.alert-danger
-        - unless @epicenter.has_member?( current_user )
-          %p Det er påkrævet at alle caretakers er medlem
-          %p
-            = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-primary'
+        %h4.header Bemærk
+        - if @epicenter.memberships.present?
+          - unless @epicenter.has_member?( current_user )
+            %p
+              %i.fa.fa-exclamation-triangle 
+              Det er påkrævet at alle caretakers er medlem
+            %p
+              = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-primary'
+        - else
+          - if @epicenter.fruittype.present?
+            %p
+              %i.fa.fa-exclamation-triangle
+              = link_to "Opret et medlemsskab", epicenter_memberships_path(@epicenter)
+              før du selv kan blive medlem
+          - else
+            %p
+              %i.fa.fa-exclamation-triangle 
+              = link_to "Opret en frugttype", epicenter_fruittypes_path(@epicenter)
+              før du kan oprette et medlemsskab
+          
 
     .col-md-9
       = yield

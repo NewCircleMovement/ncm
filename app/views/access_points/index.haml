@@ -3,16 +3,17 @@
   - if @epicenter.location.access_points.present?
     .alert.alert-success
       %i.fa.fa-check
-      Epicenteret har access points
+      Epicenteret har roller
     .row
       - for access in @epicenter.location.access_points
         .col-md-4
           .well.well-sm
             %strong= access.name
             = link_to "Ret", edit_epicenter_access_point_path(@epicenter, access)
-  -# - else
-  -#   .alert.alert-danger
-  -#     %i.fa.fa-times
-  -#     Der er ikke oprettet nogen frugttype
-  -#   = link_to "Opret frugttype", new_epicenter_fruittype_path(@epicenter), class: "btn btn-primary"
-  -#   
+  - else
+    .alert.alert-danger
+      %i.fa.fa-times
+      Der er ikke oprettet nogen frugttype
+  
+  = link_to "Opret ny rolle", new_epicenter_access_point_path(@epicenter), class: "btn btn-primary"
+    

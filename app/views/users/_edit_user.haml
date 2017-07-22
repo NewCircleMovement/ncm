@@ -1,0 +1,17 @@
+.container.top
+  %h1.header= current_user.name
+%hr/
+
+.container
+  .row
+    .col-md-3
+      %ul.nav.nav-pills.nav-stacked
+        %li{ class: "#{controller_name == 'users' && action_name == 'edit' ? 'active' : ''}" }
+          = link_to "Oplysninger", edit_user_path(current_user)
+        %li{ class: "#{controller_name == 'users' && action_name == 'memberships' ? 'active' : ''}" }
+          = link_to "Medlemskaber", user_memberships_path(current_user)
+        %li{ class: "#{controller_name == 'users' && action_name == 'fruitbasket' ? 'active' : ''}" }
+          = link_to "Frugtkurv", user_fruitbasket_path(current_user)
+        
+    .col-md-9
+      = yield

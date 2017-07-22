@@ -1,6 +1,6 @@
 = simple_form_for [@epicenter, @fruittype] do |f|
   = f.input :name, label: "Navn på frugten"
-  = f.input :monthly_decay, label: "Månedlig forfald"
+  = f.input :monthly_decay, label: "Månedlig forfald (mellem 0 og 1)"
   
   = f.submit "Gem", class: 'btn btn-primary'
   - if action_name == 'new'

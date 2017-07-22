@@ -12,12 +12,7 @@
 
 
 = render layout: "edit_epicenter" do
-  %h3.header
-    = @epicenter.name
-    %small.pull-right
-      %a{"aria-controls" => "settings", "data-toggle" => "tab", :href => "#settings", :role => "tab"} Ret
-  %div
-      
+
   / Tab panes
   .tab-content
     #about.tab-pane.active{:role => "tabpanel"} 
@@ -26,7 +21,7 @@
           = @epicenter.description
         - else
           Du mangler at give en beskrivelse af epicenteret
-      
+
       %hr/
       - if @epicenter.fruittype.present?
         %i.fa.fa-check.space-right 
@@ -51,6 +46,8 @@
       - else
         %i.fa.fa-ban.space-right
         Ikke alle caretakers er medlemmer
+      %hr/
+      %a.btn.btn-info{"aria-controls" => "settings", "data-toggle" => "tab", :href => "#settings", :role => "tab"} Ret oplysninger
       
 
     #settings.tab-pane{:role => "tabpanel"}

@@ -16,10 +16,17 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  name                   :string
+#  first_name             :string
+#  last_name              :string
+#  image                  :string
+#  profile_text           :text
 #
 
 class UsersController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_user, only: [:edit, :update, :show]
+  before_action :validate_user!, only: [:edit, :update]
+
 
   def index
     @users = User.all
@@ -27,9 +34,50 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    unless @user == current_user
-      redirect_to :back, :alert => "Access denied."
+
+    if @user == current_user
+      @show_profile = true
+    else
+      profile_memberships = @user.epicenters.map(&:id).uniq
+      users_memberships = current_user.epicenters.map(&:id).uniq
+      @show_profile = (profile_memberships & users_memberships).count >= 2
+    end
+    
+  end
+
+  def edit
+  end
+
+  def update
+    if @user.update(user_params)
+      redirect_to edit_user_path(@user), notice: 'Din profil blev opdateret.'
+    else
+      render action: 'edit'
     end
   end
+
+  def memberships
+    @user = User.find(params[:user_id])
+  end
+
+  def fruitbasket
+    @user = User.find(params[:user_id])
+  end
+
+  private
+
+    def set_user
+      @user = User.find(params[:id])
+    end
+
+    def user_params
+      params.require(:user).permit(:name, :first_name, :last_name, :profile_text, :image)
+    end
+
+    def validate_user!
+      if @user != current_user
+        redirect_to edit_user_path(current_user)
+      end
+    end
 
 end

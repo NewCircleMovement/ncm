@@ -8,6 +8,8 @@
         %span.icon-bar
         %span.icon-bar
       - if @epicenter.present? && @epicenter.id
+        = link_to root_path, class: "home-link" do
+          %i.fa.fa-chevron-circle-left
         = link_to @epicenter.name, epicenter_path(@epicenter), class: 'navbar-brand space-right'
       - else
         = link_to @mother.name, root_path, class: 'navbar-brand space-right'
@@ -34,7 +36,7 @@
               %span.caret
             %ul.dropdown-menu
               %li
-                %a{:href => "#"} Min profil
+                = link_to "Min profil", edit_user_path(current_user)
               %li
                 = link_to "Mit medlemsskab", epicenter_subscriptions_path(@mother)
               %li.divider{:role => "separator"}

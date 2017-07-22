@@ -17,8 +17,11 @@
           %ul
             - epicenter.fruitbasket.fruitbags.each do |bag|
               %li
-                %strong= bag.fruittype.name
-                = ": #{bag.amount}"
+                - if bag.fruittype.present?
+                  %strong= bag.fruittype.name
+                  = ": #{bag.amount}"
+                - else
+                  No fruittype present
 
       .col-md-6
         %h1 User info
@@ -27,8 +30,11 @@
           %ul
             - user.fruitbasket.fruitbags.each do |bag|
               %li
-                %strong= bag.fruittype.name
-                = ": #{bag.amount}"
+                - if bag.fruittype.present?
+                  %strong= bag.fruittype.name
+                  = ": #{bag.amount}"
+                - else
+                  No fruitbag
 
 
 

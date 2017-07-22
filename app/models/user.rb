@@ -16,9 +16,15 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  name                   :string
+#  first_name             :string
+#  last_name              :string
+#  image                  :string
+#  profile_text           :text
 #
 
 class User < ActiveRecord::Base
+  mount_uploader :image, ImageUploaderUser
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -52,6 +58,10 @@ class User < ActiveRecord::Base
 
   def get_membershipcard(epicenter)
     return Membershipcard.find_by(user_id: self.id, epicenter_id: epicenter.id)
+  end
+
+  def get_tshirts(epicenter)
+    return Tshirt.where(user_id: self.id, epicenter_id: epicenter.id).includes(:access_point).order("access_points.name desc")
   end
 
   def has_member_tshirt?(epicenter)
