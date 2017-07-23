@@ -1,3 +1,22 @@
 = render layout: "epicenters/edit_epicenter" do
-  
-  stuff
+  %h3.header Epicenter sider
+  %p Her kan oprette en "epicenter side". De vil fremstå som selvstændige menu-punkter på epicenteret. Epicenter sider kan have en eller flere ressourcer tilknyttet.
+  %hr/
+  = link_to "Opret ny", new_epicenter_epipage_path(@epicenter), :class => "btn btn-default"
+  %table.table.table-condensed
+    %thead
+      %tr
+        %th Titel
+        %th Url
+        %th Type
+        %th
+    %tbody
+      - @pages.each do |page|
+        %tr
+          %td= page.title
+          %td= page.slug
+          %td= page.kind
+          %td
+            = link_to "Ret", edit_epicenter_epipage_path(@epicenter, page), class: "btn btn-default"
+            = link_to "Slet", [@epicenter, page], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
+        

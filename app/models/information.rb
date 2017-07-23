@@ -11,13 +11,17 @@
 #  body       :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  kind       :string
+#  slug       :string
 #
 
 class Information < ActiveRecord::Base
   belongs_to :owner, polymorphic: true
   
   def to_param
-    self.slug.parameterize
+  	if self.slug
+    	self.slug.parameterize
+    end
 	end
   
 end

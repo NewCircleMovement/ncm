@@ -3,7 +3,7 @@
 = simple_form_for [@epicenter, @info] do |f|
   .row
     .col-md-2
-      = f.input :kind, label: "Type", :collection => ['Text', 'Url', 'Video', 'Menu']
+      = f.input :kind, label: "Type", :collection => ['Text', 'Url', 'Video']
     .col-md-8
       = f.input :title, label: "Titel"
     .col-md-2

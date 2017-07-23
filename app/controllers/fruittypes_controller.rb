@@ -54,6 +54,7 @@ class FruittypesController < ApplicationController
   private
     def set_epicenter
       @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+      @pages = @epicenter.epipages
     end
 
     def set_fruittype

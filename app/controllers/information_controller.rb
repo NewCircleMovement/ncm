@@ -11,6 +11,8 @@
 #  body       :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  kind       :string
+#  slug       :string
 #
 
 class InformationController < ApplicationController
@@ -27,6 +29,8 @@ class InformationController < ApplicationController
   end
 
   def new
+    puts "-------------------------------------"
+    puts params
     @info = @epicenter.information.build
   end
 
@@ -63,6 +67,7 @@ class InformationController < ApplicationController
 
     def set_epicenter
       @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+      @pages = @epicenter.epipages
     end
 
     def set_info

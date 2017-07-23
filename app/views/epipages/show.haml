@@ -1,0 +1,12 @@
+= render layout: "epicenters/show_epicenter" do
+  .container
+    %h2
+      = @page.title
+    %hr/
+    - if @resource
+
+      = @resource.calendar
+
+
+    - else
+      More

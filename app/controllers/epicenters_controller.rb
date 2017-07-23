@@ -27,7 +27,6 @@ class EpicentersController < ApplicationController
   before_action :authenticate_user!, only: [:new, :edit, :update]
   before_action :set_epicenter, only: [:edit, :update, :show, :join_epicenter, :leave_epicenter]
 
-
   before_filter :get_mother
   before_filter :has_edit_permission, only: [:edit, :update]
 
@@ -46,7 +45,6 @@ class EpicentersController < ApplicationController
   def show
     @left_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:left] ).first
     @right_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:right] ).first
-    @menu_items = @epicenter.information.where(:kind => 'Menu')
   end
 
   def new
@@ -112,6 +110,7 @@ class EpicentersController < ApplicationController
     puts "-----------------------------------------------------"
     puts params
     @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+    @pages = @epicenter.epipages
     
     if tshirt_name = params['tshirt']
       if params['title']
@@ -178,7 +177,9 @@ class EpicentersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_epicenter
       @epicenter = Epicenter.find_by_slug(params[:id])
+      @pages = @epicenter.epipages
     end
+
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def epicenter_params

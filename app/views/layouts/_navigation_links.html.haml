@@ -5,7 +5,11 @@
         %span.badge 
           %i.fa.fa-heart
           Caretaker
+  
   %li= link_to "Medlemmer", epicenter_members_path(@epicenter)
+  - @pages.each do |page|
+    %li= link_to page.menu_title, epicenter_epipage_path(@epicenter, page)
+  
   - @epicenter.location.access_points.where(:menu_item => true).each do |item|
     %li
       = link_to item.menu_title, epicenter_members_path(@epicenter, :tshirt => item.name, :title => item.menu_title)

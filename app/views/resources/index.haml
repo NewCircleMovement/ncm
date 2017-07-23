@@ -1,0 +1,20 @@
+= render layout: "epicenters/edit_epicenter" do
+  %h3.header Ressourcer
+  %p Her kan du oprette ressourcer til epicenteret
+  %br/
+  %table.table.table-condensed
+    %thead
+      %tr
+        %th Titel
+        %th Type
+        %th Funktioner
+    %tbody
+      - @resources.each do |resource|
+        %tr
+          %th= resource.title
+          %th
+            = link_to "Ret", edit_epicenter_resource_path(@epicenter, resource), class: "btn btn-default"
+            = link_to "Slet", [@epicenter, resource], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
+        
+
+  = link_to "Opret ny", new_epicenter_resource_path, :class => "btn btn-default"

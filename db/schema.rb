@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170722144451) do
+ActiveRecord::Schema.define(version: 20170723130746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,16 @@ ActiveRecord::Schema.define(version: 20170722144451) do
     t.boolean  "menu_item"
     t.string   "menu_title"
     t.text     "profile"
+  end
+
+  create_table "calendars", force: :cascade do |t|
+    t.time     "day_start"
+    t.time     "day_end"
+    t.float    "module_length"
+    t.boolean  "flexible"
+    t.string   "resource_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "epicenters", force: :cascade do |t|
@@ -47,10 +57,14 @@ ActiveRecord::Schema.define(version: 20170722144451) do
   end
 
   create_table "epipages", force: :cascade do |t|
+    t.string   "slug"
     t.string   "menu_title"
+    t.string   "title"
+    t.text     "body"
+    t.string   "kind",         default: "Info"
     t.integer  "epicenter_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
   create_table "fruitbags", force: :cascade do |t|
@@ -155,6 +169,13 @@ ActiveRecord::Schema.define(version: 20170722144451) do
     t.integer  "owner_id"
     t.string   "owner_type"
     t.integer  "calender_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "resources_collections", force: :cascade do |t|
+    t.integer  "epipage_id"
+    t.integer  "resource_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end

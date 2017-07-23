@@ -1,0 +1,26 @@
+%h3.header
+  = action_name == 'new' ? "Opret ny Epicenter side" : "Rediger epicenter side"
+
+= simple_form_for [@epicenter, @page] do |f|
+  .row
+    .col-md-6
+      = f.input :menu_title, label: "Menu punktets navn"
+    .col-md-6
+      = f.input :kind, label: "Type", collection: [STR_INFO, STR_RESOURCE, STR_RESOURCE_LIST], include_blank: false
+    .col-md-12
+      = f.input :title, label: "Sidens titel"
+    .col-md-12
+      = f.input :body, label: "Sidens tekst"
+    
+    = f.input :location_id, collection: @resources, label_method: :location_name, value_method: :id,label: "Location", include_blank: false, selected: @bill.location_id 
+
+  
+  = link_to "", :class => 'btn btn-default' do
+    %i.fa.fa-plus
+    Ressource
+
+
+  = f.submit "Gem", class: 'btn btn-primary'
+  - if action_name == 'new'
+    = link_to "Fortryd", :back, class: "btn btn-default"
+

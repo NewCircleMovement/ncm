@@ -7,6 +7,9 @@
 #  name        :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  menu_item   :boolean
+#  menu_title  :string
+#  profile     :text
 #
 
 class AccessPointsController < ApplicationController
@@ -53,6 +56,7 @@ class AccessPointsController < ApplicationController
     def set_epicenter
       @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
       @location = @epicenter.location
+      @pages = @epicenter.epipages
     end
 
     def set_access

@@ -8,4 +8,8 @@ MIN_DEPTH_MEMBERS = 100
 
 MEMBERSHIPCHANGE = "membershipchange"
 
+STR_INFO = "Info"
+STR_RESOURCE = "Ressource"
+STR_RESOURCE_LIST = 'Ressourceliste'
+
 INFORMATION_POSITIONS = { left: 1, right: 2 }

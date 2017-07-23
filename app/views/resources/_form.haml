@@ -1,0 +1,25 @@
+%h3.header= action_name == 'new' ? "Opret ny ressource" : "Rediger ressource"
+
+= simple_form_for [@epicenter, @resource] do |f|
+  .row
+    .col-md-2
+      = f.input :kind, label: "Type", :collection => ['Rum', 'Item']
+    .col-md-8
+      = f.input :title, label: "Titel"
+
+  .row
+    = f.simple_fields_for :calendar, @resource.calendar do |c|
+      .col-md-4
+        = c.input :day_start
+      .col-md-4
+        = c.input :day_end
+      .col-md-2
+        = c.input :module_length
+      .col-md-2
+        = c.input :flexible
+      
+
+  = f.submit "Gem", class: 'btn btn-primary'
+  - if action_name == 'new'
+    = link_to "Fortryd", :back, class: "btn btn-default"
+

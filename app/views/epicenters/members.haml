@@ -4,7 +4,7 @@
       = @title
       %span.label.label-primary
         = @members.count + @nophoto.count
-
+    %hr/
     .row
       - [@members, @nophoto].each do |members|
         - members.each do |user|

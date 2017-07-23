@@ -7,6 +7,9 @@
 #  name        :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  menu_item   :boolean
+#  menu_title  :string
+#  profile     :text
 #
 
 class AccessPoint < ActiveRecord::Base
