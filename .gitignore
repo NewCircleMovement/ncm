@@ -23,6 +23,9 @@ db/*.sqlite3
 
 # add /config/database.yml if it contains passwords
 # /config/database.yml
+config/s3.yml
+config/keys.yml
+
 
 # various artifacts
 **.war
