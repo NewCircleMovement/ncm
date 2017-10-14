@@ -1,7 +1,7 @@
-TREE = "træ"
-PLANT = "plante"
-SPROUT = "spire"
-SEED = "frø"
+TREE = "tree"
+PLANT = "plant"
+SPROUT = "sprout"
+SEED = "seed"
 
 MIN_DEPTH_FRUITS = 30000
 MIN_DEPTH_FRUITS_TRIBE = 30000

@@ -30,17 +30,18 @@
             - else
               - if @epicenter.can_accept_members?
                 %li{ :class => "#{controller_name == 'subscriptions' ? 'active' : ''}" }
-                  = link_to "Bliv medmem", new_epicenter_subscription_path( @epicenter )
+                  = link_to "Become member", new_epicenter_subscription_path( @epicenter )
               
           - else
             - if @mother.has_member?(current_user)
-              %a
-                %i.fa.fa-tint
-                = current_user.fruits(@mother)
-                = @mother.fruittype.name
+              %li
+                %a
+                  %i.fa.fa-tint
+                  = current_user.fruits(@mother)
+                  = @mother.fruittype.name
             - else
               %li{ :class => "#{controller_name == 'subscriptions' ? 'active' : ''}" }
-                = link_to "Bliv medmem", new_epicenter_subscription_path( @mother )
+                = link_to "Become member", new_epicenter_subscription_path( @mother )
 
           %li.dropdown
             %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
@@ -48,9 +49,7 @@
               %span.caret
             %ul.dropdown-menu
               %li
-                = link_to "Min profil", edit_user_path(current_user)
-              %li
-                = link_to "Mit medlemsskab", epicenter_subscriptions_path(@mother)
+                = link_to "My profile", edit_user_path(current_user)
               %li.divider{:role => "separator"}
               %li= link_to 'Log out', destroy_user_session_path, :method => :delete
         - else

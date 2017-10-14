@@ -46,24 +46,24 @@ class EventLog < ActiveRecord::Base
 		when FRUIT_TRANSFER
 			amount = event.details['value']
 			fruittype = event.details['fruittype'] || "frugter"
-			action = "overførte #{amount} #{fruittype} til"
+			action = "transferred #{amount} #{fruittype} to"
 
 		when EPICENTER_STATUS_CHANGE
 			from = event.details['from']
 			to = event.details['to']
-			action = "ændrede status fra #{from} til #{to} på"
+			action = "changed status from #{from} to #{to} in"
 
 		when NEW_MEMBERSHIP
 			membership = event.details['membership']
-			action = "er blevet #{membership} medlem af"
+			action = "is now #{membership} member of"
 
 		when MEMBERSHIP_CHANGE
 			from = event.details['from']
 			to = event.details['to']
-			action = "ændrede medlemsskab fra #{from} til #{to} i"
+			action = "changed membership from #{from} to #{to} in"
 
 		when DELETE_MEMBERSHIP
-			action = "har meldt sig ud af"
+			action = "is no longer member of"
 			
 		end
 

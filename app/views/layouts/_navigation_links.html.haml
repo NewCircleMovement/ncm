@@ -7,7 +7,7 @@
           %i.fa.fa-heart
           Caretaker
   
-  %li= link_to "Medlemmer", epicenter_members_path(@epicenter)
+  %li= link_to "Members", epicenter_members_path(@epicenter)
   - if @pages
     - @pages.each do |page|
       %li= link_to page.menu_title, epicenter_epipage_path(@epicenter, page)
@@ -24,7 +24,7 @@
           %i.fa.fa-heart
           Caretaker
 
-  %li= link_to "Epicentre", epicenters_path
-  %li= link_to "Medlemmer", epicenter_members_path(@mother)
+  %li= link_to "Epicenters", epicenters_path
+  %li= link_to "Members", epicenter_members_path(@mother)
 
 

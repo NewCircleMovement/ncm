@@ -8,8 +8,9 @@
         - if @epicenter.tagline.present?
           %p= @epicenter.tagline
 
-        - if @epicenter.can_accept_members?        
-          = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
+        - if @epicenter.can_accept_members?
+          - if current_user and not @epicenter.has_member?(current_user)
+            = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
         / / - if not @epicenter.status == SEED
         / - unless current_user.present? && current_user.get_membership(@epicenter)
         /   = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
@@ -43,36 +44,31 @@
               Støt med
               = @epicenter.mother_fruit.name
 
-      %h2 Overblik
-      %p 
-        Her finder du et overblik over 
-        = "#{@epicenter.name}s"
-        medlemmer og projekter
-      
+      %h2 Summary      
       %table.table.table-condensed
         %tr
-          %td Medlemmer
+          %td Members
           %td= @epicenter.members.count
         %tr
-          %td Realiserede projekter
+          %td Active projects
           %td= @projects_count
         %tr
-          %td Spirer
+          %td Sprouts
           %td= @sprouts_count
         %tr
-          %td Frø
+          %td Seeds
           %td= @seed_count
 
       - if @logs.present?
-        %h2 Seneste aktivitet
-        %table.table.table-condensed
+        %h2 Latest activity
+        %table.table.table-condensed.table-log
           - for log in @logs
             %tr
               %td
                 = log.description
-                %p.timestamp
+                %p.timestamp.last-element
                   = time_ago_in_words(log.created_at)
-                  siden
+                  ago
 
       %h4 
         %strong Caretakers
@@ -89,16 +85,16 @@
             %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
               %span{"aria-hidden" => "true"} ×
             %h4#myModalLabel.modal-title
-              Støt
+              Support
               = @epicenter.name
           .modal-body
             %p
               = @epicenter.name
-              er ikke klar til at modtage medlemmer endnu, men du kan vise din støtte for projektet med 
-              en engangsoverførsel af 
+              is not ready to receive members yet, but you can show your support for the project by
+              making a one-time transfer of
               = @epicenter.mother_fruit.name
             %p
-              Du har i øjeblikket
+              You currently have 
               %strong
                 = current_user.fruitbasket.fruit_amount(@epicenter.mother_fruit)
                 = @epicenter.mother_fruit.name
@@ -108,6 +104,6 @@
               = hidden_field_tag(:epicenter_id, @epicenter.id)
 
           .modal-footer
-            %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Fortryd
-            %button.btn.btn-primary{:type => "submit"} Støt nu
+            %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Cancel
+            %button.btn.btn-primary{:type => "submit"} Support
 

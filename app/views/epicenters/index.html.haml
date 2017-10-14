@@ -12,12 +12,10 @@
             - else
               = image_tag(@mother.image)
 
-
           .progress.has-tooltip{ 'data-toggle' => "tooltip", "title" => "#{number_with_precision(epicenter.progress_members, precision: 1)}% minimum members reached", 'data-placement' => 'top' }
             .progress-bar{ :style => "width: #{epicenter.progress_members}%", 'aria-valuemin' => "0", 'aria-valuemax' => "100" }
           .progress.has-tooltip{ 'data-toggle' => "tooltip", "title" => "#{number_with_precision(epicenter.progress_fruits, precision: 1)}% minimum support reached", 'data-placement' => 'top' }
             .progress-bar.progress-bar-basic{ :style => "width: #{epicenter.progress_fruits}%" }
-          
           
           .panel-body.main-info
             %h3.header
@@ -45,11 +43,11 @@
               - if epicenter.tagline.present?
                 = epicenter.tagline
               - else
-                Her kommer der en tagline
+                Tagline
           
           .clearfix
           .panel-body
-            = link_to "Vis mere", epicenter_path( epicenter ), :class => 'btn btn-danger'
+            = link_to "Show", epicenter_path( epicenter ), :class => 'btn btn-danger'
             -# - if current_user
             -#   - if epicenter.has_member?( current_user )
             -#     = link_to "Rediger medlemskab", epicenter_subscriptions_path( epicenter ), :class => 'btn btn-danger'
@@ -59,8 +57,8 @@
             -#   = link_to "Bliv medlem", new_epicenter_subscription_path( epicenter ), :class => 'btn btn-primary'
             - if current_user
               - if epicenter.has_member?( current_user )
-                Du er medlem  
+                %span.space-left-5 You are a member
               - if epicenter.users_with_tshirt('caretaker').pluck(:id).include? current_user.id
-                = link_to "edit", edit_epicenter_path(epicenter), :class => "btn btn-default pull-right"
+                = link_to "Edit", edit_epicenter_path(epicenter), :class => "btn btn-default pull-right"
           
     

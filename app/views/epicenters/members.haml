@@ -26,7 +26,7 @@
                       = user.name
                   %p.grey
                     %small 
-                      Medlem siden:
+                      Member since:
                       - member_since = user.get_membershipcard(@epicenter).created_at
                       = l(member_since, format: '%B %d, %Y')
                   %p
