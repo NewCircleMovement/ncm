@@ -11,8 +11,12 @@
               = image_tag(epicenter.mother.image)
             - else
               = image_tag(@mother.image)
-          .progress.has-tooltip{ 'data-toggle' => "tooltip", "title" => "#{epicenter.progress}% minimum support reached", 'data-placement' => 'top' }
-            .progress-bar.progress-bar-basic{ :style => "width: #{epicenter.progress}%" }
+
+
+          .progress.has-tooltip{ 'data-toggle' => "tooltip", "title" => "#{number_with_precision(epicenter.progress_members, precision: 1)}% minimum members reached", 'data-placement' => 'top' }
+            .progress-bar{ :style => "width: #{epicenter.progress_members}%", 'aria-valuemin' => "0", 'aria-valuemax' => "100" }
+          .progress.has-tooltip{ 'data-toggle' => "tooltip", "title" => "#{number_with_precision(epicenter.progress_fruits, precision: 1)}% minimum support reached", 'data-placement' => 'top' }
+            .progress-bar.progress-bar-basic{ :style => "width: #{epicenter.progress_fruits}%" }
           
           
           .panel-body.main-info

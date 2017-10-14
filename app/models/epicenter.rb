@@ -186,6 +186,18 @@ class Epicenter < Blueprint
   end
 
 
+  def progress_members
+    progress = [self.members.count.to_f / self.depth_members, 1].min * 100
+    return progress
+  end
+
+  def progress_fruits
+    collected_fruits = self.fruitbasket.fruit_amount( self.mother_fruit ) 
+    progress = [collected_fruits.to_f / self.depth_fruits, 1].min * 100
+    return progress
+  end
+  
+
   def progress
     progress_members = [self.members.count.to_f / self.depth_members, 1].min
 
