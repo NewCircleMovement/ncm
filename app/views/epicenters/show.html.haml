@@ -8,8 +8,11 @@
         - if @epicenter.tagline.present?
           %p= @epicenter.tagline
 
+        / - if not @epicenter.status == SEED
         - unless current_user.present? && current_user.get_membership(@epicenter)
           = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
+        / - else
+        /   Stuff
 
 .container
   .row

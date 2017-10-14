@@ -60,6 +60,7 @@ class EpicentersController < ApplicationController
     @mother = Epicenter.find(@mother_id)
 
     @epicenter = @mother.make_child( epicenter_params, current_user )
+
     if @epicenter.save
       redirect_to edit_epicenter_path(@epicenter)
     else
@@ -67,11 +68,24 @@ class EpicentersController < ApplicationController
     end
   end
 
+
   def update
     if @epicenter.update(epicenter_params)
-      redirect_to edit_epicenter_path(@epicenter), notice: 'Epicenteret er blevet opdateret.'
+
+      # if sowing the seed, redirect to Trin 3 (Memberships) after saving
+      if params[:sow]
+        redirect_to epicenter_memberships_path(@epicenter, :sow => true)
+      elsif params[:review]
+        redirect_to epicenter_confirm_plant_path(@epicenter)
+      else
+        redirect_to edit_epicenter_path(@epicenter), notice: 'Epicenteret er blevet opdateret.'
+      end
     else
-      render action: 'edit'
+      if params[:sow]
+        redirect_to epicenter_edit_engagement_path(@epicenter, :sow => true), notive: ''
+      else
+        render action: 'edit'
+      end
     end
   end
 
@@ -105,6 +119,21 @@ class EpicentersController < ApplicationController
   def edit_members
     @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
   end
+
+  def edit_engagement
+    @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+  end
+
+  def edit_meeting_time
+    @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+  end
+
+  def confirm_plant
+    @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+    @membership = @epicenter.memberships.first
+  end
+
+
 
   def members
     puts "-----------------------------------------------------"
@@ -167,6 +196,9 @@ class EpicentersController < ApplicationController
     
     def has_edit_permission
       if current_user
+        puts "-------------------------"
+        puts "Check permission for user", current_user.email
+        puts "And epicenter", @epicenter.name
         unless @epicenter.has_caretaker?(current_user)
           redirect_to :back, notice: "Du er ikke medlem af new circle movement"
         end
@@ -184,7 +216,8 @@ class EpicentersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def epicenter_params
       params.require(:epicenter).permit(:name, :description, :image, :tagline, :max_members, :video_url, :growing, :manifested,
-                                        :depth_fruits, :depth_members, :slug, :monthly_fruits_basis,
+                                        :size, :depth_fruits, :depth_members, :slug, :monthly_fruits_basis,
+                                        :meeting_day, :meeting_time, :meeting_week, :meeting_address, :meeting_active,
                                         fruittype_attributes: [:name, :monthly_decay],
                                         memberships_attributes: [:name, :monthly_fee, :engagement] )
     end

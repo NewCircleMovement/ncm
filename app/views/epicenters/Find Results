@@ -1,0 +1,123 @@
+Searching 1208 files for "Trin 2"
+
+/Users/me/sites/ncm/app/controllers/fruittypes_controller.rb:
+   36      @fruittype.epicenter_id = @epicenter.id
+   37      if @fruittype.save
+   38:       # if sowing the seed, redirect to Trin 2 (Opbakning) after saving
+   39        if params[:sow]
+   40          redirect_to epicenter_memberships_path(@epicenter, :sow => true)
+
+/Users/me/sites/ncm/app/views/epicenters/edit_engagement.haml:
+    7  				frø
+    8  				%span.pull-right 
+    9: 					%strong Trin 2 af 4
+   10  			%hr/
+   11  			%h4
+
+2 matches across 2 files
+
+
+Searching 1208 files for "50000"
+
+/Users/me/sites/ncm/app/assets/javascripts/epicenters.js:
+   73  				requirements = {
+   74  					members: { min: 1000, max: 10000 },
+   75: 					fruits: { min: 50000, max: 150000 }
+   76  				}
+   77  				break;
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/0Ow26lR6Q1j1LWoI4gGenXeDN5yy0iLJvPYRCohTHV8.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/2IkBSHeJQSqYBmonJFhc6D03-_4j-HzLXtu_gmYFd9o.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/FAyzhrFGAw68j2PzK7J197y9Hz2zrjugkL15CPBg6Qw.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/k49rWjkJJTjwm2TxtwZILl2n1_rOxoVyW5aTrWgHdFs.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/MscgU5GjaqJLuHCaklUWDmcCYbf1dB9xxiO8khmwTYg.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/n-yH7-dhvKZQh7uBffZEY2i-Mrvgwk-4cgueYViya8E.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/nAqjvg2rQgVe04QDnVCANrtbVYPYBxqpe4yvqh5RjxI.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/PW8qqb2iPpyfL386b3tYvG0IplzqfxDk86WzmLbTcfs.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/rB2erWghqakmz-SPVfjLgi92FtMZ6ZPYYE-b-veM3w8.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/RXh3E_0fYnWBJmTxS8uauTlQ28UI8MlLC52SKrVpQ8A.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/WBvpmqZSMAMfo6AnSJWWOzA5efeb27e0TPazwUZLz-w.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/xI62oa7uQ7XlfRKpZz6H7d2KGqNnQSZdvgykHU1TH3k.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/YpZh-fIyM3NHhE02JDgOqtxgb5T-MWR9KnI78R4NOQ4.cache:
+    <binary>
+
+/Users/me/sites/ncm/tmp/cache/assets/sprockets/v3.0/ZBZ6WTg3N9zWowE7gyUQEifdx7-Y0bbvxHuQqH-PYMg.cache:
+    <binary>
+
+29 matches across 15 files
+
+
+Searching 1216 files for "opret medlemsskaber"
+
+0 matches
+
+Searching 1216 files for "Opret medlemskaber"
+
+/Users/me/sites/ncm/app/views/memberships/_seed_header.haml:
+    7  	%hr/
+    8  	%h4 
+    9: 		%strong Opret medlemskaber
+   10  	%p
+   11  		Dit epicenter
+
+1 match in 1 file
+
+
+Searching 1216 files for "nej tak, "
+
+/Users/me/sites/ncm/app/views/epicenters/edit_meeting_time.haml:
+   20  			%p#meeting-time-choice
+   21  				%button.btn.btn-info#meeting-time-yes{ type: "button" } Ja tak
+   22: 				= link_to "Nej tak, Plant frø nu", epicenter_confirm_plant_path(@epicenter), :class => "btn btn-primary"
+   23  				%span.space-left-15
+   24  					%em Du kan gennemse dine valg inden du bekræfter
+
+1 match in 1 file
+
+
+Searching 1216 files for "nej tak, "
+
+/Users/me/sites/ncm/app/views/epicenters/edit_meeting_time.haml:
+   20  			%p#meeting-time-choice
+   21  				%button.btn.btn-info#meeting-time-yes{ type: "button" } Ja tak
+   22: 				= link_to "Nej tak, Plant frø nu", epicenter_confirm_plant_path(@epicenter), :class => "btn btn-primary"
+   23  				%span.space-left-15
+   24  					%em Du kan gennemse dine valg inden du bekræfter
+
+1 match in 1 file
+
+
+Searching 1216 files for "Du kan oprette flere "
+
+/Users/me/sites/ncm/app/views/memberships/_form.haml:
+   23          = link_to "Slet", [@epicenter, @membership], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
+   24        %span.space-left-15
+   25:         %em Du kan ændre eller oprette flere medlemskaber senere
+   26      %p#message
+   27      %div#back-button{ style: "display: none"}
+
+1 match in 1 file

@@ -20,10 +20,15 @@ Rails.application.routes.draw do
     resources :resources
     
     namespace :members do
-
     end
 
-    get '/edit_members' => 'epicenter#edit_members'
+    resources :epicenters
+
+    get '/edit_engagement' => 'epicenters#edit_engagement'
+    get '/edit_members' => 'epicenters#edit_members'
+    get '/edit_meeting_time' => 'epicenters#edit_meeting_time'
+    get '/confirm_plant' => 'epicenters#confirm_plant'
+
     get '/members' => 'epicenters#members'
     get '/tshirts' => 'epicenters#tshirts'
     post '/give_tshirt' => 'epicenters#give_tshirt'

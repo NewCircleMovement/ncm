@@ -22,7 +22,7 @@ class Fruittype < ActiveRecord::Base
   validates :name, :presence => true
   validates :monthly_decay, 
     presence:true, 
-    numericality: { only_float: true, greater_than: 0 }, 
+    numericality: { only_float: true, greater_than: 0.01 }, 
     :inclusion => { :in => 0..1 }
 
   belongs_to :epicenter

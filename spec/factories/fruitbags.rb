@@ -3,7 +3,7 @@
 # Table name: fruitbags
 #
 #  id             :integer          not null, primary key
-#  amount         :integer
+#  amount         :integer          default(0)
 #  fruittype_id   :string
 #  fruitbasket_id :string
 #  created_at     :datetime         not null

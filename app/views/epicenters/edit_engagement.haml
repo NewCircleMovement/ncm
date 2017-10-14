@@ -1,0 +1,93 @@
+= render layout: "edit_epicenter" do
+	= simple_form_for @epicenter do |f|
+		.well#edit-engagement
+			%h4.header
+				Du er ved at så dit
+				%strong= @epicenter.name
+				frø
+				%span.pull-right 
+					%strong Trin 2 af 4
+			%hr/
+			%h4
+				%strong Opbakning
+			%p
+				For at opnå en månedlig udbetaling fra 
+				= "#{@epicenter.mother.name}"
+				skal
+				%strong= "#{@epicenter.name}"
+				opfylde 2 minimumskrav:
+			%ul
+				%li 
+					%strong Opbakning 
+					fra et minimums antal medlemmer
+				%li 
+					%strong 
+						Samle en vis mængde 
+						= "#{@epicenter.mother_fruit.name}"
+					indsamlet fra medlemmerne gennem deres medlemsskab.
+			
+			%p
+				Minimumskravene afhænger af om 
+				%strong= "#{@epicenter.name}"
+				er en 
+				%strong Tribe 
+				eller en 
+				%strong Movement.
+			%p
+				%strong En tribe
+				kan sammenlignes med et mindre community og kan have op til 1.000 medlemmer. 
+				For at få udbetalt støtte kræver en tribe medlemskab fra mindst 100 personer, 
+				og en støtte fra medlemmerne på mindst 30.000
+				= @epicenter.mother_fruit.name
+
+			%p
+				%strong En movement
+				er en større bevægelse og kan have op til 10.000 medlemmer. 
+				For at få udbetalt støtte kræver en movement medlemsskab fra mindst 1.000 personer,
+				og ligeledes en støtte fra medlemmerne på mindst 30.000
+				= @epicenter.mother_fruit.name
+			
+			.well
+				%em
+					%strong
+						Eksempel:
+					Epicenteret Tinkuy er plantet med en dybde på 100 medlemmer, 
+					Epicenteret Tinkuy får hver måned ca 70.000 vanddråber, som giver centeret en indtægt på ca. kr. 75,000 per måned fra New Circle Movement.
+
+			%h4
+				%strong
+					Bemærk: Når frøet først er plantet kan størrelsen ikke laves om
+			.form-group
+				= f.input :size, label: "Størrelse", :collection => ['Tribe', 'Movement'], include_blank: false
+
+			.form-group
+				= f.input :depth_members, label: "Minimum antal medlemmer", input_html: { :class => 'form-control' }
+				%span.help-block
+					Det antal medlemmer som 
+					= "#{@epicenter.name}"
+					mindst skal have for at få udbetalt støtte
+			.form-group
+				= f.input :depth_fruits, label: "Minimum antal #{@epicenter.mother_fruit.name}", input_html: { :class => 'form-control' } 
+				%span.help-block
+					Det antal 
+					= "#{@epicenter.mother_fruit.name} som #{@epicenter.name}"
+					mindst skal samle for at få udbetalt støtte
+
+
+			.form-group
+				= f.input :monthly_fruits_basis, :label => "#{@epicenter.fruittype.name}træernes frugtbarhed pr. måned"
+				%span.help-block 
+					De 
+					= "#{@epicenter.fruittype.name}"
+					som alle medlemmer får hver måned fra deres 
+					= "#{@epicenter.fruittype.name.downcase}træ"
+
+			%hr/
+			= hidden_field_tag(:sow, true)
+			= f.submit "Næste step", :id => 'submit', :class => 'btn btn-primary', :disabled => true
+			%span.space-left-15#messages
+
+/ ##42 move minimum requirements to mother epicenter
+/ = javascript_tag do
+/ 	window.test = "#{j MIN_DEPTH_MEMBERS_TRIBE}";
+

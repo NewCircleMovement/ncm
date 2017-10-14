@@ -62,8 +62,8 @@ namespace :ncm do
       growing: true, 
       manifested: true, 
       niveau: nil, 
-      depth_members: 100, 
-      depth_fruits: 30000 
+      depth_members: 0, 
+      depth_fruits: 0 
     }
 
     puts "create mother epicenter_id"

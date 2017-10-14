@@ -31,10 +31,13 @@ class Epicenter < Blueprint
   before_destroy :test_if_ncm
 
   validates :name, :tagline, :depth_members, :depth_fruits, :presence => true
+  # validates :size, :presence => true
   validates :depth_members,
     numericality: { only_integer: true, greater_than: 99 }
   validates :depth_fruits, 
     numericality: { only_integer: true, greater_than: 29999 }
+  validates :monthly_fruits_basis,
+    numericality: { only_integer: true, greater_than: -1, less_than: 100000 }
 
   belongs_to :mother, :class_name => "Epicenter", :foreign_key => 'mother_id'
   has_many :children, :class_name => "Epicenter", :foreign_key => 'mother_id', :dependent => :destroy
@@ -141,6 +144,20 @@ class Epicenter < Blueprint
     end
   end
 
+  def get_max_members
+    case self.size
+    when 'Tribe'
+      return 1000
+    when 'Movement'
+      return 10000
+    end
+  end
+
+  def check_seed
+    
+  end
+
+
   def progress
     progress_members = [self.members.count.to_f / self.depth_members, 1].min
 
@@ -153,7 +170,8 @@ class Epicenter < Blueprint
   
   # create new epicenter
   def make_child(epicenter_params, current_user)
-
+    puts "---------------------------------------------------"
+    puts "MAKE CHILD"
     # first create and save a location for the epicenter
     location_for_child = Location.new(:name => epicenter_params[:name], :density => 2)
 
@@ -163,20 +181,40 @@ class Epicenter < Blueprint
       child.mother_id = self.id
       child.location = location_for_child
       child.slug = child.to_slug
+
+      ##42 child depth members and fruits must be variable on mother epicenter
+      case child.size
+      when 'Tribe'
+        child.depth_members = MIN_DEPTH_MEMBERS_TRIBE
+        child.depth_fruits = MIN_DEPTH_FRUITS_TRIBE
+      when 'Movement'
+        child.depth_members = MIN_DEPTH_MEMBERS_MOVEMENT
+        child.depth_fruits = MIN_DEPTH_FRUITS_MOVEMENT
+      end
       
       if child.save
+        puts ">> Epicenter", child.name, "has been saved"
         fruitbasket = Fruitbasket.create(:owner_id => child.id, :owner_type => 'Epicenter')
         Fruitbag.create(:fruitbasket_id => fruitbasket.id, :amount => 0)
 
         # access points
+        puts ">> Creating acess points"
         caretaker_access = child.location.access_points.build(:name => "caretaker")
         member_access = child.location.access_points.build(:name => "member")
         caretaker_access.save
         member_access.save
+        puts "caretaker", caretaker_access
+        puts "member", member_access
 
         child.make_tshirt( current_user, caretaker_access )
+      else
+        puts "----------------------------------------------"
+        puts "CHILD NOT SAVED"
       end
 
+    else 
+      puts "---------------------------------"
+      puts "LOCATION NOT SAVED"
     end
 
     return child
@@ -254,6 +292,7 @@ class Epicenter < Blueprint
   # makes a new tshirt with specific access point, e.g. 'member' or 'caretaker'
   def make_tshirt(user, access_point)
     tshirt = Tshirt.where(:epicenter_id => self.id, :user_id => user.id, :access_point_id => access_point.id).first_or_create
+    puts "Made tshirt", tshirt
   end
 
 
@@ -325,7 +364,9 @@ class Epicenter < Blueprint
   def can_accept_members?
     return self.memberships.present? && 
       self.all_caretakers_are_members? && 
-      self.fruittype.present?
+      self.fruittype.present? 
+      # &&
+      # self.status != SEED
   end
 
 

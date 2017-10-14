@@ -1,4 +1,5 @@
 - if @epicenter.present? and @epicenter.id
+  
   - if current_user and @epicenter.has_caretaker?(current_user)
     %li
       = link_to edit_epicenter_path(@epicenter) do
@@ -7,8 +8,9 @@
           Caretaker
   
   %li= link_to "Medlemmer", epicenter_members_path(@epicenter)
-  - @pages.each do |page|
-    %li= link_to page.menu_title, epicenter_epipage_path(@epicenter, page)
+  - if @pages
+    - @pages.each do |page|
+      %li= link_to page.menu_title, epicenter_epipage_path(@epicenter, page)
   
   - @epicenter.location.access_points.where(:menu_item => true).each do |item|
     %li

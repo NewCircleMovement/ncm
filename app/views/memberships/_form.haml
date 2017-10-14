@@ -1,16 +1,46 @@
-= simple_form_for [@epicenter, @membership] do |f|
-  = f.input :name
-  = f.input :monthly_fee, label: "Pris for medlemsskab pr. måned (#{@epicenter.mother_fruit.name})"
-  - if @epicenter.fruittype.present?
-    = f.input :monthly_gain, label: "Udbytte af medlemsskab pr. måned (#{@epicenter.fruittype.name})"
-  = f.input :profile, label: "Giv medlemskabet en profil"
-  
-  - if @epicenter == @mother
-    = f.input :payment_id, label: "Stripe id for membership"
-  
-  = f.submit "Gem", :class => 'btn btn-primary'
-  - if action_name == 'edit'
-    = link_to "Slet", [@epicenter, @membership], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
-  - if action_name == 'new'
-    = link_to "Fortryd", :back, class: "btn btn-default"
+- if @sow
+  .well#edit-memberships
+    = render :partial => 'seed_header'
+
+    %hr/  
+    = simple_form_for [@epicenter, @membership] do |f|
+      = hidden_field_tag(:depth_members, @epicenter.depth_members)
+      = hidden_field_tag(:depth_fruits, @epicenter.depth_fruits)
+      = hidden_field_tag(:monthly_decay, @epicenter.fruittype.monthly_decay)
+
+      = f.input :name
+      = f.input :monthly_fee, label: "Medlemmets tilførsel pr. måned (#{@epicenter.mother_fruit.name})"
+      - if @epicenter.fruittype.present?
+        = f.input :monthly_gain, label: "Medlemmets udbytte af medlemsskab pr. måned (#{@epicenter.fruittype.name.downcase})"
+      = f.input :profile, label: "Giv medlemskabet en profil"
+      
+      - if @epicenter == @mother
+        = f.input :payment_id, label: "Stripe id for membership"
+      
+      = hidden_field_tag(:sow, true)
+      = f.submit "Næste side", :class => 'btn btn-primary', :id => "create-membership-button"
+      - if action_name == 'edit'
+        = link_to "Slet", [@epicenter, @membership], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
+      %span.space-left-15
+        %em Du kan oprette flere eller ændre medlemskaber senere
+    %p#message
+    %div#back-button{ style: "display: none"}
+      = link_to "Juster minimum medlemmer/frugter her", epicenter_edit_engagement_path(@epicenter, :sow => true)
+
+- else
+  = simple_form_for [@epicenter, @membership] do |f|
+    = f.input :name
+    = f.input :monthly_fee, label: "Pris for medlemsskab pr. måned (#{@epicenter.mother_fruit.name})"
+    - if @epicenter.fruittype.present?
+      = f.input :monthly_gain, label: "Udbytte af medlemsskab pr. måned (#{@epicenter.fruittype.name})"
+    = f.input :profile, label: "Giv medlemskabet en profil"
+    
+    - if @epicenter == @mother
+      = f.input :payment_id, label: "Stripe id for membership"
+    
+    = f.submit "Gem", :class => 'btn btn-primary'
+    - if action_name == 'edit'
+      = link_to "Slet", [@epicenter, @membership], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
+    - if action_name == 'new'
+      = link_to "Fortryd", :back, class: "btn btn-default"
 

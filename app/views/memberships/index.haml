@@ -1,40 +1,55 @@
 = render layout: "epicenters/edit_epicenter" do
   
-  - if @epicenter.memberships.present?
-    .alert.alert-success
-      %i.fa.fa-check
-      Medlemskaber er aktive
-    .row
-      - for membership in @epicenter.memberships
-        .col-md-4
-          .well.well-sm
-            %strong name:
-            = membership.name
-            %hr/
-            - if @hard_currency
-              - plan = membership.payment_plan
-              - if plan
-                %strong id:
-                = plan.id
-                %br/
+  - if @sow
+    .well
+      = render :partial => 'seed_header'
+
+      - if @epicenter.memberships.present?
+        %p
+          %strong
+            Du har allerede oprettet et medlemsskab
+        %p
+          = link_to "Rediger medlemsskab", edit_epicenter_membership_path(@epicenter, @epicenter.memberships.first, :params => { :sow => true}), class: "btn btn-primary"      
+          = link_to "Gå til næste trin", epicenter_edit_meeting_time_path(@epicenter, :params => { :sow => true}), class: "btn btn-primary"      
+      - else
+        = link_to "Opret medlemsskab", new_epicenter_membership_path(@epicenter, :params => { :sow => true}), class: "btn btn-primary"      
+
+  - else
+  
+    - if @epicenter.memberships.present?
+      .alert.alert-success
+        %i.fa.fa-check
+        Medlemskaber er aktive
+      .row
+        - for membership in @epicenter.memberships
+          .col-md-4
+            .well.well-sm
+              %strong name:
+              = membership.name
+              %hr/
+              - if @hard_currency
+                - plan = membership.payment_plan
+                - if plan
+                  %strong id:
+                  = plan.id
+                  %br/
+                  %strong amount:
+                  = plan.amount / 100
+                  %br/
+                  %strong valuta:
+                  = plan.currency
+              - else        
                 %strong amount:
-                = plan.amount / 100
+                = membership.monthly_fee
                 %br/
                 %strong valuta:
-                = plan.currency
-            - else        
-              %strong amount:
-              = membership.monthly_fee
-              %br/
-              %strong valuta:
-              = @epicenter.mother.fruittype.name
-            %hr/
-            = link_to "Ret", edit_epicenter_membership_path(@epicenter, membership), class: "btn btn-default"
-      .col-md-12
-        = link_to "Opret medlemsskab", new_epicenter_membership_path(@epicenter), class: "btn btn-primary"  
-  - else
-    .alert.alert-danger
-      %i.fa.fa-times
-      Der er ikke oprettet nogen medlemskaber
-    = link_to "Opret medlemsskab", new_epicenter_membership_path(@epicenter), class: "btn btn-primary"
-    
+                = @epicenter.mother.fruittype.name
+              %hr/
+              = link_to "Ret", edit_epicenter_membership_path(@epicenter, membership), class: "btn btn-default"
+        .col-md-12
+          = link_to "Opret medlemsskab", new_epicenter_membership_path(@epicenter), class: "btn btn-primary"  
+    - else
+      / %h3.header
+      /   Der er ikke oprettet nogen medlemskaber
+      = link_to "Opret medlemsskab", new_epicenter_membership_path(@epicenter), class: "btn btn-primary"
+      

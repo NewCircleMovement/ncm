@@ -1,17 +1,38 @@
-.container
-  %h1= @epicenter.name
-  
-  %p
-    %strong Medlemmer
-    = @epicenter.users_with_tshirt('member').count
+.jumbotron.epicenter
+  .image
+    - if @epicenter.image
+      = image_tag(@epicenter.image, width: "100%", height: "250")
+    .text-wrap
+      .text 
+        %h1= @epicenter.name
+        - if @epicenter.tagline.present?
+          %p= @epicenter.tagline
 
-  .row
-    - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
-      - for membership in @memberships
-        .col-md-4
-          .panel.panel-default
-            .panel-body
-              = render partial: 'form', locals: {membership: membership}
-    - else
-      .col-md-12
-        %p Dette epicenter kan endnu ikke modtage medlemmer
+  
+.container
+  - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
+    %h1 Medlemskaber  
+    %p
+      %strong Medlemmer:
+      = @epicenter.users_with_tshirt('member').count
+
+    .row
+      - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
+        - for membership in @memberships
+          .col-md-4
+            .panel.panel-default
+              .panel-body
+                = render partial: 'form', locals: {membership: membership}
+  - else
+    %h1 Medlemskaber er ikke aktiveret
+    %p
+      = @epicenter.name 
+      kan af følgende grunde endnu ikke modtage medlemmer
+    %ul
+      - if @epicenter.status == SEED
+        %li
+          Frøet til epicenteret er endnu ikke plantet
+      - if @epicenter.all_caretakers_are_members?
+        %li
+          Ikke alle caretakers er medlemmer endnu
+

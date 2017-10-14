@@ -1,0 +1,28 @@
+%h4.header
+	Du er ved at så dit
+	%strong= @epicenter.name
+	frø
+	%span.pull-right
+		Trin 3 af 4
+	%hr/
+	%h4 
+		%strong Opret medlemskaber
+	%p
+		%strong= @epicenter.name
+		skal have 
+		%strong mindst et medlemsskab. 
+	%p
+		I medlemskabetet angives følgende:
+	%ul
+		%li 
+			Den månedlige tilførsel af 
+			%strong= "#{@epicenter.mother_fruit.name}"
+			som et medlemskab kræver
+		%li
+			Det månedlige udbyttet af
+			%strong= "#{@epicenter.fruittype.name.downcase}"
+			som medlemsskabet giver.
+		%li
+			Medlemsskabets 
+			%strong profil 
+			som fortæller kort om hvad man får for sit medlemsskab.

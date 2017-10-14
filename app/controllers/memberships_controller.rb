@@ -19,34 +19,45 @@ class MembershipsController < ApplicationController
   before_action :set_membership, only: [:edit, :update, :destroy]
 
   def index
+    @sow = params['sow']
     @memberships = @epicenter.memberships
     @hard_currency = (@epicenter == @mother)
   end
 
   def new
+    @sow = params['sow']
     @membership = @epicenter.memberships.build
     puts "/// new membership"
     puts @membership
   end
 
   def edit
+    @sow = params['sow']
   end
 
   def create
-    # @membership = Membership.new(membership_params)
-    # @membership.epicenter_id = @epicenter.id
+    @sow = params[:sow]
     @membership = @epicenter.memberships.build(membership_params)
     if @membership.save
-      redirect_to epicenter_memberships_path(@epicenter), notice: 'Medlemskabet blev oprettet'
+      if params[:sow]
+        redirect_to epicenter_edit_meeting_time_path(@epicenter, :sow => true)
+      else
+        redirect_to epicenter_memberships_path(@epicenter), notice: 'Medlemskabet blev oprettet'
+      end
     else
       render action: 'new'
     end
-
   end
+  
 
   def update
+    @sow = params[:sow]
     if @membership.update(membership_params)
-      redirect_to epicenter_memberships_path(@epicenter), notice: 'Medlemskabet blev opdateret.'
+      if params[:sow]
+        redirect_to epicenter_edit_meeting_time_path(@epicenter, :sow => true)
+      else
+        redirect_to epicenter_memberships_path(@epicenter), notice: 'Medlemskabet blev opdateret.'
+      end
     else
       render action: 'edit'
     end

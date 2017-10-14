@@ -16,6 +16,10 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  name                   :string
+#  first_name             :string
+#  last_name              :string
+#  image                  :string
+#  profile_text           :text
 #
 
 describe User do

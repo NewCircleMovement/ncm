@@ -1,0 +1,95 @@
+.container
+	%h3
+		Bekræft plantningen af
+		= @epicenter.name
+		frøet
+	.well
+		%h4.header
+			%span.badge 1 
+			%strong Frugttype
+		%p
+			Du har valgt
+			%strong= @epicenter.fruittype.name
+			med 
+			%strong= "#{@epicenter.fruittype.monthly_decay * 100}%"
+			som slettes hver måned
+		%p
+			%em
+				Frugtnavn og forfaldsrate kan altid ændres. Frugter kan benyttes som et internt redskab 
+				til fordeling af fællesskabets ressourcer. Fx. booking af aktivitetsrum.
+
+	.well
+		%h4.header 
+			%span.badge 2
+			%strong Opbakning
+		%p
+			Du har valgt at 
+			%strong= @epicenter.name 
+			er en
+			%strong= @epicenter.size
+		%p
+			Dit epicenter skal derfor opnå mimimum 
+			%strong= @epicenter.depth_members
+			medlemmer og
+			%strong= @epicenter.depth_fruits
+			= @epicenter.mother_fruit.name
+			for at få udbetalt støtte.
+		%p
+			%em
+				%strong Bemærk: 
+				Disse størrelser kan ikke ændres når frøet er plantet.
+	.well
+		%h4.header 
+			%span.badge 3
+			%strong Medlemsskab
+		%p
+			Du har oprrettet
+			%strong= @membership.name
+			medlemskabet til
+			%strong
+				= @membership.monthly_fee
+				= @epicenter.mother_fruit.name
+			per måned
+		%p
+			Medlemsskabet giver hvert medlem
+			%strong
+				= @membership.monthly_gain
+				= @epicenter.fruittype.name
+			hver måned
+		%p
+			%em
+				Du kan altid ændre og oprette medlemskaber.
+
+	.well
+		%h4.header
+			%span.badge 4
+			%strong Community Building
+
+		
+		- if @epicenter.meeting_active
+			%p 
+				Du har valgt at holde et møde den
+				%strong= "#{@epicenter.meeting_week} #{@epicenter.meeting_day}"
+				i hver måned, klokken
+				%strong= @epicenter.meeting_time.strftime("%H:%M")
+			%p
+				Mødested:
+				- if @epicenter.meeting_address
+					%strong= @epicenter.meeting_address
+				%em ikke sat
+
+		- else
+			%p Du har fravalgt at holde et månedligt møde med medlemmer og interesserede
+
+		%p
+			%em
+				Du kan altid ændre/fravælge mødetid og sted.
+
+	%button.btn.btn-lg
+		%span.space-right
+			%span.fa-stack.fa-lg.sprout
+				%i.fa.fa-circle.fa-stack-2x
+				%i.fa.fa-bolt.fa-flip-vertical.fa-stack-1x.white
+
+		Plant frøet
+%hr/

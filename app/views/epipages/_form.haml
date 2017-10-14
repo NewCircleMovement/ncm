@@ -12,7 +12,8 @@
     .col-md-12
       = f.input :body, label: "Sidens tekst"
     
-    = f.input :location_id, collection: @resources, label_method: :location_name, value_method: :id,label: "Location", include_blank: false, selected: @bill.location_id 
+    - if @resources
+      = f.input :location_id, collection: @resources, label_method: :location_name, value_method: :id,label: "Location", include_blank: false, selected: @bill.location_id 
 
   
   = link_to "", :class => 'btn btn-default' do

@@ -1,14 +1,20 @@
 - unless @epicenter.can_accept_members?
   .alert.alert-danger
     .container
-      %i.fa.fa-exclamation-circle.space-right-sm
-      Epicenteret kan endnu ikke modtage medlemmer
-      - unless @epicenter.fruittype.present?
-        %span.label.label-default Frugttype ikke oprettet
-      - unless @epicenter.memberships.present?
-        %span.label.label-default Ingen medlemskaber
-      - unless @epicenter.all_caretakers_are_members?
-        %span.label.label-default Ikke alle caretakers er medlem
+      - if @epicenter.status == SEED
+        = @epicenter.name
+        er et
+        %span.badge frø
+        Du skal plante det for at få medlemmer
+      - else
+        %i.fa.fa-exclamation-circle.space-right-sm
+        Epicenteret kan endnu ikke modtage medlemmer
+        - unless @epicenter.fruittype.present?
+          %span.label.label-default Frugttype ikke oprettet
+        - unless @epicenter.memberships.present?
+          %span.label.label-default Ingen medlemskaber
+        - unless @epicenter.all_caretakers_are_members?
+          %span.label.label-default Ikke alle caretakers er medlem
 
 
 = render layout: "edit_epicenter" do
@@ -21,6 +27,42 @@
           = @epicenter.description
         - else
           Du mangler at give en beskrivelse af epicenteret
+
+      %hr/
+      - if @epicenter.status == SEED
+        %p
+          Epicenter status
+          %span.badge Frø
+        %p
+          %em 
+            %strong= @epicenter.name
+            er foreløbigt en ide (frø) du kan præsentere til andre og få sparring på. 
+            %br/ 
+            For at du kan få medlemmer til dit projekt, skal du plante frøet. 
+
+        %p Når du planter frøet skal du være forberedt på følgende trin
+
+        %ol
+          %li
+            %strong Frugttype:
+            Vælg den valuta som bestemmer hvordan ressourcerne i
+            = "#{@epicenter.name}"
+            fordeles blandt medlemmerne
+          %li
+            %strong Opbakning:
+            Angiv hvor stor en opbakning (økonomisk støtte og medlemmer) du mindst vil have til dit projekt
+          %li
+            %strong Medlemsskab:
+            Hvilke medlemskaber vil du tilbyde og hvilke ressourcer/fordele skal dine medlemmer have?
+
+          %li
+            %strong Community building:
+            Vis dit engagement ved at holde mindst et månedeligt møde
+          
+
+        %p
+          = link_to "Plant frøet nu", new_epicenter_fruittype_path(@epicenter, :sow => true), :class => "btn btn-success"
+
 
       %hr/
       - if @epicenter.fruittype.present?
@@ -46,6 +88,8 @@
       - else
         %i.fa.fa-ban.space-right
         Ikke alle caretakers er medlemmer
+        - if @epicenter.status == SEED
+          %em.grey NB: du kan først blive medlem når du har plantet frøet
       %hr/
       %a.btn.btn-info{"aria-controls" => "settings", "data-toggle" => "tab", :href => "#settings", :role => "tab"} Ret oplysninger
       

@@ -1,0 +1,48 @@
+= render layout: "edit_epicenter" do
+	= simple_form_for @epicenter do |f|
+		.well#meeting-time
+			%h4.header
+				Du er ved at så dit
+				%strong= @epicenter.name
+				frø
+				%span.pull-right 
+					%strong Trin 4 af 4
+			%hr/
+			%h4
+				%strong Community building
+			
+			%p
+				Du har mulighed for at signalere 
+				%strong dit engagement 
+				ved at tilbyde dine medlemmer og interesserede 
+				at mødes med dig på et fast månedligt sted og tidspunkt. 
+			%p
+				Din valgte mødedag vil blive vist på dit epicenter's side, og du kan altid rette i det senere.
+			%p
+				Ønsker du at gøre dette?
+			%p#meeting-time-choice
+				%button.btn.btn-info#meeting-time-yes{ type: "button" } Ja tak
+				= link_to "Nej tak, Plant frøet nu", epicenter_confirm_plant_path(@epicenter), :class => "btn btn-primary"
+				%span.space-left-15
+					%em Du kan gennemse dine valg inden du bekræfter
+				
+			%form
+				%div#meeting-time-form{ style: "display: none;" }
+					.row
+						.col-md-4
+							.form-group
+								= f.input :meeting_day, label: "Mødedag", :collection => ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag', 'søndag'], include_blank: false
+						.col-md-4
+							.form-group
+								= f.input :meeting_week, label: "Uge i måneden", :collection => ['første', 'anden', 'tredie', 'fjerde'], include_blank: false
+						.col-md-4
+							.form-group
+								= f.input :meeting_time, label: "Mødetidspunkt", default: Time.parse('14:00')
+					= f.input :meeting_address, label: "Mødested"
+					= f.input :meeting_active, :as => :hidden, :input_html => { :value => true }
+
+					=# hidden_field_tag(:meeting_active, true)
+					= hidden_field_tag(:review, true)
+					= f.submit "Plant frø", :class => 'btn btn-primary'
+					%span.space-left-15
+						%em Du kan gennemse dine valg inden du bekræfter

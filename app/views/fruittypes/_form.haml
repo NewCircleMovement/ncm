@@ -1,8 +1,48 @@
 = simple_form_for [@epicenter, @fruittype] do |f|
-  = f.input :name, label: "Navn på frugten"
-  = f.input :monthly_decay, label: "Månedlig forfald (mellem 0 og 1)"
-  
-  = f.submit "Gem", class: 'btn btn-primary'
-  - if action_name == 'new'
-    = link_to "Fortryd", :back, class: "btn btn-default"
+	.well
+		- if @sow
+			%h4.header
+				Du er ved at så dit 
+				%strong= @epicenter.name
+				frø
+				%span.pull-right 
+					%strong Trin 1 af 4
+			%hr/
+			%h4
+				%strong Vælg en frugttype
+			%p
+				Frugttypen er den 
+				valuta, som bestemmer hvordan ressourcerne i
+				%strong= "#{@epicenter.name}"
+				fordeles blandt medlemmerne
+			%p
+				Hver måned får
+				%strong= "#{@epicenter.name}s"
+				medlemmer et antal frugter (sættes på næste side). Frugterne har et månedligt forfald for at undgå ophobning og opfordre til engagement og cirkulation
+			.well
+				%em
+					%strong
+						Eksempel:
+					I Tinkuy for Basis medlemmer 100 blommer hver måned. Med blommerne kan man booke behandlerrum og få adgang til fripladser i weekenden.
+			%p
+				Det er ikke sikkert at 
+				%strong= "#{@epicenter.name}"
+				vil gøre brug af denne funktion, men det er et krav at den bliver oprettet.
+
+		- else
+			%h4.header
+				%strong Frugttype
+		%hr/
+	
+		= f.input :name, label: "Navn på frugten"
+		= f.input :monthly_decay, label: "Månedlig forfald (mellem 0,01 og 1)"
+		
+		- if @sow
+			= hidden_field_tag(:sow, true)
+			= f.submit "Opret frugttype", class: 'btn btn-primary'
+
+		- else
+			= f.submit "Gem", class: 'btn btn-primary'
+			- if action_name == 'new'
+				= link_to "Fortryd", :back, class: "btn btn-default"
 
