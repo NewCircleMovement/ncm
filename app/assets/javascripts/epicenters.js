@@ -79,19 +79,19 @@ $(function() {
 		}
 
 		if (membersValue < requirements.members.min) {
-			messages.push(`Medlemmer skal minimum være ${requirements.members.min}`);
+			messages.push("Medlemmer skal minimum være " + requirements.members.min);
 		}
 
 		if (membersValue > requirements.members.max) {
-			messages.push(`Medlemmer må højst være ${requirements.members.max}`);
+			messages.push("Medlemmer må højst være " + requirements.members.max);
 		}
 
 		if (fruitsValue < requirements.fruits.min) {
-			messages.push(`Vanddråber skal være over ${requirements.fruits.min}`);
+			messages.push("Vanddråber skal være over " + requirements.fruits.min);
 		} 
 
 		if (fruitsValue > requirements.fruits.max) {
-			messages.push(`Vanddråber må ikke være over ${requirements.fruits.max}`);
+			messages.push("Vanddråber må ikke være over " + requirements.fruits.max);
 		}
 
 		seedIsOk = (messages.length == 0);
