@@ -23,5 +23,5 @@ $(window).load( function() {
   		$('#donateInput').focus();
 	});
 
-	$('#supportInput').regexMask(/^\d+$/);
+	
 }) 

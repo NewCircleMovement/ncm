@@ -45,14 +45,14 @@ $(function() {
 		var minSupply = (depthFruits.value * monthlyDecay.value) / depthMembers.value;
 
 		if (notEnoughFruit) {
-			message.innerHTML = `
-				Bemærk: Med ${monthlyFee.value} vanddråber pr. måned kan du 
-				med ${depthMembers.value} medlemmer maximalt nå
-				${fruitPeak} (da ${monthlyDecay.value * 100}% forsvinder hver måned).
-				Du skal nå dit minimum på ${depthFruits.value}.
-				Sæt enten medlemsskabets månedlige tilførsel op til mindst ${minSupply} 
-				eller juster minimum antal medlemmer/frugter.
-			`;
+			message.innerHTML = "Bemærk: Med " + 
+				monthlyFee.value + " vanddråber pr. måned kan du med " + 
+				depthMembers.value + " medlemmer maximalt nå " +
+				fruitPeak + " da " + (monthlyDecay.value * 100) + 
+				"% forsvinder hver måned). Du skal nå dit minimum på " + 
+				depthFruits.value + " for at få udbetalt støtte. " +
+				"Sæt enten medlemsskabets månedlige tilførsel op til mindst " +
+				minSupply + " eller juster minimum antal medlemmer/frugter.";
 		} else {
 			message.innerHTML = '';
 		}
