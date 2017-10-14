@@ -467,8 +467,12 @@ class Epicenter < Blueprint
     return ""
   end
 
-  def event_log
-    return EventLog.where(:acts_on_type => Epicenter.name, :acts_on_id => self.id).limit(10).order("created_at DESC")
+  def event_log(log_level=LOG_COARSE)
+    return EventLog.where(
+      :acts_on_type => Epicenter.name, 
+      :acts_on_id => self.id,
+      :log_level => log_level
+    ).limit(10).order("created_at DESC")
   end
 
 
