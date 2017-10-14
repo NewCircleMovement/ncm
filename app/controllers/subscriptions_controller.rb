@@ -7,10 +7,10 @@ class SubscriptionsController < ApplicationController
     
     if current_user.has_member_tshirt?(@epicenter)
       @membership = @epicenter.get_membership_for(current_user)
-      @change = current_user.membership_changes.find_by(epicenter_id: @epicenter)
-      if @change
-        @new_membership = Membership.find(@change.new_membership_id)
-      end
+      # @change = current_user.membership_changes.find_by(epicenter_id: @epicenter)
+      # if @change
+      #   @new_membership = Membership.find(@change.new_membership_id)
+      # end
     else
       puts "redirect attempt", epicenter_subscriptions_path( @epicenter )
       flash[:notice] = "Du er ikke aktivt medlem af #{@epicenter.name}"
@@ -141,6 +141,10 @@ class SubscriptionsController < ApplicationController
       @epicenter.make_membershipcard( current_user, @membership, stripe_customer )
       @epicenter.make_member( current_user )
       @epicenter.harvest_time_for( current_user )
+
+      log_details = { membership: @membership.name }
+      EventLog.entry(current_user, @epicenter, NEW_MEMBERSHIP, log_details, LOG_COARSE)
+
       flash[:success] = "Du er nu medlem af #{@epicenter.name}"
       redirect_path = epicenter_path(@epicenter)
     else
@@ -167,6 +171,7 @@ class SubscriptionsController < ApplicationController
     new_membership = Membership.find(params[:id])
 
     membershipcard = current_user.get_membershipcard( @epicenter )
+
 
     # change subscription to "new circle movement"
     if @epicenter == @mother  
@@ -205,6 +210,9 @@ class SubscriptionsController < ApplicationController
       puts "new membership", membershipcard.membership.monthly_gain
 
       if membershipcard.save
+        log_details = { from: old_membership.name, to: new_membership.name }
+        EventLog.entry(current_user, @epicenter, MEMBERSHIP_CHANGE, log_details, LOG_COARSE)
+
         @epicenter.harvest_time_for( current_user )
         flash[:success] = "Du er nu #{new_membership.name} medlem af #{@epicenter.name}"        
       else 
@@ -219,20 +227,21 @@ class SubscriptionsController < ApplicationController
   end
 
 
-  def cancel_change
-    change = current_user.requested_change(@epicenter)
-    change.destroy
-    flash[:success] = "Dit medlemskab vil ikke længere blive ændret"
-    redirect_to epicenter_subscriptions_path(@epicenter)
-  end
+  # def cancel_change
+  #   change = current_user.requested_change(@epicenter)
+  #   change.destroy
+  #   flash[:success] = "Dit medlemskab vil ikke længere blive ændret"
+  #   redirect_to epicenter_subscriptions_path(@epicenter)
+  # end
 
 
   def destroy
     if @epicenter == @mother
       begin
         card = current_user.get_membershipcard(@epicenter)
-        member = current_user.get_member(card)
-        if member.delete
+        stripe_user = current_user.get_member(card)
+        if stripe_user.delete
+          @epicenter.delete_member(current_user)
           current_user.destroy
           flash[:success] = "Du er ikke længere aktiv medlem af New Circle Movement"
         else

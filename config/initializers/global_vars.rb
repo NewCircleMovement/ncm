@@ -1,7 +1,7 @@
-TREE = 3
-PLANT = 2
-SPROUT = 1
-SEED = 0
+TREE = "træ"
+PLANT = "plante"
+SPROUT = "spire"
+SEED = "frø"
 
 MIN_DEPTH_FRUITS = 30000
 MIN_DEPTH_FRUITS_TRIBE = 30000
@@ -12,11 +12,20 @@ MIN_DEPTH_MEMBERS_MOVEMENT = 1000
 
 # EVENTLOGS
 FRUIT_TRANSFER = "frugtoverførsel"
+EPICENTER_STATUS_CHANGE = "statusskift"
+NEW_MEMBERSHIP = "nytmedlem"
+MEMBERSHIP_CHANGE = "medlemsskift"
+DELETE_MEMBERSHIP = "udmeldning"
+
+# EVENT LOG LEVELS
+LOG_COARSE = 0 # standard view
+LOG_FINE = 1 # detailed view (e.g. all transfers)
+LOG_DELICATE = 2 # very detailed view
 
 
 
-
-MEMBERSHIPCHANGE = "membershipchange"
+##42 check this, and probably delete old code
+# MEMBERSHIPCHANGE = "membershipchange"
 
 
 

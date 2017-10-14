@@ -74,13 +74,14 @@ ActiveRecord::Schema.define(version: 20171014113335) do
   end
 
   create_table "event_logs", force: :cascade do |t|
-    t.string   "actor_type"
-    t.integer  "actor_id"
+    t.string   "owner_type"
+    t.integer  "owner_id"
     t.string   "acts_on_type"
     t.integer  "acts_on_id"
     t.string   "event_type"
     t.string   "description"
     t.json     "details"
+    t.integer  "log_level"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end

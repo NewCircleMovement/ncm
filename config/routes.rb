@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   resources :epicenters do
     resources :subscriptions do
-      get "/cancel_change" => "subscriptions#cancel_change"
+      # get "/cancel_change" => "subscriptions#cancel_change"
     end
 
     resources :epipages
@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     get '/edit_engagement' => 'epicenters#edit_engagement'
     get '/edit_members' => 'epicenters#edit_members'
     get '/edit_meeting_time' => 'epicenters#edit_meeting_time'
+    get '/review_plant' => 'epicenters#review_plant'
     get '/confirm_plant' => 'epicenters#confirm_plant'
 
     get '/members' => 'epicenters#members'

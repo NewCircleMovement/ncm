@@ -52,6 +52,8 @@ class Epicenter < Blueprint
 
   has_one :fruittype
   has_one :fruitbasket, as: :owner, :dependent => :destroy
+  has_many :event_logs, as: :owner, :dependent => :destroy ##42
+
   belongs_to :location # kan fx. være en "gateway (density 2)"
 
   accepts_nested_attributes_for :memberships
@@ -118,6 +120,32 @@ class Epicenter < Blueprint
 
 
   # returns the STATUS of the epicenter (tree, plant, sprout, seed)
+  def set_status(new_status, caretaker=nil)
+    details = { from: self.status, to: new_status }
+
+    case new_status
+    when SPROUT
+      self.manifested = false
+      self.growing = true
+    when PLANT
+      self.manifested = true
+      self.growing = false
+    when TREE
+      self.manifested = true
+      self.growing = true
+    end
+    
+    if caretaker
+      actor = caretaker
+    else
+      actor = self
+    end
+    
+    EventLog.entry(actor, self, EPICENTER_STATUS_CHANGE, details)
+    self.save
+  end
+
+
   def status
     if self.manifested && self.growing
       status = TREE
@@ -330,6 +358,9 @@ class Epicenter < Blueprint
     self.tshirts.where(user_id: user.id).delete_all
     fruittree = Fruittree.find_by(owner_id: user.id, owner_type: "User", fruittype_id: self.fruittype.id)
     fruittree.destroy
+    
+    log_details = { from: self.name }
+    EventLog.entry(user, self, DELETE_MEMBERSHIP, log_details, LOG_COARSE)
   end
 
   def fruitbag
@@ -425,7 +456,7 @@ class Epicenter < Blueprint
   end
 
   def event_log
-    return EventLog.where(:acts_on_type => Epicenter.name, :acts_on_id => self.id)
+    return EventLog.where(:acts_on_type => Epicenter.name, :acts_on_id => self.id).limit(10).order("created_at DESC")
   end
 
 

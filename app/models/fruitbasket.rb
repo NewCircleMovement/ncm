@@ -45,7 +45,7 @@ class Fruitbasket < ActiveRecord::Base
   #   fruitbag.save
   # end 
 
-  def give_fruit_to(receiver_basket, fruittype, amount)
+  def give_fruit_to(receiver_basket, fruittype, amount, log_level=LOG_FINE)
     fruit_was_given = false
 
     source_bag = self.find_fruitbag(fruittype)
@@ -64,12 +64,8 @@ class Fruitbasket < ActiveRecord::Base
       fruit_was_given = true
 
       details = { value: amount, fruittype: fruittype.name }
-      EventLog.create(
-        source_bag.owner, 
-        receiver_bag.owner, 
-        FRUIT_TRANSFER, 
-        details
-      )
+      EventLog.entry(self.owner, receiver_basket.owner, FRUIT_TRANSFER, details, log_level)
+      
     end 
 
     ##42 TODO

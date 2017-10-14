@@ -46,6 +46,8 @@ class User < ActiveRecord::Base
   
   has_many :fruittrees, as: :owner, :dependent => :destroy
   has_one :fruitbasket, as: :owner, :dependent => :destroy
+  has_many :event_logs, as: :owner, :dependent => :destroy ##42
+
 
   # when user creates account he/she will a fruitbasket
   def create_fruitbasket
@@ -81,7 +83,7 @@ class User < ActiveRecord::Base
   end
 
   def give_fruit_to(receiver, fruittype, amount)
-    result = self.fruitbasket.give_fruit_to(receiver.fruitbasket, fruittype, amount)
+    result = self.fruitbasket.give_fruit_to(receiver.fruitbasket, fruittype, amount, LOG_COARSE)
     return result
   end
 

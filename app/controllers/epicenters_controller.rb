@@ -77,7 +77,9 @@ class EpicentersController < ApplicationController
       if params[:sow]
         redirect_to epicenter_memberships_path(@epicenter, :sow => true)
       elsif params[:review]
-        redirect_to epicenter_confirm_plant_path(@epicenter)
+        redirect_to epicenter_review_plant_path(@epicenter)
+      elsif params[:confirm]
+        redirect to
       else
         redirect_to edit_epicenter_path(@epicenter), notice: 'Epicenteret er blevet opdateret.'
       end
@@ -129,16 +131,20 @@ class EpicentersController < ApplicationController
     @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
   end
 
-  def confirm_plant
+  def review_plant
     @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
     @membership = @epicenter.memberships.first
   end
 
-
+  def confirm_plant
+    @caretaker = User.find(params[:caretaker_id])
+    @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+    @epicenter.set_status(SPROUT, @caretaker)
+    message = "Tillykke, #{@epicenter.name} er nu en #{SPROUT}. Meld dig ind så andre også kan modtage medlemmer"
+    redirect_to new_epicenter_subscription_path(@epicenter), :notice => message
+  end
 
   def members
-    puts "-----------------------------------------------------"
-    puts params
     @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
     @pages = @epicenter.epipages
     
