@@ -364,9 +364,8 @@ class Epicenter < Blueprint
   def can_accept_members?
     return self.memberships.present? && 
       self.all_caretakers_are_members? && 
-      self.fruittype.present? 
-      # &&
-      # self.status != SEED
+      self.fruittype.present? &&
+      self.status != SEED
   end
 
 
@@ -423,6 +422,10 @@ class Epicenter < Blueprint
       end
     end
     return ""
+  end
+
+  def event_log
+    return EventLog.where(:acts_on_type => Epicenter.name, :acts_on_id => self.id)
   end
 
 

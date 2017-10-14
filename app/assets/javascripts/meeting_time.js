@@ -5,11 +5,13 @@ $(function() {
 	var meetingTimeForm = document.getElementById('meeting-time-form');
 	var meetingTimeYes = document.getElementById('meeting-time-yes');
 
-
-	meetingTimeYes.onclick = function () {
-		meetingTimeChoice.style.display = 'none';
-		meetingTimeForm.style.display = '';
+	if (meetingTimeYes) {
+		meetingTimeYes.onclick = function () {
+			meetingTimeChoice.style.display = 'none';
+			meetingTimeForm.style.display = '';
+		}
 	}
+	
 
 	// if (meetingTime) {
 	// 	console.log('active');

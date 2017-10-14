@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   resources :users do
     get '/memberships' => 'users#memberships'
     get '/fruitbasket' => 'users#fruitbasket'
+    get '/caretaker' => 'users#caretaker'
+    post '/support_epicenter' => 'users#support_epicenter'
   end
 
   resources :epicenters do

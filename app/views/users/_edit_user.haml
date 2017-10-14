@@ -10,6 +10,11 @@
           = link_to "Oplysninger", edit_user_path(current_user)
         %li{ class: "#{controller_name == 'users' && action_name == 'memberships' ? 'active' : ''}" }
           = link_to "Medlemskaber", user_memberships_path(current_user)
+
+        - if current_user.has_epicenters_with_role('caretaker').present?
+          %li{ class: "#{controller_name == 'users' && action_name == 'caretaker' ? 'active' : ''}" }
+            = link_to "Caretaker", user_caretaker_path(current_user)
+
         %li{ class: "#{controller_name == 'users' && action_name == 'fruitbasket' ? 'active' : ''}" }
           = link_to "Frugtkurv", user_fruitbasket_path(current_user)
         

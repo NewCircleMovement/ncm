@@ -11,8 +11,9 @@
               = image_tag(epicenter.mother.image)
             - else
               = image_tag(@mother.image)
-          .progress
+          .progress.has-tooltip{ 'data-toggle' => "tooltip", "title" => "#{epicenter.progress}% minimum support reached", 'data-placement' => 'top' }
             .progress-bar.progress-bar-basic{ :style => "width: #{epicenter.progress}%" }
+          
           
           .panel-body.main-info
             %h3.header
@@ -42,25 +43,6 @@
               - else
                 Her kommer der en tagline
           
-          / .panel-info
-          /   .info-box
-          /     - case epicenter.status
-          /       - when SEED
-          /         %i.fa.fa-circle{ class: "seed" }
-          /       - when SPROUT
-          /         %i.fa.fa-fire{ class: "sprout" }
-          /       - when PLANT
-          /         %i.fa.fa-plant{ class: "plant" }
-          /       - when TREE
-          /         %i.fa.fa-tree{ class: "tree" }
-          /     = epicenter.status_text
-          /   .info-box
-          /     %i.fa.fa-users.members
-          /     = epicenter.members.count
-          /   .info-box
-          /     %i.fa.fa-tint.waterdrop
-          /     = epicenter.fruitbasket.fruit_amount( epicenter.mother.fruittype ) || 0
-
           .clearfix
           .panel-body
             = link_to "Vis mere", epicenter_path( epicenter ), :class => 'btn btn-danger'
@@ -77,4 +59,4 @@
               - if epicenter.users_with_tshirt('caretaker').pluck(:id).include? current_user.id
                 = link_to "edit", edit_epicenter_path(epicenter), :class => "btn btn-default pull-right"
           
-    .col-md-4
+    

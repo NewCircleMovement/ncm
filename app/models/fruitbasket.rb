@@ -46,21 +46,35 @@ class Fruitbasket < ActiveRecord::Base
   # end 
 
   def give_fruit_to(receiver_basket, fruittype, amount)
-    donor_bag = self.find_fruitbag(fruittype)
+    fruit_was_given = false
 
-    owner_is_user = self.owner.class == User
-    has_too_little_fruit = donor_bag.amount < amount
+    source_bag = self.find_fruitbag(fruittype)
+    # owner_is_user = self.owner.class == User
+    # too_little_fruit = source_bag.amount < amount
+    enough_fruit = source_bag.amount >= amount
     
-    unless owner_is_user and has_too_little_fruit and fruittype.name != "kroner"
-      donor_bag.amount -= amount
-      donor_bag.save
+    ##42 deleted "owner_is_user"
+    # unless owner_is_user and too_little_fruit and fruittype.name != "kroner"
+    if enough_fruit and fruittype.name != "kroner"
+      source_bag.amount -= amount
+      source_bag.save
       receiver_bag = receiver_basket.find_fruitbag(fruittype)
       receiver_bag.amount += amount
       receiver_bag.save
+      fruit_was_given = true
+
+      details = { value: amount, fruittype: fruittype.name }
+      EventLog.create(
+        source_bag.owner, 
+        receiver_bag.owner, 
+        FRUIT_TRANSFER, 
+        details
+      )
     end 
 
     ##42 TODO
     ## if payment cannot be made, this should be logged in a logging object
+    return fruit_was_given
   end
 	
 end

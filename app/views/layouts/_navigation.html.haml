@@ -28,8 +28,9 @@
                   = current_user.fruits(@epicenter)
                   = @epicenter.fruittype.name
             - else
-              %li{ :class => "#{controller_name == 'subscriptions' ? 'active' : ''}" }
-                = link_to "Bliv medmem", new_epicenter_subscription_path( @epicenter )
+              - if @epicenter.can_accept_members?
+                %li{ :class => "#{controller_name == 'subscriptions' ? 'active' : ''}" }
+                  = link_to "Bliv medmem", new_epicenter_subscription_path( @epicenter )
               
           - else
             - if @mother.has_member?(current_user)
@@ -37,6 +38,9 @@
                 %i.fa.fa-tint
                 = current_user.fruits(@mother)
                 = @mother.fruittype.name
+            - else
+              %li{ :class => "#{controller_name == 'subscriptions' ? 'active' : ''}" }
+                = link_to "Bliv medmem", new_epicenter_subscription_path( @mother )
 
           %li.dropdown
             %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}

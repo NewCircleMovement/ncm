@@ -1,0 +1,21 @@
+= render layout: "edit_user" do
+  %h3.header Du er caretaker af disse epicentre
+  .row
+    - current_user.has_epicenters_with_role('caretaker').each do |epicenter|
+      .col-md-4
+        
+        .panel.panel-default
+          .panel-image
+            - if epicenter.image.present?
+              = image_tag(epicenter.image)
+            - elsif epicenter.mother.image.present?
+              = image_tag(epicenter.mother.image)
+            - else
+              = image_tag(@mother.image)
+          .panel-body
+            %h4.header
+              = epicenter.name
+            
+            %p
+              = link_to "Edit epicenter", edit_epicenter_path(epicenter), :class => "btn btn-primary"
+

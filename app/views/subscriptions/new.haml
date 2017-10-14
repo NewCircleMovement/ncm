@@ -32,7 +32,11 @@
       - if @epicenter.status == SEED
         %li
           Frøet til epicenteret er endnu ikke plantet
-      - if @epicenter.all_caretakers_are_members?
-        %li
-          Ikke alle caretakers er medlemmer endnu
-
+    %p
+      Støt 
+      %strong= @epicenter.name
+      med en engangsoverførsel for at tilkendegive din interesse for epicenteret
+    %p
+      %button.btn.btn-primary.btn-lg{"data-target" => "#donateModal", "data-toggle" => "modal", :type => "button"}
+        Støt med
+        = @epicenter.mother_fruit.name

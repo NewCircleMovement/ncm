@@ -14,3 +14,14 @@
 //= require jquery_ujs
 //= require bootstrap-sprockets
 //= require_tree .
+
+
+$(window).load( function() {
+	($('.has-tooltip').tooltip());
+
+	$('#donateModal').on('shown.bs.modal', function () {
+  		$('#donateInput').focus();
+	});
+
+	$('#supportInput').regexMask(/^\d+$/);
+}) 

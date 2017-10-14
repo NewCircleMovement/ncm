@@ -68,8 +68,21 @@ class User < ActiveRecord::Base
     self.tshirts.pluck(:epicenter_id).include? epicenter.id
   end
 
+  def has_epicenters_with_role(role)
+    tshirts = self.tshirts.includes(:access_point).select do |tshirt| 
+      tshirt.access_point.name == role
+    end
+    epicenter_ids = tshirts.map(&:epicenter_id)
+    return Epicenter.find(epicenter_ids)
+  end
+
   def requested_change(epicenter)
     return MembershipChange.find_by(user_id: self.id, epicenter_id: epicenter.id)
+  end
+
+  def give_fruit_to(receiver, fruittype, amount)
+    result = self.fruitbasket.give_fruit_to(receiver.fruitbasket, fruittype, amount)
+    return result
   end
 
 

@@ -45,6 +45,7 @@ class EpicentersController < ApplicationController
   def show
     @left_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:left] ).first
     @right_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:right] ).first
+    @logs = @epicenter.event_log
   end
 
   def new

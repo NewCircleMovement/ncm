@@ -43,14 +43,12 @@ body
 .container.top
   padding-top: 20px
 
-.space-left-15
-  margin-left: 15px
-.space-right
-  margin-right: 15px
-.space-right-sm
-  margin-right: 10px
-.space-top-lg
-  margin-top: 30px
+$spaces: 5, 10, 15, 20, 25, 30
+$directions: top, right, bottom, left
+@each $space in $spaces
+  @each $direction in $directions
+    .space-#{$direction}-#{$space}
+      margin-#{$direction}: #{$space}px
 
 .header
   margin-top: 0

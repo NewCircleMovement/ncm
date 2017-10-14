@@ -46,6 +46,7 @@ class UsersController < ApplicationController
   end
 
   def edit
+    # @caretaker_epicenters = @user.epicenters_with_role('caretaker')
   end
 
   def update
@@ -60,8 +61,28 @@ class UsersController < ApplicationController
     @user = User.find(params[:user_id])
   end
 
+  def caretaker
+    @user = User.find(params[:user_id])
+  end
+
   def fruitbasket
     @user = User.find(params[:user_id])
+  end
+
+
+  def support_epicenter
+    amount = params['support']['amount']
+    @epicenter = Epicenter.find(params['epicenter_id'])
+    @user = User.find(params[:user_id])
+    
+    result = @user.give_fruit_to(@epicenter, @epicenter.mother_fruit, amount.to_i)
+    if result
+      message = "Tak for din støtte med #{amount} #{@epicenter.mother_fruit.name} til #{@epicenter.name}"
+    else
+      message = "Tak for tanken, men du har ikke nok #{@epicenter.mother_fruit.name}"
+    end
+
+    redirect_to epicenter_path(Epicenter.last), notice: message
   end
 
   private

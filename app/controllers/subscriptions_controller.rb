@@ -13,7 +13,7 @@ class SubscriptionsController < ApplicationController
       end
     else
       puts "redirect attempt", epicenter_subscriptions_path( @epicenter )
-      flash[:notice] = "Du er ikke længere aktivt medlem af #{@epicenter.name}"
+      flash[:notice] = "Du er ikke aktivt medlem af #{@epicenter.name}"
       redirect_to epicenters_path
     end
   end
