@@ -75,7 +75,7 @@ class UsersController < ApplicationController
     @epicenter = Epicenter.find(params['epicenter_id'])
     @user = User.find(params[:user_id])
     
-    result = @user.give_fruit_to(@epicenter, @epicenter.mother_fruit, amount.to_i)
+    result = @user.give_fruit_to(@epicenter, @epicenter.mother_fruit, amount.to_i, )
     if result
       message = "Tak for din støtte med #{amount} #{@epicenter.mother_fruit.name} til #{@epicenter.name}"
     else

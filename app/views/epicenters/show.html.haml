@@ -32,15 +32,16 @@
         %p= @right_info.body
 
     .col-md-4
-      - if @epicenter.status == SEED
-        .well.bg-ncm-info.space-top-15
-          %p
-            Støt 
-            %strong= @epicenter.name
-            med en engangsoverførsel for at tilkendegive din interesse for epicenteret
-          %button.btn.btn-primary{"data-target" => "#supportModal", "data-toggle" => "modal", :type => "button"}
-            Støt med
-            = @epicenter.mother_fruit.name
+      - if current_user
+        - if @epicenter.status == SEED
+          .well.bg-ncm-info.space-top-15
+            %p
+              Støt 
+              %strong= @epicenter.name
+              med en engangsoverførsel for at tilkendegive din interesse for epicenteret
+            %button.btn.btn-primary{"data-target" => "#supportModal", "data-toggle" => "modal", :type => "button"}
+              Støt med
+              = @epicenter.mother_fruit.name
 
       %h2 Overblik
       %p 
@@ -79,33 +80,34 @@
         = caretaker.name
 
 / Modal
-#supportModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
-  .modal-dialog{:role => "document"}
-    = form_for :support, url: user_support_epicenter_path(current_user, @epicenter) do |form|
-      .modal-content
-        .modal-header
-          %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
-            %span{"aria-hidden" => "true"} ×
-          %h4#myModalLabel.modal-title
-            Støt
-            = @epicenter.name
-        .modal-body
-          %p
-            = @epicenter.name
-            er ikke klar til at modtage medlemmer endnu, men du kan vise din støtte for projektet med 
-            en engangsoverførsel af 
-            = @epicenter.mother_fruit.name
-          %p
-            Du har i øjeblikket
-            %strong
-              = current_user.fruitbasket.fruit_amount(@epicenter.mother_fruit)
+- if current_user
+  #supportModal.modal.fade{"aria-labelledby" => "myModalLabel", :role => "dialog", :tabindex => "-1"}
+    .modal-dialog{:role => "document"}
+      = form_for :support, url: user_support_epicenter_path(current_user, @epicenter) do |form|
+        .modal-content
+          .modal-header
+            %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+              %span{"aria-hidden" => "true"} ×
+            %h4#myModalLabel.modal-title
+              Støt
+              = @epicenter.name
+          .modal-body
+            %p
+              = @epicenter.name
+              er ikke klar til at modtage medlemmer endnu, men du kan vise din støtte for projektet med 
+              en engangsoverførsel af 
               = @epicenter.mother_fruit.name
+            %p
+              Du har i øjeblikket
+              %strong
+                = current_user.fruitbasket.fruit_amount(@epicenter.mother_fruit)
+                = @epicenter.mother_fruit.name
 
-          .form-group
-            = form.number_field :amount, :class => "form-control", :id => "supportInput", :value => 10
-            = hidden_field_tag(:epicenter_id, @epicenter.id)
+            .form-group
+              = form.number_field :amount, :class => "form-control", :id => "supportInput", :value => 10
+              = hidden_field_tag(:epicenter_id, @epicenter.id)
 
-        .modal-footer
-          %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Fortryd
-          %button.btn.btn-primary{:type => "submit"} Støt nu
+          .modal-footer
+            %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Fortryd
+            %button.btn.btn-primary{:type => "submit"} Støt nu
 
