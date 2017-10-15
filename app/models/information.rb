@@ -16,12 +16,12 @@
 #
 
 class Information < ActiveRecord::Base
-  belongs_to :owner, polymorphic: true
+	belongs_to :owner, polymorphic: true
   
-  def to_param
-  	if self.slug
-    	self.slug.parameterize
-    end
-	end
+ 	#  	def to_param
+	# 	if self.slug
+	# 		self.slug.parameterize
+	# 	end
+	# end
   
 end
