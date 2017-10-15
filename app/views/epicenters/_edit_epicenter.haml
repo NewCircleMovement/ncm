@@ -23,30 +23,38 @@
   .row
     .col-md-3
       %ul.nav.nav-pills.nav-stacked
-        %li{ class: "#{controller_name == 'epicenters' && action_name != 'members' && action_name != 'tshirts' ? 'active' : ''}" }= link_to "Epicenter", edit_epicenter_path(@epicenter)
+        %li{ class: "#{controller_name == 'epicenters' && action_name != 'members' && action_name != 'tshirts' ? 'active' : ''}" }
+          = link_to "Epicenter", edit_epicenter_path(@epicenter)
         
-        %li{ class: "#{controller_name == 'information' ? 'active' : ''}" }= link_to "Hovedside information", epicenter_information_index_path(@epicenter)
+        %li{ class: "#{controller_name == 'information' ? 'active' : ''}" }
+          = link_to "Main page", epicenter_information_index_path(@epicenter)
 
-        %li{ class: "#{controller_name == 'epipages' ? 'active' : ''}" }= link_to "Epicenter sider", epicenter_epipages_path(@epicenter)
-
+        %li{ class: "#{controller_name == 'epipages' ? 'active' : ''}" }
+          = link_to "Epicenter pages", epicenter_epipages_path(@epicenter)
         
         - if @epicenter.status != SEED
-          %li{ class: "#{controller_name == 'resources' ? 'active' : ''}" }= link_to "Resourcer", epicenter_resources_path(@epicenter)
+          %li{ class: "#{controller_name == 'resources' ? 'active' : ''}" }
+            = link_to "Resources", epicenter_resources_path(@epicenter)
 
-          %li{ class: "#{controller_name == 'fruittypes' ? 'active' : ''}" }= link_to "Frugttype", epicenter_fruittypes_path(@epicenter)
+          %li{ class: "#{controller_name == 'fruittypes' ? 'active' : ''}" }
+            = link_to "Fruit type", epicenter_fruittypes_path(@epicenter)
 
           - if @epicenter.fruittype.present?
-            %li{ class: "#{controller_name == 'memberships' ? 'active' : ''}" }= link_to "Medlemskaber", epicenter_memberships_path(@epicenter)
+            %li{ class: "#{controller_name == 'memberships' ? 'active' : ''}" }
+              = link_to "Memberships", epicenter_memberships_path(@epicenter)
         
-          %li{ class: "#{controller_name == 'access_points' ? 'active' : ''}" }= link_to "Roller", epicenter_access_points_path(@epicenter)
+          %li{ class: "#{controller_name == 'access_points' ? 'active' : ''}" }
+            = link_to "Member roles", epicenter_access_points_path(@epicenter)
 
-          %li{ class: "#{action_name == 'members' ? 'active' : ''}" }= link_to "Medlemmer", epicenter_members_path(@epicenter)
+          %li{ class: "#{action_name == 'members' ? 'active' : ''}" }
+            = link_to "Members", epicenter_members_path(@epicenter)
 
-          %li{ class: "#{action_name == 'tshirts' ? 'active' : ''}" }= link_to "Tshirts", epicenter_tshirts_path(@epicenter)
+          %li{ class: "#{action_name == 'tshirts' ? 'active' : ''}" }
+            = link_to "Tshirts", epicenter_tshirts_path(@epicenter)
 
-      - if @epicenter.status != SEED
-        .alert.alert-danger
-          %h4.header Bemærk
+      .well.well-sm
+        %h4.header Please note
+        - if @epicenter.status != SEED
           - if @epicenter.memberships.present?
             - unless @epicenter.has_member?( current_user )
               %p
