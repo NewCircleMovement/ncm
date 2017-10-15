@@ -2,63 +2,58 @@
   .row
     - @epicenters.each do |epicenter|
       .col-md-4
-        .panel.panel-default
-          
-          .panel-image
-            - if epicenter.image.present?
-              = image_tag(epicenter.image)
-            - elsif epicenter.mother.image.present?
-              = image_tag(epicenter.mother.image)
-            - else
-              = image_tag(@mother.image)
-
-          .progress.has-tooltip{ 'data-toggle' => "tooltip", "title" => "#{number_with_precision(epicenter.progress_members, precision: 1)}% minimum members reached", 'data-placement' => 'top' }
-            .progress-bar{ :style => "width: #{epicenter.progress_members}%", 'aria-valuemin' => "0", 'aria-valuemax' => "100" }
-          .progress.has-tooltip{ 'data-toggle' => "tooltip", "title" => "#{number_with_precision(epicenter.progress_fruits, precision: 1)}% minimum support reached", 'data-placement' => 'top' }
-            .progress-bar.progress-bar-basic{ :style => "width: #{epicenter.progress_fruits}%" }
-          
-          .panel-body.main-info
-            %h3.header
-              = link_to epicenter.name, epicenter
-            .stat-info
-              .stat-item
-                - case epicenter.status
-                  - when SEED
-                    %i.fa.fa-circle{ class: "seed" }
-                  - when SPROUT
-                    %i.fa.fa-fire{ class: "sprout" }
-                  - when PLANT
-                    %i.fa.fa-plant{ class: "plant" }
-                  - when TREE
-                    %i.fa.fa-tree{ class: "tree" }
-                = epicenter.status_text
-              .stat-item
-                %i.fa.fa-users.members
-                = epicenter.members.count
-              .stat-item
-                %i.fa.fa-tint.waterdrop
-                = epicenter.fruitbasket.fruit_amount( epicenter.mother.fruittype ) || 0
-
-            %p
-              - if epicenter.tagline.present?
-                = epicenter.tagline
+        = link_to epicenter do
+          .panel.panel-default.panel-link
+            .panel-image
+              - if epicenter.image.present?
+                = image_tag(epicenter.image)
+              - elsif epicenter.mother.image.present?
+                = image_tag(epicenter.mother.image)
               - else
-                Tagline
-          
-          .clearfix
-          .panel-body
-            = link_to "Show", epicenter_path( epicenter ), :class => 'btn btn-danger'
-            -# - if current_user
-            -#   - if epicenter.has_member?( current_user )
-            -#     = link_to "Rediger medlemskab", epicenter_subscriptions_path( epicenter ), :class => 'btn btn-danger'
-            -#   - else
-            -#     = link_to "Bliv medlem", new_epicenter_subscription_path( epicenter ), :class => 'btn btn-primary'
-            -# - else
-            -#   = link_to "Bliv medlem", new_epicenter_subscription_path( epicenter ), :class => 'btn btn-primary'
+                = image_tag(@mother.image)
+
+            .progress.has-tooltip{ 'data-toggle' => "tooltip", "title" => "#{number_with_precision(epicenter.progress_members, precision: 1)}% minimum members reached", 'data-placement' => 'top' }
+              .progress-bar{ :style => "width: #{epicenter.progress_members}%", 'aria-valuemin' => "0", 'aria-valuemax' => "100" }
+            .progress.has-tooltip{ 'data-toggle' => "tooltip", "title" => "#{number_with_precision(epicenter.progress_fruits, precision: 1)}% #{epicenter.mother_fruit.name} reached", 'data-placement' => 'top' }
+              .progress-bar.progress-bar-basic{ :style => "width: #{epicenter.progress_fruits}%" }
+            
+            .panel-body.main-info
+              %h3.header
+                = epicenter.name
+              .stat-info
+                .stat-item
+                  - case epicenter.status
+                    - when SEED
+                      %i.fa.fa-circle{ class: "seed" }
+                    - when SPROUT
+                      %i.fa.fa-fire{ class: "sprout" }
+                    - when PLANT
+                      %i.fa.fa-plant{ class: "plant" }
+                    - when TREE
+                      %i.fa.fa-tree{ class: "tree" }
+                  = epicenter.status_text
+                .stat-item
+                  %i.fa.fa-users.members
+                  = epicenter.members.count
+                .stat-item
+                  %i.fa.fa-tint.waterdrop
+                  = epicenter.fruitbasket.fruit_amount( epicenter.mother.fruittype ) || 0
+
+              %p
+                - if epicenter.tagline.present?
+                  = epicenter.tagline
+                - else
+                  Tagline
+
             - if current_user
               - if epicenter.has_member?( current_user )
-                %span.space-left-5 You are a member
-              - if epicenter.users_with_tshirt('caretaker').pluck(:id).include? current_user.id
-                = link_to "Edit", edit_epicenter_path(epicenter), :class => "btn btn-default pull-right"
+                %span.panel-member You are member
+                
+              / = link_to "Show", epicenter_path( epicenter ), :class => 'btn btn-danger'
+              / - if current_user
+              /   - if epicenter.has_member?( current_user )
+              /     %span.space-left-5 You are a member
+              /   - if epicenter.users_with_tshirt('caretaker').pluck(:id).include? current_user.id
+              /     = link_to "Edit", edit_epicenter_path(epicenter), :class => "btn btn-default pull-right"
           
     

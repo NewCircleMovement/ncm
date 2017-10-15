@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .card
-  border: 1px solid darken(white, 10  )
+  border: 1px solid darken(white, 10)
   .video
     width: 100%
 
@@ -37,8 +37,20 @@
       margin-right: 20px
 
   .main-info
-    height: 120px
+    position: relative
+    height: 140px
+    max-height: 140px
     overflow: hidden
+    p
+      color: black
+    span.panel-member
+      position: absolute
+      right: 0
+      bottom: 0
+      font-size: 11px
+      padding: 3px 5px
+      background: black
+      color: white
 
   .panel-image-left
     width: 100px
@@ -63,7 +75,19 @@
   max-height: 100px
   overflow: hidden
 
-// .panel-stats
-//   float: right
-//   width: 30%
-//   border-left: 1px solid #DDDDDD
+.panel-link
+  position: relative
+  border: none
+  transition: all 0.1s ease-in-out
+  box-shadow: 0 0 5px darken(white, 20) 
+  &:hover
+    box-shadow: 0 0 10px darken(white, 50) 
+  span.panel-member
+    position: absolute
+    right: 0
+    top: 0
+    font-size: 11px
+    padding: 3px 6px
+    background: darken(#D95E34, 20)
+    color: white
+    border-bottom-left-radius: 3px
