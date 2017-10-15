@@ -1,4 +1,5 @@
-%h3.header= action_name == 'new' ? "Opret ny information" : "Rediger information"
+%h3.header
+  = action_name == 'new' ? "Opret ny information" : "Rediger information"
 
 = simple_form_for [@epicenter, @info] do |f|
   .row

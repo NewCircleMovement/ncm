@@ -17,7 +17,7 @@
 
 class InformationController < ApplicationController
   before_action :set_epicenter
-  before_action :set_info, only: [:edit, :update, :destroy]
+  before_action :set_info, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
 
   def index
