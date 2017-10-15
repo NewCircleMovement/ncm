@@ -13,6 +13,6 @@
           %tr
             %th= info.title
             %th
-              = link_to "Ret", edit_epicenter_information_path(@epicenter, info), class: "btn btn-default"
-              = link_to "Slet", [@epicenter, info], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
+              = link_to "Ret", edit_epicenter_information_path(@epicenter, info.id), class: "btn btn-default"
+              / = link_to "Slet", [@epicenter, info], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
           
