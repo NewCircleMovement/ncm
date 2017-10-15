@@ -71,7 +71,8 @@ class InformationController < ApplicationController
     end
 
     def set_info
-      @info = Information.find_by(slug: params[:id])
+      # @info = Information.find_by(slug: params[:id])
+      @info = Information.find(params[:id])
     end
 
     def information_params
