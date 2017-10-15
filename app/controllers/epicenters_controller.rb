@@ -20,6 +20,12 @@
 #  slug                 :string
 #  image                :string
 #  tagline              :string
+#  size                 :string
+#  meeting_day          :string
+#  meeting_time         :time
+#  meeting_week         :string
+#  meeting_address      :string
+#  meeting_active       :boolean          default(FALSE)
 #
 
 class EpicentersController < ApplicationController
@@ -223,7 +229,7 @@ class EpicentersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def epicenter_params
       params.require(:epicenter).permit(:name, :description, :image, :tagline, :max_members, :video_url, :growing, :manifested,
-                                        :size, :depth_fruits, :depth_members, :slug, :monthly_fruits_basis,
+                                        :ongoing, :size, :depth_fruits, :depth_members, :slug, :monthly_fruits_basis,
                                         :meeting_day, :meeting_time, :meeting_week, :meeting_address, :meeting_active,
                                         fruittype_attributes: [:name, :monthly_decay],
                                         memberships_attributes: [:name, :monthly_fee, :engagement] )

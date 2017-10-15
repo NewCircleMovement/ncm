@@ -20,6 +20,12 @@
 #  slug                 :string
 #  image                :string
 #  tagline              :string
+#  size                 :string
+#  meeting_day          :string
+#  meeting_time         :time
+#  meeting_week         :string
+#  meeting_address      :string
+#  meeting_active       :boolean          default(FALSE)
 #
 
 FactoryGirl.define do

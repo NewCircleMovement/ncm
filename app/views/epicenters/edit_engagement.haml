@@ -58,16 +58,19 @@
 				%strong
 					Bemærk: Når frøet først er plantet kan størrelsen ikke laves om
 			.form-group
-				= f.input :size, label: "Størrelse", :collection => ['Tribe', 'Movement'], include_blank: false
+				- if @epicenter.ongoing
+					= f.input :size, label: "Impact", :collection => [TRIBE, MOVEMENT], include_blank: false
+				- else
+					= f.input :size, label: "Impact", :collection => [GATHERING], include_blank: false
 
 			.form-group
-				= f.input :depth_members, label: "Minimum antal medlemmer", input_html: { :class => 'form-control' }
+				= f.input :depth_members, label: "Minimum members", input_html: { :class => 'form-control' }
 				%span.help-block
 					Det antal medlemmer som 
 					= "#{@epicenter.name}"
 					mindst skal have for at få udbetalt støtte
 			.form-group
-				= f.input :depth_fruits, label: "Minimum antal #{@epicenter.mother_fruit.name}", input_html: { :class => 'form-control' } 
+				= f.input :depth_fruits, label: "Minimum #{@epicenter.mother_fruit.name}", input_html: { :class => 'form-control' } 
 				%span.help-block
 					Det antal 
 					= "#{@epicenter.mother_fruit.name} som #{@epicenter.name}"
@@ -77,14 +80,14 @@
 			.form-group
 				= f.input :monthly_fruits_basis, :label => "#{@epicenter.fruittype.name}træernes frugtbarhed pr. måned"
 				%span.help-block 
-					De 
+					The
 					= "#{@epicenter.fruittype.name}"
-					som alle medlemmer får hver måned fra deres 
-					= "#{@epicenter.fruittype.name.downcase}træ"
+					which all members recieve every month from their
+					= "#{@epicenter.fruittype.name.downcase} tree"
 
 			%hr/
 			= hidden_field_tag(:sow, true)
-			= f.submit "Næste step", :id => 'submit', :class => 'btn btn-primary', :disabled => true
+			= f.submit "Next step", :id => 'submit', :class => 'btn btn-primary', :disabled => true
 			%span.space-left-15#messages
 
 / ##42 move minimum requirements to mother epicenter

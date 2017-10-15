@@ -35,6 +35,8 @@ class EpipagesController < ApplicationController
   end
 
   def create
+    puts "//////////////////////////////////////"
+    puts ""
     @page = @epicenter.epipages.build(epipage_params)
     if @page.menu_title
       @page.slug = @page.menu_title.parameterize

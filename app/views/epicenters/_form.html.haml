@@ -1,41 +1,37 @@
 = simple_form_for @epicenter do |f|
   .form-group
-    .row
-      .col-md-10
-
-        = f.input :name, label: "Navn", input_html: { :class => 'form-control' } 
-      .col-md-2
-        = f.input :size, label: "Størrelse", :collection => ['Tribe', 'Movement'], include_blank: false
+    = f.input :name, label: "Name", input_html: { :class => 'form-control' } 
+  .form-group  
+    %label What kind of epicenter are you creating?
+    .radio
+      = f.collection_radio_buttons(:ongoing, [[true, 'Ongoing activity'] ,[false, 'A one time gathering']], :first, :last) do |b| b.label { b.radio_button + b.text } end
   .form-group
     = f.input :tagline, input_html: { :class => 'form-control' } 
   .form-group
-    = f.input :description, label: "Beskrivelse", input_html: { :class => 'form-control' } 
+    = f.input :description, label: "Description", input_html: { :class => 'form-control' } 
   
   .row
     .col-md-6
       .form-group
-        = f.input :video_url, label: "Link til projekt video, e.g. youtube"
+        = f.input :video_url, label: "Link to project video, e.g. youtube"
     .col-md-6
       .form-group
-        = f.input :image, label: "Baggrundsbillede (optimalt format: 250px høj, og fuld bredde)"
+        = f.input :image, label: "Background image (optimal format: 250px high, and full screen width)"
   .row
     .col-md-3
       - if @epicenter.size
-        = f.input :depth_members, label: "Minimum antal medlemmer", input_html: { :class => 'form-control', :value => @depth_members }
+        = f.input :depth_members, label: "Minimum members", input_html: { :class => 'form-control', :value => @depth_members }
     .col-md-3
       - if @epicenter.size
-        = f.input :depth_fruits, label: "Minimum antal #{@epicenter.mother_fruit.name}", input_html: { :class => 'form-control', :value => @depth_fruits } 
+        = f.input :depth_fruits, label: "Minimum #{@epicenter.mother_fruit.name}", input_html: { :class => 'form-control', :value => @depth_fruits } 
 
     - unless action_name == "new"
       .col-md-6
-        = f.input :monthly_fruits_basis, :label => "Frugtræernes produktion pr. måned"
-        %span.help-block Den frugt som alle medlemmer får hver måned fra deres træ
+        = f.input :monthly_fruits_basis, :label => "Fruit tree yield per month"
+        %span.help-block 
+          The fruit that each member recieves from their tree per month
   
-  = f.submit "Gem", :class => 'btn btn-primary'
-  -# - if action_name == 'new'
-  -#   = link_to "Fortryd", :back, class: "btn btn-default"
-  -# - else
-  -#   = link_to "Fortryd", epicenters_path, class: "btn btn-default"
+  = f.submit "Save", :class => 'btn btn-primary'
 
 <script>
 $(document).ready(function(){$('[data-toggle="tooltip"]').tooltip();});

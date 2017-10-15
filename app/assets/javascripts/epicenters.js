@@ -41,6 +41,9 @@ $(function() {
 			case 'Movement':
 				members.value = 1000;
 				break;
+			case 'Gathering':
+				members.value = 100;
+				break;
 		}
 	}
 
@@ -76,22 +79,29 @@ $(function() {
 				}
 				break;
 
+			case 'Gathering':
+				requirements = {
+					members: { min: 100, max: 1000 },
+					fruits: { min: 30000, max: 100000 }
+				}
+				break;
+
 		}
 
 		if (membersValue < requirements.members.min) {
-			messages.push("Medlemmer skal minimum være " + requirements.members.min);
+			messages.push("Minimum number of members " + requirements.members.min);
 		}
 
 		if (membersValue > requirements.members.max) {
-			messages.push("Medlemmer må højst være " + requirements.members.max);
+			messages.push("Maximum number of members " + requirements.members.max);
 		}
 
 		if (fruitsValue < requirements.fruits.min) {
-			messages.push("Vanddråber skal være over " + requirements.fruits.min);
+			messages.push("Waterdrops must exceed " + requirements.fruits.min);
 		} 
 
 		if (fruitsValue > requirements.fruits.max) {
-			messages.push("Vanddråber må ikke være over " + requirements.fruits.max);
+			messages.push("Waterdrops must not exceed " + requirements.fruits.max);
 		}
 
 		seedIsOk = (messages.length == 0);

@@ -20,6 +20,12 @@
 #  slug                 :string
 #  image                :string
 #  tagline              :string
+#  size                 :string
+#  meeting_day          :string
+#  meeting_time         :time
+#  meeting_week         :string
+#  meeting_address      :string
+#  meeting_active       :boolean          default(FALSE)
 #
 
 # niveau "kan måske slettes... kan evt. sættes af location"
@@ -174,9 +180,9 @@ class Epicenter < Blueprint
 
   def get_max_members
     case self.size
-    when 'Tribe'
+    when TRIBE, GATHERING
       return 1000
-    when 'Movement'
+    when MOVEMENT
       return 10000
     end
   end
@@ -216,7 +222,6 @@ class Epicenter < Blueprint
     location_for_child = Location.new(:name => epicenter_params[:name], :density => 2)
 
     if location_for_child.save
-
       child = Epicenter.new(epicenter_params)
       child.mother_id = self.id
       child.location = location_for_child
@@ -224,12 +229,15 @@ class Epicenter < Blueprint
 
       ##42 child depth members and fruits must be variable on mother epicenter
       case child.size
-      when 'Tribe'
+      when TRIBE, GATHERING
         child.depth_members = MIN_DEPTH_MEMBERS_TRIBE
         child.depth_fruits = MIN_DEPTH_FRUITS_TRIBE
-      when 'Movement'
+      when MOVEMENT
         child.depth_members = MIN_DEPTH_MEMBERS_MOVEMENT
         child.depth_fruits = MIN_DEPTH_FRUITS_MOVEMENT
+      else
+        child.depth_members = 100
+        child.depth_fruits = 30000
       end
       
       if child.save

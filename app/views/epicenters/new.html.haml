@@ -1,5 +1,5 @@
 .container
-  %h1 Opret nyt epicenter
+  %h1 Create epicenter
   .row
     .col-md-8
       .well
@@ -7,18 +7,19 @@
     .col-md-4
       .well
         %h3.header 
-          Hvornår får dit projekt støtte?
+          When will your project receive funding?
         %p
-          Dit projekt får støtte i det øjeblik din "epicenter spire" bryder igennem jordoverfladen.
+          Your project will receive funding when your epicenter "sprout" shoots from the soil 
         %p
-          Din spire bryder igennem når minimumsstøtten er opfyldt i form af 
-          %strong medlemmer
-          = "(minimum #{MIN_DEPTH_MEMBERS}) og"
-          %strong vanddråber
-          = "(minimum #{MIN_DEPTH_FRUITS})"
-          som medlemmerne giver.
+          Your sprout shoots when your project reaches the minimum support from
+          %strong= "#{MIN_DEPTH_MEMBERS} members"
+          supporting with
+          
+          %strong= "#{MIN_DEPTH_FRUITS} #{@mother.fruittype.name}"
         
-        %h3 Hvad er dine minimumskrav?
-        %p Du kan sætte din egen påkrævede minimumsstøtte.
+        %h3 
+          What are 
+          %em your 
+          minimum requirements?
         %p
-          Du har et fremragende projekt. Men hvornår vil du dedikere tid til at føre det ud i livet? Med andre ord, hvor stor opbakning har du og projektet brug for?
+          You have an excellent project. But when will you dedicate your time and committment to make it happen? In other words, what level of support do you and the project need?

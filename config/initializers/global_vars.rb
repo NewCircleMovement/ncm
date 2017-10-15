@@ -1,3 +1,9 @@
+## Note that all javascript files do not currently use global vars
+
+TRIBE = "Tribe"
+MOVEMENT = "Movement"
+GATHERING = "Gathering"
+
 TREE = "tree"
 PLANT = "plant"
 SPROUT = "sprout"
