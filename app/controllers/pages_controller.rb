@@ -7,6 +7,10 @@ class PagesController < ApplicationController
     @projects_count = Epicenter.where(:manifested => true).count
     @left_info = @mother.information.where(:position => INFORMATION_POSITIONS[:left]).first
     @right_info = @mother.information.where(:position => INFORMATION_POSITIONS[:right]).first
+
+    @support = @mother.information.where(:title => "Support").first
+    @paid = @mother.information.where(:title => "Paid").first
+    @pool = @mother.information.where(:title => "Pool").first
   end
 
   def info

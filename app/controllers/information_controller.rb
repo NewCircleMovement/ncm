@@ -76,7 +76,7 @@ class InformationController < ApplicationController
     end
 
     def information_params
-      params.require(:information).permit(:title, :body, :position, :kind)
+      params.require(:information).permit(:title, :string, :body, :position, :kind)
     end
 
 end

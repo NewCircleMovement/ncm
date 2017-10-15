@@ -30,7 +30,7 @@
             - else
               - if @epicenter.can_accept_members?
                 %li{ :class => "#{controller_name == 'subscriptions' ? 'active' : ''}" }
-                  = link_to "Become a member", new_epicenter_subscription_path( @epicenter )
+                  = link_to "Join now", new_epicenter_subscription_path( @epicenter )
               
           - else
             - if @mother.has_member?(current_user)
@@ -41,7 +41,7 @@
                   = @mother.fruittype.name
             - else
               %li{ :class => "#{controller_name == 'subscriptions' ? 'active' : ''}" }
-                = link_to "Become a member", new_epicenter_subscription_path( @mother )
+                = link_to "Join now", new_epicenter_subscription_path( @mother )
 
           %li.dropdown
             %a.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}

@@ -7,7 +7,7 @@
           %p 
             Find your tribe. Start the movement. Heal the planet.
           - unless user_signed_in?
-            = link_to "Become a member", new_user_registration_path, :class => 'btn btn-primary btn-lg'
+            = link_to "Join now", new_user_registration_path, :class => 'btn btn-primary btn-lg'
 
 .container.top
   -# - if user_signed_in?
@@ -43,24 +43,39 @@
       %p A summary of New Circle Movements members and projects
       
       %table.table.table-condensed
-        %tr
-          %td 
-            Support from members 
-            %p.timestamp.last-element September, 2017
-          %td 
-            80,000
-        %tr
-          %td 
-            Paid to projects
-            %p.timestamp.last-element September, 2017
-          %td
-
-        %tr
-          %td 
-            Pool for new projects
-            %p.timestamp.last-element For October
-          %td
-
+        - if @support
+          %tr
+            %td 
+              Support from members 
+              %p.timestamp.last-element 
+                = @support.body
+            %td 
+              .stat-number
+                - @support.string.chars.map(&:to_i).each do |digit|
+                  .stat-number-digit
+                    = digit
+        - if @paid
+          %tr
+            %td 
+              Paid to projects
+              %p.timestamp.last-element 
+                = @paid.body
+            %td
+              .stat-number
+                - @paid.string.chars.map(&:to_i).each do |digit|
+                  .stat-number-digit
+                    = digit
+        - if @pool
+          %tr
+            %td 
+              Pool for new projects
+              %p.timestamp.last-element 
+                = @pool.body
+            %td
+              .stat-number
+                - @pool.string.chars.map(&:to_i).each do |digit|
+                  .stat-number-digit
+                    = digit
 
 
       / %table.table.table-condensed
