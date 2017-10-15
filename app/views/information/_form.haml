@@ -1,12 +1,6 @@
 %h3.header
   = action_name == 'new' ? "Opret ny information" : "Rediger information"
 
-%p Her er den
-
-%p= @info.id
-%p= @info.kind
-%p= @info.title
-%p= @info.position
 = simple_form_for [@epicenter, @info] do |f|
   .row
     .col-md-2
