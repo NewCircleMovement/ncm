@@ -39,25 +39,46 @@
         %p= @right_info.body
 
     .col-md-4
-      %h2 Summary
+      %h2 Activity
       %p A summary of New Circle Movements members and projects
       
       %table.table.table-condensed
         %tr
-          %td Members
-          %td= @mother.members.count
+          %td 
+            Support from members 
+            %p.timestamp.last-element September, 2017
+          %td 
+            80,000
         %tr
-          %td Active projects
-          %td= @projects_count
-        %tr
-          %td Sprouts
-          %td= @sprouts_count
-        %tr
-          %td Seeds
-          %td= @seed_count
-        %tr
-          %td Udbetalt sidste måned
+          %td 
+            Paid to projects
+            %p.timestamp.last-element September, 2017
           %td
+
+        %tr
+          %td 
+            Pool for new projects
+            %p.timestamp.last-element For October
+          %td
+
+
+
+      / %table.table.table-condensed
+      /   %tr
+      /     %td Members
+      /     %td= @mother.members.count
+      /   %tr
+      /     %td Active projects
+      /     %td= @projects_count
+      /   %tr
+      /     %td Sprouts
+      /     %td= @sprouts_count
+      /   %tr
+      /     %td Seeds
+      /     %td= @seed_count
+      /   %tr
+      /     %td Udbetalt sidste måned
+      /     %td
 
 
 

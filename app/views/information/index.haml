@@ -1,16 +1,17 @@
 = render layout: "epicenters/edit_epicenter" do
-  %h3.header Informations
-  = link_to "Opret ny", new_epicenter_information_path, :class => "btn btn-default"
-  %table.table.table-condensed
-    %thead
-      %tr
-        %th Titel
-        %th Funktioner
-    %tbody
-      - @information.each do |info|
-        %tr
-          %th= info.title
-          %th
-            = link_to "Ret", edit_epicenter_information_path(@epicenter, info), class: "btn btn-default"
-            = link_to "Slet", [@epicenter, info], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
+  Test
+  / %h3.header Informations
+  / = link_to "Opret ny", new_epicenter_information_path, :class => "btn btn-default"
+  / %table.table.table-condensed
+  /   %thead
+  /     %tr
+  /       %th Titel
+  /       %th Funktioner
+  /   %tbody
+  /     - @information.each do |info|
+  /       %tr
+  /         %th= info.title
+  /         %th
+  /           = link_to "Ret", edit_epicenter_information_path(@epicenter, info), class: "btn btn-default"
+  /           = link_to "Slet", [@epicenter, info], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
         
