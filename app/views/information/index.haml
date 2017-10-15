@@ -8,11 +8,11 @@
         %th Titel
         %th Funktioner
     %tbody
-      - @information.each do |info|
-        - if info
+      - @information.each do |item|
+        - if item
           %tr
-            %th= info.title
+            %th= item.title
             %th
-              = link_to "Ret", edit_epicenter_information_path(@epicenter, info.id), class: "btn btn-default"
-              / = link_to "Slet", [@epicenter, info], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
+              = link_to "Ret", edit_epicenter_information_path(@epicenter, item.id), class: "btn btn-default"
+              = link_to "Slet", [@epicenter, item], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
           
