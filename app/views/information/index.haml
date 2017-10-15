@@ -1,12 +1,12 @@
 = render layout: "epicenters/edit_epicenter" do
-  Test
-  / %h3.header Informations
-  / = link_to "Opret ny", new_epicenter_information_path, :class => "btn btn-default"
-  / %table.table.table-condensed
-  /   %thead
-  /     %tr
-  /       %th Titel
-  /       %th Funktioner
+  %h3.header Informations
+  = link_to "Opret ny", new_epicenter_information_path, :class => "btn btn-default"
+  
+  %table.table.table-condensed
+    %thead
+      %tr
+        %th Titel
+        %th Funktioner
   /   %tbody
   /     - @information.each do |info|
   /       %tr
