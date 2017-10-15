@@ -14,5 +14,6 @@
             %th= item.title
             %th
               = link_to "Ret", edit_epicenter_information_path(@epicenter, item.id), class: "btn btn-default"
-              = link_to "Slet", [@epicenter, item], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
+              / Careful... adding delete link breaks
+              / = link_to "Slet", [@epicenter, item], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
           
