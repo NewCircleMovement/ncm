@@ -78,7 +78,7 @@
                     = digit
       - if @message
         .well.well-sm
-          %p= @message.content
+          %p= @message.body.strip()
 
 
 
