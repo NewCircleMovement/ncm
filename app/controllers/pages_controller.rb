@@ -11,6 +11,7 @@ class PagesController < ApplicationController
     @support = @mother.information.where(:title => "Support").first
     @paid = @mother.information.where(:title => "Paid").first
     @pool = @mother.information.where(:title => "Pool").first
+    @message = @mother.information.where(:title => "Message").first
   end
 
   def info

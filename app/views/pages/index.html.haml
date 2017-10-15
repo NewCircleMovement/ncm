@@ -40,7 +40,7 @@
 
     .col-md-4
       %h2 Activity
-      %p A summary of New Circle Movements members and projects
+      %p A summary of New Circle Movement's support and payout in Danish Kroner
       
       %table.table.table-condensed
         - if @support
@@ -52,7 +52,7 @@
             %td 
               .stat-number
                 - @support.string.chars.map(&:to_i).each do |digit|
-                  .stat-number-digit
+                  .stat-number-digit.bg-ncm-dark-primary
                     = digit
         - if @paid
           %tr
@@ -63,7 +63,7 @@
             %td
               .stat-number
                 - @paid.string.chars.map(&:to_i).each do |digit|
-                  .stat-number-digit
+                  .stat-number-digit.bg-ncm-darker-primary
                     = digit
         - if @pool
           %tr
@@ -74,8 +74,12 @@
             %td
               .stat-number
                 - @pool.string.chars.map(&:to_i).each do |digit|
-                  .stat-number-digit
+                  .stat-number-digit.bg-ncm-primary
                     = digit
+      - if @message
+        .well.well-sm
+          %p= @message.content
+
 
 
       / %table.table.table-condensed
