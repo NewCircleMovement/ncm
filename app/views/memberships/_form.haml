@@ -6,7 +6,7 @@
     = simple_form_for [@epicenter, @membership] do |f|
       = hidden_field_tag(:depth_members, @epicenter.depth_members)
       = hidden_field_tag(:depth_fruits, @epicenter.depth_fruits)
-      = hidden_field_tag(:monthly_decay, @epicenter.fruittype.monthly_decay)
+      = hidden_field_tag(:monthly_decay, @epicenter.mother.fruittype.monthly_decay)
 
       = f.input :name
       = f.input :monthly_fee, label: "Medlemmets tilførsel pr. måned (#{@epicenter.mother_fruit.name})"

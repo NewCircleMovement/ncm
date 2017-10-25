@@ -11,6 +11,8 @@
         - if @epicenter.can_accept_members?
           - if current_user and not @epicenter.has_member?(current_user)
             = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
+          - else
+            = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
         / / - if not @epicenter.status == SEED
         / - unless current_user.present? && current_user.get_membership(@epicenter)
         /   = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
