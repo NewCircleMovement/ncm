@@ -22,12 +22,15 @@ Rails.application.routes.draw do
     resources :resources
     
     namespace :members do
+    
     end
 
     resources :epicenters
 
     get '/edit_engagement' => 'epicenters#edit_engagement'
     get '/edit_members' => 'epicenters#edit_members'
+    get '/api' => 'epicenters#api'
+    get '/new_api_token' => 'epicenters#new_api_token'
     get '/edit_meeting_time' => 'epicenters#edit_meeting_time'
     get '/review_plant' => 'epicenters#review_plant'
     get '/confirm_plant' => 'epicenters#confirm_plant'
@@ -40,4 +43,19 @@ Rails.application.routes.draw do
   get '/info' => 'pages#info'
   get '/join_epicenter' => 'epicenters#join_epicenter'
   get '/leave_epicenter' => 'epicenters#leave_epicenter'
+
+  
+  namespace :api, defaults: { format: 'json' } do
+    # resources :users
+    
+    namespace :v1 do
+      resources :epicenters, param: :slug do
+        resources :users
+        post '/authenticate' => 'users#authenticate'
+      end
+      
+    end
+  end
+
+
 end

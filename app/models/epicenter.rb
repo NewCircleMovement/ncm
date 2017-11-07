@@ -32,8 +32,7 @@
 require 'blueprint'
 
 class Epicenter < Blueprint
-  mount_uploader :image, ImageUploaderEpicenter
-
+  before_create :generate_api_token
   before_destroy :test_if_ncm
 
   validates :name, :tagline, :depth_members, :depth_fruits, :presence => true
@@ -65,6 +64,7 @@ class Epicenter < Blueprint
   accepts_nested_attributes_for :memberships
   accepts_nested_attributes_for :fruittype
 
+  mount_uploader :image, ImageUploaderEpicenter
 
   def self.grand_mother
     return Epicenter.where(:name => "New Circle Movement").first
@@ -520,4 +520,18 @@ class Epicenter < Blueprint
 
     ret
   end
+
+  def new_api_token
+    self.send(:generate_api_token)
+  end
+
+  
+  private
+
+  def generate_api_token
+    begin
+      self.api_token = SecureRandom.hex
+    end while self.class.exists?(api_token: api_token)
+  end
+
 end

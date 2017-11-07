@@ -1,0 +1,41 @@
+= render layout: "edit_epicenter" do
+  .alert.alert-info
+    
+  %h3
+    Api
+  %p
+    If you are running your own website you can authenticate users and retrieve all epicenter information through the New Circle Movement api. 
+
+  .well.well-sm
+    %h4.header Your api token
+    %p
+      - if @epicenter.api_token
+        %strong= @epicenter.api_token
+      - else
+        %strong You currently do not have an api token
+    %p.space-bottom-20
+      - if @epicenter.api_token
+        = link_to "Generate new token", epicenter_new_api_token_path(@epicenter), :class => "btn btn-default", :data => { :confirm => "Are you sure?" }
+      - else
+        = link_to "Generate new token", epicenter_new_api_token_path(@epicenter), :class => "btn btn-default"
+    
+    %h4 Requests
+    %p
+      All api requests must include the follwing header 
+    - if @epicenter.api_token
+      %samp= "Authorization: Token #{@epicenter.api_token}"
+
+  %h3
+    Authenticate users
+  %p
+    You can authenticate users of your epicenter by 
+    
+  %pre 
+    %span.badge.space-right-10 POST 
+    = " /api/v1/epicenters/#{@epicenter.slug}/authenticate"
+
+  %strong Request object: 
+  %samp { email: "test@example.com", password: "secret" }
+  %br/
+  %strong Expected response
+  %samp { user: UserObject, valid_password: true/false, valid_member: true/false }
