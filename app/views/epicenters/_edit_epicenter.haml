@@ -23,9 +23,9 @@
   .row
     .col-md-3
       %ul.nav.nav-pills.nav-stacked
-        %li{ class: "#{controller_name == 'epicenters' && action_name != 'members' && action_name != 'tshirts' ? 'active' : ''}" }
+        %li{ class: "#{controller_name == 'epicenters' and !['edit_members', 'members', 'tshirts', 'api'].include?(action_name) ? 'active' : ''}" }
           = link_to "Epicenter", edit_epicenter_path(@epicenter)
-        
+
         %li{ class: "#{controller_name == 'information' ? 'active' : ''}" }
           = link_to "Main page", epicenter_information_index_path(@epicenter)
 
@@ -46,11 +46,14 @@
           %li{ class: "#{controller_name == 'access_points' ? 'active' : ''}" }
             = link_to "Member roles", epicenter_access_points_path(@epicenter)
 
-          %li{ class: "#{action_name == 'members' ? 'active' : ''}" }
-            = link_to "Members", epicenter_members_path(@epicenter)
+          %li{ class: "#{action_name == 'edit_members' ? 'active' : ''}" }
+            = link_to "Members", epicenter_edit_members_path(@epicenter)
 
           %li{ class: "#{action_name == 'tshirts' ? 'active' : ''}" }
             = link_to "Tshirts", epicenter_tshirts_path(@epicenter)
+
+          %li{ class: "#{action_name == 'api' ? 'active' : ''}" }
+            = link_to "Api", epicenter_api_path(@epicenter)
 
       .well.well-sm
         %h4.header Please note

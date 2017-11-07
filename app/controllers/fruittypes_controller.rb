@@ -10,10 +10,10 @@
 #  epicenter_id  :integer
 #
 
-class FruittypesController < ApplicationController
+class FruittypesController < MainEpicentersController
   before_action :set_epicenter
   before_action :set_fruittype, only: [:edit, :update, :destroy]
-  
+  before_action :require_caretaker
 
   def index
   end

@@ -14,8 +14,9 @@
 #  updated_at  :datetime         not null
 #
 
-class ResourcesController < ApplicationController
+class ResourcesController < MainEpicentersController
   before_action :set_epicenter
+  before_action :require_caretaker
 
   def index
     @resources = @epicenter.resources

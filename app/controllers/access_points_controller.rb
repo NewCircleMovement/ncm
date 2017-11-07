@@ -12,9 +12,10 @@
 #  profile     :text
 #
 
-class AccessPointsController < ApplicationController
+class AccessPointsController < MainEpicentersController
   before_action :set_epicenter
   before_action :set_access, only: [:edit, :update, :destroy]
+  before_action :require_caretaker
 
   def index
   end

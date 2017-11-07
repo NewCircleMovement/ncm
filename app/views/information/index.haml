@@ -1,6 +1,6 @@
 = render layout: "epicenters/edit_epicenter" do
-  %h3.header Informations
-  = link_to "Opret ny", new_epicenter_information_path, :class => "btn btn-default"
+  %h3.header Information blocks
+  %p Create information blocks that will appear on your epicenter's front page
   
   %table.table.table-condensed
     %thead
@@ -15,4 +15,4 @@
             %th
               = link_to "Ret", edit_epicenter_information_path(@epicenter, item), class: "btn btn-default"
               = link_to "Slet", [@epicenter, item], :method => :delete, :data => { :confirm => 'Er du sikker' }, class: "btn btn-danger"
-          
+  = link_to "Opret ny", new_epicenter_information_path, :class => "btn btn-default"

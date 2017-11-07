@@ -15,10 +15,11 @@
 #  slug       :string
 #
 
-class InformationController < ApplicationController
+class InformationController < MainEpicentersController
+  before_action :authenticate_user!
   before_action :set_epicenter
   before_action :set_info, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!
+  before_action :require_caretaker
 
   def index
     @information = @epicenter.information.order(:position)
@@ -29,8 +30,6 @@ class InformationController < ApplicationController
   end
 
   def new
-    puts "-------------------------------------"
-    puts params
     @info = @epicenter.information.build
   end
 

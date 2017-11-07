@@ -13,9 +13,10 @@
 #  updated_at   :datetime         not null
 #
 
-class EpipagesController < ApplicationController
+class EpipagesController < MainEpicentersController
   before_action :set_epicenter
   before_action :set_page, only: ['show', 'edit', 'update', 'destroy']
+  before_action :require_caretaker, except: [:show]
 
   def index
     @pages = @epicenter.epipages
@@ -35,8 +36,6 @@ class EpipagesController < ApplicationController
   end
 
   def create
-    puts "//////////////////////////////////////"
-    puts ""
     @page = @epicenter.epipages.build(epipage_params)
     if @page.menu_title
       @page.slug = @page.menu_title.parameterize
@@ -73,7 +72,6 @@ class EpipagesController < ApplicationController
   def set_page
   	@page = Epipage.find_by(slug: params[:id])
   end
-
 
   def epipage_params
   	params.require(:epipage).permit(:menu_title, :title, :slug, :kind, :body)

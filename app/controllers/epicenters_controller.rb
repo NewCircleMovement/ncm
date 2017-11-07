@@ -28,13 +28,16 @@
 #  meeting_active       :boolean          default(FALSE)
 #
 
-class EpicentersController < ApplicationController
+class EpicentersController < MainEpicentersController
+
   # include SharedMethods
   before_action :authenticate_user!, only: [:new, :edit, :update]
-  before_action :set_epicenter, only: [:edit, :update, :show, :join_epicenter, :leave_epicenter]
+  before_action :set_epicenter, except: [:index]
+  before_action :require_caretaker, except: [
+    :index, :show, :new, :create, :join_epicenter, :leave_epicenter, :members
+  ]
 
-  before_filter :get_mother
-  before_filter :has_edit_permission, only: [:edit, :update]
+  before_action :get_mother
 
 
   # validates :slug, uniqueness: true
@@ -48,24 +51,27 @@ class EpicentersController < ApplicationController
     
   end
 
+
   def show
     @left_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:left] ).first
     @right_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:right] ).first
     @logs = @epicenter.event_log
   end
 
+
   def new
     @epicenter = Epicenter.new
     set_minimum_requirements(@epicenter)
   end 
 
+  
   def edit
     set_minimum_requirements(@epicenter)
   end
 
+  
   def create
     @mother = Epicenter.find(@mother_id)
-
     @epicenter = @mother.make_child( epicenter_params, current_user )
 
     if @epicenter.save
@@ -108,6 +114,7 @@ class EpicentersController < ApplicationController
   #   end
   # end
 
+
   def leave_epicenter
     if @epicenter.has_member?( current_user )
 
@@ -149,6 +156,19 @@ class EpicentersController < ApplicationController
     message = "Tillykke, #{@epicenter.name} er nu en #{SPROUT}. Meld dig ind så andre også kan modtage medlemmer"
     redirect_to new_epicenter_subscription_path(@epicenter), :notice => message
   end
+
+  def api
+    @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+  end
+
+  def new_api_token
+    @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+    @epicenter.new_api_token
+    if @epicenter.save
+      redirect_to epicenter_api_path(@epicenter), :notice => "Api token was generated"  
+    end
+  end
+
 
   def members
     @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
@@ -207,22 +227,20 @@ class EpicentersController < ApplicationController
 
   private
     
-    def has_edit_permission
-      if current_user
-        puts "-------------------------"
-        puts "Check permission for user", current_user.email
-        puts "And epicenter", @epicenter.name
-        unless @epicenter.has_caretaker?(current_user)
-          redirect_to :back, notice: "Du er ikke medlem af new circle movement"
-        end
-      end
+    def is_caretaker
+      has_caretaker_permissions(current_user, @epicenter)
     end
 
 
     # Use callbacks to share common setup or constraints between actions.
     def set_epicenter
       @epicenter = Epicenter.find_by_slug(params[:id])
-      @pages = @epicenter.epipages
+      if not @epicenter
+        @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+      end
+      if @epicenter
+        @pages = @epicenter.epipages
+      end
     end
 
 

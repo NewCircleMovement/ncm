@@ -14,9 +14,11 @@
 #  profile      :text
 #
 
-class MembershipsController < ApplicationController
+class MembershipsController < MainEpicentersController
   before_action :set_epicenter
   before_action :set_membership, only: [:edit, :update, :destroy]
+  before_action :require_caretaker, only: [:edit, :index]
+  
 
   def index
     @sow = params['sow']
