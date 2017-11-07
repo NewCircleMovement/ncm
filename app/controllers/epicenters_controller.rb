@@ -199,11 +199,14 @@ class EpicentersController < MainEpicentersController
     @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
     temp = params["temp_tshirt"]
     user = User.find_by_email( temp["email"] )
-    access_point = AccessPoint.find_by_id( temp["access_point"] )
-
-    Tshirt.find_or_create_by(:user_id => user.id, :access_point_id => access_point.id, :epicenter_id => @epicenter.id)
-    puts params
-    redirect_to edit_epicenter_path(@epicenter), notice: "Du gav en #{access_point.name} tshirt til #{user.name}"
+    
+    if user
+      access_point = AccessPoint.find_by_id( temp["access_point"] )
+      Tshirt.find_or_create_by(:user_id => user.id, :access_point_id => access_point.id, :epicenter_id => @epicenter.id)
+      redirect_to edit_epicenter_path(@epicenter), notice: "You gave a #{access_point.name} tshirt to #{user.name}"
+    else
+      redirect_to edit_epicenter_path(@epicenter), notice: "NOTICE: the user with email '#{temp['email']}' is not a member of New Circle Movement"
+    end
   end
 
   def get_mother
