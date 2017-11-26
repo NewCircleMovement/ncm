@@ -38,13 +38,34 @@ def create_new_subscription(log, email, membershipcard, membership)
 end
 
 
-def update_membershipcard(card)
-
-end
 
 
 
 namespace :data do 
+
+  task :test_payments => :environment do
+    ActiveRecord::Base.logger.level = 1 
+    @mother = Epicenter.grand_mother
+    problems = []
+    User.all.each do |u|
+      count = u.membershipcards.where(:epicenter_id => @mother.id).count
+      card = u.membershipcards.where(:epicenter_id => @mother.id).first
+      if card.payment_id != "bank"
+
+        puts "#{u.email} - #{card.payment_id}"
+        puts "  >  payment = #{card.valid_payment ? 'YES' : 'NO '}  >  supply = #{card.valid_supply ? 'YES' : 'NO'}"
+        if card.valid_payment == false or card.valid_supply == false
+          problems.append( { 
+            :email => u['email'], 
+            :stripe_id => card.payment_id, 
+            :valid_payment => card.valid_payment,
+            :valid_supply => card.valid_supply
+          })
+        end
+      end
+    end
+    puts problems
+  end
 
   task :prepare_migration => :environment do
     ActiveRecord::Base.logger.level = 1 

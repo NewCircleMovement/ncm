@@ -179,7 +179,7 @@ class SubscriptionsController < ApplicationController
 
       customer = Stripe::Customer.retrieve( membershipcard.payment_id )
       subscription = customer['subscriptions']['data'][0]
-      subscription.plan = new_membership.id.to_s
+      subscription.plan = new_membership.payment_id.to_s
 
       # update the users subscription and charge the monthly fee for new fruits
       if subscription.save

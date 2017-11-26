@@ -88,8 +88,12 @@ class User < ActiveRecord::Base
   end
 
   def has_valid_supply(epicenter)
+    result = true
     card = self.get_membershipcard(epicenter)
-    return card.valid_supply
+    if card
+      result = card.valid_supply
+    end
+    return result
   end
 
 

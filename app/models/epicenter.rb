@@ -285,14 +285,21 @@ class Epicenter < Blueprint
   # pays for new membership and ensures that the new members has:
   # 1. the required fruit to become member
   # 2. the required monthly engagement (new monthly fruit) to be able to pay in the future (next month)
-  def validate_and_pay_new_membership(user, membership)
+  def validate_and_pay_new_membership(user, new_membership)
     result = false
     fruittype = self.mother_fruit
     puts ""
     print "VALIDATE payment"
     # check if user has enough fruits
-    enough_fruit = (user.fruitbasket.fruit_amount( fruittype ) >= membership.monthly_fee )
+    enough_fruit = (user.fruitbasket.fruit_amount( fruittype ) >= new_membership.monthly_fee )
     print "> Enough fruit now #{enough_fruit}"
+
+    # handle existing memberships (if the user is changing memberships)
+    already_paying = 0
+    if self.has_member?(user)
+      existing_membership = user.membership_for(self)
+      already_paying = existing_membership.monthly_fee
+    end
 
     # check if user has enough monhtly engagement (fruit income)
     # 1: the user receives a monthly harvest from NCM (Tinkuy's mother)
@@ -300,8 +307,8 @@ class Epicenter < Blueprint
     # 3: and harvest must be larger than the tinkuy monthly membership cost
     # 4: plus other monthly engagements (of the same mother)
     monthly_mother_harvest = self.mother.get_membership_for( user ).monthly_gain
-    monthly_epicenter_price = membership.monthly_fee
-    monthly_current_engagements = user.sum_of_all_engagements(self.mother.fruittype)
+    monthly_epicenter_price = new_membership.monthly_fee
+    monthly_current_engagements = user.sum_of_all_engagements(self.mother.fruittype) - already_paying
     enough_engagement = ( monthly_mother_harvest >= monthly_epicenter_price + monthly_current_engagements )
       
     print " > Harvest = #{monthly_mother_harvest}"
@@ -311,7 +318,7 @@ class Epicenter < Blueprint
 
     # overfør frugt fra bruger til epicenter
     if enough_fruit && enough_engagement
-      user.fruitbasket.give_fruit_to( self.fruitbasket, fruittype, membership.monthly_fee )
+      user.fruitbasket.give_fruit_to( self.fruitbasket, fruittype, new_membership.monthly_fee )
       result = true
     end
     return result
