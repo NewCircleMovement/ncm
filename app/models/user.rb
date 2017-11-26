@@ -87,6 +87,11 @@ class User < ActiveRecord::Base
     return result
   end
 
+  def has_valid_supply(epicenter)
+    card = self.get_membershipcard(epicenter)
+    return card.valid_supply
+  end
+
 
   def update_card(customer, token)
     new_card = customer.sources.create(card: token)
@@ -140,7 +145,9 @@ class User < ActiveRecord::Base
     result = 0
     memberships = self.all_memberships_of_fee_fruittype(fruittype)
     memberships.each do |membership|
-      result += membership.monthly_fee
+      if membership.epicenter.has_member?(self)
+        result += membership.monthly_fee
+      end
     end
     return result
   end
@@ -209,7 +216,9 @@ class User < ActiveRecord::Base
     fruitbag.save
     fruittree.save
 
-    return fruittree.fruits_per_month
+    # return fruittree.fruits_per_month
+    ## 42 if harvest < 100 make sure epicenter gets the rest
+    return harvest
   end
 
 

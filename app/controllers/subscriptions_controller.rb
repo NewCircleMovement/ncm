@@ -205,6 +205,8 @@ class SubscriptionsController < ApplicationController
     if success
       # update membershipcard
       membershipcard.membership_id = new_membership.id
+      membershipcard.valid_payment = true
+      membershipcard.update_valid_supply
 
       puts "--------------------------------"
       puts "new membership", membershipcard.membership.monthly_gain
@@ -220,6 +222,9 @@ class SubscriptionsController < ApplicationController
       end
       redirect_path = epicenter_path(@epicenter)
     else
+      membershipcard.valid_payment = false
+      membershipcard.save
+
       flash[:warning] = no_success_message
       redirect_path = epicenter_subscriptions_path(@epicenter)
     end

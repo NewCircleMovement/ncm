@@ -55,3 +55,10 @@
         - else
           %li
             = link_to "Login", new_user_session_path
+
+- if current_user and not current_user.has_valid_supply(@mother)
+  %div.alert.alert-danger
+    .container
+      There is a problem with your credit card. Please update 
+      -# ##42 make update card page
+      %button.btn.btn-sm TODO

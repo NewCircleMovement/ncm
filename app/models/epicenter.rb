@@ -103,10 +103,15 @@ class Epicenter < Blueprint
     """ give user fruits according to membership, 
         and take residual amount from epicenter fruitbag """
     membership = self.get_membership_for(user)
+    print "#{self.name} > User harvest"
+    print " > should get = #{membership.monthly_gain}"
 
-    puts "do we have the right membership =>", membership.monthly_gain
-    user_harvest = user.harvest_fruittree(self)
+    user_harvest = user.harvest_fruittree(self)    
     missing_fruit = [0, membership.monthly_gain - user_harvest].max
+
+    print " > from tree = #{user_harvest}"
+    print " > missing_fruit = #{missing_fruit}"
+
     self.fruitbasket.give_fruit_to( user.fruitbasket, self.fruittype, missing_fruit )
   end
 
@@ -283,25 +288,26 @@ class Epicenter < Blueprint
   def validate_and_pay_new_membership(user, membership)
     result = false
     fruittype = self.mother_fruit
-
+    puts ""
+    print "VALIDATE payment"
     # check if user has enough fruits
     enough_fruit = (user.fruitbasket.fruit_amount( fruittype ) >= membership.monthly_fee )
-    puts "user has enough fruits: ", enough_fruit
+    print "> Enough fruit now #{enough_fruit}"
 
     # check if user has enough monhtly engagement (fruit income)
     # 1: the user receives a monthly harvest from NCM (Tinkuy's mother)
     # 2: harvest must be larger than user membership for Tinkuy/BASIS cost 100 "waterdrops" (monthly price)
     # 3: and harvest must be larger than the tinkuy monthly membership cost
-    # 4: and harvest must be larger than other monthly engagements (of the same mother)
+    # 4: plus other monthly engagements (of the same mother)
     monthly_mother_harvest = self.mother.get_membership_for( user ).monthly_gain
     monthly_epicenter_price = membership.monthly_fee
     monthly_current_engagements = user.sum_of_all_engagements(self.mother.fruittype)
     enough_engagement = ( monthly_mother_harvest >= monthly_epicenter_price + monthly_current_engagements )
       
-    puts "Monthly mother harvest", monthly_mother_harvest
-    puts "Monthly price for new membership", monthly_epicenter_price
-    puts "Monthly price for other engagements", monthly_current_engagements
-    
+    print " > Harvest = #{monthly_mother_harvest}"
+    print " > Membership price = #{monthly_epicenter_price}"
+    print " > Other prices = #{monthly_current_engagements}"
+    print " > Enough engagement = #{enough_engagement}"
 
     # overfør frugt fra bruger til epicenter
     if enough_fruit && enough_engagement
@@ -325,6 +331,7 @@ class Epicenter < Blueprint
       membershipcard.payment_id = stripe_customer.id
     end
     membershipcard.save
+    return membershipcard
   end
 
 
@@ -340,7 +347,7 @@ class Epicenter < Blueprint
   # makes a new tshirt with specific access point, e.g. 'member' or 'caretaker'
   def make_tshirt(user, access_point)
     tshirt = Tshirt.where(:epicenter_id => self.id, :user_id => user.id, :access_point_id => access_point.id).first_or_create
-    puts "Made tshirt", tshirt
+    # puts "Made tshirt", tshirt
   end
 
 
