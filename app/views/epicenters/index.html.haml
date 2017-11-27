@@ -2,11 +2,19 @@
   .row
     .col-md-12.space-bottom-15
       %strong
-        = pluralize(@epicenters.count, 'Epicenter')
+        = pluralize(@epicenters.count, "Epicenter")
         - if @status
-          with
-          = @status.upcase
-          status
+          %span.space-left-10
+            - case @status
+              - when SEED
+                %i.fa.fa-circle{ class: "seed" }
+              - when SPROUT
+                %i.fa.fa-fire{ class: "sprout" }
+              - when PLANT
+                %i.fa.fa-plant{ class: "plant" }
+              - when TREE
+                %i.fa.fa-tree{ class: "tree" }
+            = "#{@status.capitalize}s"
         - else
           (all)
 
