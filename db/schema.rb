@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171125152756) do
+ActiveRecord::Schema.define(version: 20171127204620) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +62,8 @@ ActiveRecord::Schema.define(version: 20171125152756) do
     t.boolean  "meeting_active",       default: false
     t.boolean  "ongoing",              default: true
     t.string   "api_token"
+    t.integer  "members_count"
+    t.integer  "fruits_count"
   end
 
   create_table "epipages", force: :cascade do |t|

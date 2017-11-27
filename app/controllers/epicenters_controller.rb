@@ -43,10 +43,47 @@ class EpicentersController < MainEpicentersController
   # validates :slug, uniqueness: true
 
   def index
-    if current_user and not current_user.get_membership(@mother)
-      @epicenters = Epicenter.all
+    @up = false
+
+    if params[:status].present?
+      @status = params[:status]
     else
-      @epicenters = @mother.children.where.not(id: @mother_id)
+      @status = nil
+    end
+
+    if params[:sort].present?
+      @sort = params[:sort]
+    else
+      @sort = nil
+    end
+
+    if params[:dir].present?
+      @dir = params[:dir]
+      @up = if params[:dir] == 'up' then true else false end
+    end
+
+    if @sort
+      @sort_field = if @sort == "members" then "members_count" else "fruits_count" end
+    else
+      @sort_field = "members_count"
+    end
+
+    if @up
+      @sort_direction = "ASC" 
+    else
+      
+      @sort_direction = "DESC"
+    end
+
+
+    if current_user and not current_user.get_membership(@mother)
+      @epicenters = Epicenter.all.order("#{@sort_field} #{@sort_direction}")
+    else
+      @epicenters = @mother.children.where.not(id: @mother_id).order("#{@sort_field} #{@sort_direction}")
+    end
+
+    if @status
+      @epicenters = @epicenters.select{ |e| e.status == @status }
     end
     
   end

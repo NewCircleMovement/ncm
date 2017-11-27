@@ -1,5 +1,38 @@
 .container.top
   .row
+    .col-md-12.space-bottom-15
+      %strong
+        = pluralize(@epicenters.count, 'Epicenter')
+        - if @status
+          with
+          = @status.upcase
+          status
+        - else
+          (all)
+
+      .pull-right
+        = link_to "All", epicenters_path, :class => "btn btn-sm btn-sort #{@status ? '' : 'active'}"
+        - ['tree', 'plant', 'sprout', 'seed'].each do |kind|
+          = link_to epicenters_path(:status => kind, :sort => @sort, :dir => @dir), :class => "btn btn-sm btn-sort #{@status == kind ? 'active' : ''}" do
+            = "#{kind.capitalize}s"
+        |
+        = link_to epicenters_path(:status => @status, :sort => 'members', :dir => @up ? 'down' : 'up'), :class => 'btn btn-sm btn-sort' do
+          - if @sort == "members" or not @sort
+            %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
+            Members
+        = link_to epicenters_path(:status => @status, :sort => 'support', :dir => @up ? 'down' : 'up'), :class => 'btn btn-sm btn-sort' do
+          - if @sort == "fruits"
+            %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
+          Support
+  
+    - if @epicenters.count == 0
+      .col-md-12
+        %p
+          There are currently no 
+          %strong= @status
+          epicenters.
+
+
     - @epicenters.each do |epicenter|
       .col-md-4
         = link_to epicenter do

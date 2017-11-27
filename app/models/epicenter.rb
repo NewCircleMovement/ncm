@@ -34,6 +34,7 @@ require 'blueprint'
 class Epicenter < Blueprint
   before_create :generate_api_token
   before_destroy :test_if_ncm
+  before_save :update_counters
 
   validates :name, :tagline, :depth_members, :depth_fruits, :presence => true
   # validates :size, :presence => true
@@ -504,6 +505,11 @@ class Epicenter < Blueprint
       self.save
       self.destroy
     end
+  end
+
+  def update_counters
+    self.members_count = self.members.count
+    self.fruits_count = self.fruitbasket.fruit_amount( self.mother.fruittype ) || 0
   end
 
 
