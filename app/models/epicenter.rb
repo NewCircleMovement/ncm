@@ -51,12 +51,12 @@ class Epicenter < Blueprint
   has_many :users, :through => :tshirts
   has_many :tshirts, :dependent => :destroy
   has_many :epipages, :dependent => :destroy
-  has_many :memberships
-  has_many :information, as: :owner
-  has_many :resources, as: :owner
+  has_many :memberships, :dependent => :destroy
+  has_many :information, as: :owner, :dependent => :destroy
+  has_many :resources, as: :owner, :dependent => :destroy
 
 
-  has_one :fruittype
+  has_one :fruittype, :dependent => :destroy
   has_one :fruitbasket, as: :owner, :dependent => :destroy
   has_many :event_logs, as: :owner, :dependent => :destroy ##42
 
