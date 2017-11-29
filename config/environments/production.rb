@@ -71,20 +71,24 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
+  # ActionMailer Config
+  config.action_mailer.default_url_options = { :host => "newcirclemovement.org" }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = false
+
   config.action_mailer.smtp_settings = {
     :address        => 'smtp.sendgrid.net',
     :port           => '587',
     :authentication => :plain,
     :user_name      => ENV['SENDGRID_USERNAME'],
     :password       => ENV['SENDGRID_PASSWORD'],
-    :domain         => 'heroku.com'    
+    :domain         => 'newcirclemovement.herokuapp.com',
+    :enable_starttls_auto => true 
   }
-  # ActionMailer Config
+  
 
-  config.action_mailer.default_url_options = { :host => "newcirclemovement.org" }
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = false
+  
 
 
   # Use default logging formatter so that PID and timestamp are not suppressed.

@@ -15,6 +15,7 @@ Devise.setup do |config|
   # with default "from" parameter.
   
   # config.mailer_sender = 'no-reply@' + Rails.application.secrets.domain_name
+  config.mailer_sender = 'info@newcirclemovement.org'
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
