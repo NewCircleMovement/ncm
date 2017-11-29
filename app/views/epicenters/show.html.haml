@@ -52,7 +52,7 @@
           %td 
             You
           %td
-            - if @epicenter.has_member?(current_user)
+            - if current_user and @epicenter.has_member?(current_user)
               Member
             - else
               = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-xs btn-primary'
