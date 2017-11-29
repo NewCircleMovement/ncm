@@ -86,9 +86,6 @@ Rails.application.configure do
     :domain         => 'newcirclemovement.herokuapp.com',
     :enable_starttls_auto => true 
   }
-  
-
-  
 
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
