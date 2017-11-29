@@ -77,12 +77,13 @@ class UsersController < ApplicationController
     
     result = @user.give_fruit_to(@epicenter, @epicenter.mother_fruit, amount.to_i, )
     if result
+      @epicenter.update_counters
       message = "Tak for din støtte med #{amount} #{@epicenter.mother_fruit.name} til #{@epicenter.name}"
     else
       message = "Tak for tanken, men du har ikke nok #{@epicenter.mother_fruit.name}"
     end
 
-    redirect_to epicenter_path(Epicenter.last), notice: message
+    redirect_to epicenter_path(@epicenter), notice: message
   end
 
   private
