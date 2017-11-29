@@ -141,6 +141,7 @@ class SubscriptionsController < ApplicationController
       @epicenter.make_membershipcard( current_user, @membership, stripe_customer )
       @epicenter.make_member( current_user )
       @epicenter.harvest_time_for( current_user )
+      @epicenter.update_counters
 
       log_details = { membership: @membership.name }
       EventLog.entry(current_user, @epicenter, NEW_MEMBERSHIP, log_details, LOG_COARSE)

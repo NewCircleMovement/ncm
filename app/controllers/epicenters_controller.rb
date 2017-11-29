@@ -45,16 +45,10 @@ class EpicentersController < MainEpicentersController
   def index
     @up = false
 
-    if params[:status].present?
-      @status = params[:status]
+    if @sort
+      @sort_field = if @sort == "members" then "members_count" else "fruits_count" end
     else
-      @status = nil
-    end
-
-    if params[:sort].present?
-      @sort = params[:sort]
-    else
-      @sort = nil
+      @sort_field = "members_count"
     end
 
     if params[:dir].present?
@@ -62,30 +56,18 @@ class EpicentersController < MainEpicentersController
       @up = if params[:dir] == 'up' then true else false end
     end
 
-    if @sort
-      @sort_field = if @sort == "members" then "members_count" else "fruits_count" end
-    else
-      @sort_field = "members_count"
-    end
+    @sort_direction = if @up then "ASC" else "DESC" end
+    @search = if params[:search].present? then params[:search] else nil end
+    @status = if params[:status].present? then params[:status] else nil end
+    @sort = if params[:sort].present? then params[:sort] else nil end
 
-    if @up
-      @sort_direction = "ASC" 
-    else
-      
-      @sort_direction = "DESC"
-    end
-
-
-    if current_user and not current_user.get_membership(@mother)
-      @epicenters = Epicenter.all.order("#{@sort_field} #{@sort_direction}")
-    else
-      @epicenters = @mother.children.where.not(id: @mother_id).order("#{@sort_field} #{@sort_direction}")
-    end
+    @epicenters = if @search then Epicenter.search_for(@search) else Epicenter.all end    
+    @epicenters = @epicenters.where.not(:id => @mother.id).order("#{@sort_field} #{@sort_direction}")
 
     if @status
       @epicenters = @epicenters.select{ |e| e.status == @status }
     end
-    
+
   end
 
 

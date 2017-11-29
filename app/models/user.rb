@@ -70,6 +70,11 @@ class User < ActiveRecord::Base
     self.tshirts.pluck(:epicenter_id).include? epicenter.id
   end
 
+  def is_caretaker(epicenter)
+    access = epicenter.location.access_points.find_by(name: 'caretaker')
+    return self.tshirts.where(epicenter_id: epicenter.id).where(access_point_id: access.id) != nil
+  end
+
   def has_epicenters_with_role(role)
     tshirts = self.tshirts.includes(:access_point).select do |tshirt| 
       tshirt.access_point.name == role

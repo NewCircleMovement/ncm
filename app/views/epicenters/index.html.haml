@@ -1,11 +1,25 @@
 .container.top
   .row
-    .col-md-12.space-bottom-15
-      %strong
-        = pluralize(@epicenters.count, "Epicenter")
-        - if @status
-          %span.space-left-10
-            - case @status
+    .col-md-8.col-md-offset-2.space-top-5.space-bottom-10
+
+      = form_tag epicenters_path(:search => @search, :status => @status, :sort => @sort, :dir => @dir), :class => "form-inline", :class => 'search-form', :method => 'get' do
+        .form-group
+          = text_field_tag :search, @search, placeholder: @search || "Search for names, taglines, descriptions", :class => "form-control"
+          = hidden_field_tag(:status, @status)
+          = hidden_field_tag(:sort, @sort)
+          = hidden_field_tag(:dir, @dir)
+          = submit_tag "Search", :name => nil, :class => "btn btn-primary"
+
+    .col-md-12.space-bottom-25
+      %hr
+      .pull-left
+        %strong.space-right-15
+          = pluralize(@epicenters.count, "Epicenter")
+      
+        = link_to "All", epicenters_path(:search => @search, :status => @status, :sort => @sort, :dir => @dir), :class => "btn btn-sm btn-sort #{@status ? '' : 'active'}"
+        - ['tree', 'plant', 'sprout', 'seed'].each do |kind|
+          = link_to epicenters_path(:status => kind, :search => @search, :sort => @sort, :dir => @dir), :class => "btn btn-sm btn-sort #{@status == kind ? 'active' : ''}" do
+            - case kind
               - when SEED
                 %i.fa.fa-circle{ class: "seed" }
               - when SPROUT
@@ -14,31 +28,37 @@
                 %i.fa.fa-plant{ class: "plant" }
               - when TREE
                 %i.fa.fa-tree{ class: "tree" }
-            = "#{@status.capitalize}s"
-        - else
-          (all)
-
-      .pull-right
-        = link_to "All", epicenters_path, :class => "btn btn-sm btn-sort #{@status ? '' : 'active'}"
-        - ['tree', 'plant', 'sprout', 'seed'].each do |kind|
-          = link_to epicenters_path(:status => kind, :sort => @sort, :dir => @dir), :class => "btn btn-sm btn-sort #{@status == kind ? 'active' : ''}" do
             = "#{kind.capitalize}s"
-        |
-        = link_to epicenters_path(:status => @status, :sort => 'members', :dir => @up ? 'down' : 'up'), :class => 'btn btn-sm btn-sort' do
+        - if @search or @status
+          |
+          = link_to "Clear search", epicenters_path, :class => "btn btn-sm btn-sort"
+      .pull-right
+        = link_to epicenters_path(:status => @status, :search => @search, :sort => 'members', :dir => @up ? 'down' : 'up'), :class => 'btn btn-sm btn-sort' do
           - if @sort == "members" or not @sort
             %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
-            Members
+          %i.fa.fa-users.members
         = link_to epicenters_path(:status => @status, :sort => 'support', :dir => @up ? 'down' : 'up'), :class => 'btn btn-sm btn-sort' do
-          - if @sort == "fruits"
+          - if @sort == "support"
             %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
-          Support
-  
+          %i.fa.fa-tint.waterdrop
+
+
     - if @epicenters.count == 0
       .col-md-12
-        %p
-          There are currently no 
-          %strong= @status
-          epicenters.
+        %h3 No epicenters matching
+        - if @search
+          %p
+            %i.fa.fa-chevron-right 
+            %strong= @search
+            in name, tagline or description matching
+        - if @status
+          %p
+            %i.fa.fa-chevron-right
+            status 
+            %strong= @status
+        .space-top-30
+        = link_to "Clear search", epicenters_path, :class => "btn btn-default"
+        = link_to "Create new Epicenter", new_epicenter_path, :class => "btn btn-primary"
 
 
     - @epicenters.each do |epicenter|

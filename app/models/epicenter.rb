@@ -33,7 +33,8 @@ require 'blueprint'
 
 class Epicenter < Blueprint
   include PgSearch
-  pg_search_scope :search_for, against: [:name, :description], using: { tsearch: { any_word: true } }
+  # pg_search_scope :search_for, against: [:name, :description], using: { tsearch: { any_word: true } }
+  pg_search_scope :search_for, against: [:name, :tagline, :description], using: { tsearch: { any_word: true } }
   # multisearchable :against => [:title, :author], using: { tsearch: { any_word: true } }
 
   before_create :generate_api_token
