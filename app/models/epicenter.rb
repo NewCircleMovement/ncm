@@ -517,6 +517,7 @@ class Epicenter < Blueprint
   def update_counters
     self.members_count = self.members.count
     self.fruits_count = self.fruitbasket.fruit_amount( self.mother.fruittype ) || 0
+    self.save
   end
 
 

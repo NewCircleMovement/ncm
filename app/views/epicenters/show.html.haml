@@ -75,7 +75,13 @@
                 Tree
         %tr
           %td Members
-          %td= @epicenter.members.count
+          %td
+            = @epicenter.members_count
+        %tr
+          %td
+            = @epicenter.mother.fruittype.name
+          %td
+            = @epicenter.fruits_count
         %tr
           %td Active projects
           %td= @projects_count
