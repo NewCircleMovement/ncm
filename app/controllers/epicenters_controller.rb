@@ -208,23 +208,15 @@ class EpicentersController < MainEpicentersController
 
 
   def members
+    @title = 'Members'
     @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
     @pages = @epicenter.epipages
     
-    if tshirt_name = params['tshirt']
-      if params['title']
-        @title = params['title']
-      else
-        @title = tshirt_name
-      end
-    else
-      tshirt_name = 'member'
-      @title = 'Medlemmer'
-    end
-    @members = @epicenter.users_with_tshirt( tshirt_name ).where.not(:image => nil).order(:name)
-    @nophoto = @epicenter.users_with_tshirt( tshirt_name ).where(:image => nil).order(:name)  
-    
+    @users = User.joins(:membershipcards).where(:membershipcards => { epicenter_id: @epicenter.id })
+    @members = @users.where.not(:image => nil).order(:name)
+    @nophoto = @users.where(:image => nil).order(:name)  
   end
+  
 
   def tshirts
     @tshirt = Tshirt.new

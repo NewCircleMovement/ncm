@@ -29,9 +29,9 @@
                       Member since:
                       - member_since = user.get_membershipcard(@epicenter).created_at
                       = l(member_since, format: '%B %d, %Y')
-                  %p
-                    - user.get_tshirts(@epicenter).each do |tshirt|
-                      - if tshirt.access_point.name != 'member'
-                        %span.label.label-primary
-                          = tshirt.access_point.name
+                  -# %p
+                  -#   - user.get_tshirts(@epicenter).each do |tshirt|
+                  -#     - if tshirt.access_point.name != 'member'
+                  -#       %span.label.label-primary
+                  -#         = tshirt.access_point.name
                 
