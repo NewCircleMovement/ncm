@@ -48,12 +48,16 @@
             %td 
               Support from members 
               %p.timestamp.last-element 
-                = @support.body
+                = Time.now.strftime("%B, %Y")
             %td 
               .stat-number
-                - @support.string.chars.map(&:to_i).each do |digit|
+                - @support.to_s.chars.map(&:to_i).each do |digit|
                   .stat-number-digit.bg-ncm-dark-primary
                     = digit
+
+                -# - @support.string.chars.map(&:to_i).each do |digit|
+                -#   .stat-number-digit.bg-ncm-dark-primary
+                -#     = digit
         - if @paid
           %tr
             %td 

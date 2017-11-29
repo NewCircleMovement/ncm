@@ -8,7 +8,8 @@ class PagesController < ApplicationController
     @left_info = @mother.information.where(:position => INFORMATION_POSITIONS[:left]).first
     @right_info = @mother.information.where(:position => INFORMATION_POSITIONS[:right]).first
 
-    @support = @mother.information.where(:title => "Support").first
+    # @support = @mother.information.where(:title => "Support").first
+    @support = Membershipcard.where(:epicenter_id => 1).joins(:membership).sum('memberships.monthly_fee')
     @paid = @mother.information.where(:title => "Paid").first
     @pool = @mother.information.where(:title => "Pool").first
     @message = @mother.information.where(:title => "Message").first
