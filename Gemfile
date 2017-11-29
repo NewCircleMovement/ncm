@@ -16,6 +16,7 @@ gem 'font-awesome-sass'
 
 #db
 gem 'pg'
+gem 'pg_search'
 
 # images and aws S3 upload
 gem 'carrierwave'

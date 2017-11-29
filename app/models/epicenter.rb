@@ -32,6 +32,10 @@
 require 'blueprint'
 
 class Epicenter < Blueprint
+  include PgSearch
+  pg_search_scope :search_for, against: [:name, :description], using: { tsearch: { any_word: true } }
+  # multisearchable :against => [:title, :author], using: { tsearch: { any_word: true } }
+
   before_create :generate_api_token
   before_destroy :test_if_ncm
   before_save :update_counters
@@ -349,6 +353,7 @@ class Epicenter < Blueprint
     self.make_tshirt( user, member_access )
     self.give_fruittree_to( user )
     self.give_fruitbag_to( user )
+    self.update_counters
   end
 
 
@@ -393,6 +398,7 @@ class Epicenter < Blueprint
     self.tshirts.where(user_id: user.id).delete_all
     fruittree = Fruittree.find_by(owner_id: user.id, owner_type: "User", fruittype_id: self.fruittype.id)
     fruittree.destroy
+    self.update_counters
     
     log_details = { from: self.name }
     EventLog.entry(user, self, DELETE_MEMBERSHIP, log_details, LOG_COARSE)

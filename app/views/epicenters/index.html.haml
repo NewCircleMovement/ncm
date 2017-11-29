@@ -75,10 +75,12 @@
                   = epicenter.status_text
                 .stat-item
                   %i.fa.fa-users.members
-                  = epicenter.members.count
+                  -# = epicenter.members.count
+                  = epicenter.members_count
                 .stat-item
                   %i.fa.fa-tint.waterdrop
-                  = epicenter.fruitbasket.fruit_amount( epicenter.mother.fruittype ) || 0
+                  -# = epicenter.fruitbasket.fruit_amount( epicenter.mother.fruittype ) || 0
+                  = epicenter.fruits_count
 
               %p
                 - if epicenter.tagline.present?
