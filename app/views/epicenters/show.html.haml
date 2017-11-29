@@ -9,15 +9,11 @@
           %p= @epicenter.tagline
 
         - if @epicenter.can_accept_members?
-          - if current_user and not @epicenter.has_member?(current_user)
-            = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
+          - if current_user
+            - unless @epicenter.has_member?(current_user)
+              = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
           - else
             = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
-        / / - if not @epicenter.status == SEED
-        / - unless current_user.present? && current_user.get_membership(@epicenter)
-        /   = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
-        / / - else
-        / /   Stuff
 
 .container
   .row
@@ -37,17 +33,46 @@
     .col-md-4
       - if current_user
         - if @epicenter.status == SEED
-          .well.bg-ncm-info.space-top-15
+          .well.well-sm.bg-ncm-info.space-top-15
             %p
-              Støt 
+              Support
               %strong= @epicenter.name
-              med en engangsoverførsel for at tilkendegive din interesse for epicenteret
-            %button.btn.btn-primary{"data-target" => "#supportModal", "data-toggle" => "modal", :type => "button"}
-              Støt med
+              with a single transfer of 
               = @epicenter.mother_fruit.name
-
-      %h2 Summary      
+              to state your interest for the idea
+            %button.btn.btn-primary{"data-target" => "#supportModal", "data-toggle" => "modal", :type => "button"}
+              Give
+              = @epicenter.mother_fruit.name
+          
+      %h4.space-top-15
+        %strong
+          Overview
       %table.table.table-condensed
+        %tr
+          %td 
+            You
+          %td
+            - if @epicenter.has_member?(current_user)
+              Member
+            - else
+              = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-xs btn-primary'
+
+        %tr
+          %td Epicenter
+          %td
+            - case @epicenter.status
+              - when SEED
+                %i.fa.fa-circle{ class: "seed" }
+                Seed
+              - when SPROUT
+                %i.fa.fa-fire{ class: "sprout" }
+                Sprout
+              - when PLANT
+                %i.fa.fa-plant{ class: "plant" }
+                Plant
+              - when TREE
+                %i.fa.fa-tree{ class: "tree" }
+                Tree
         %tr
           %td Members
           %td= @epicenter.members.count
@@ -61,8 +86,21 @@
           %td Seeds
           %td= @seed_count
 
+      - if @epicenter.status != SEED
+        .well.well-sm.bg-ncm-info.space-top-15
+          %p
+            Support
+            %strong= @epicenter.name
+            with a single transfer of 
+            = @epicenter.mother_fruit.name
+            to state your interest for the idea
+          %button.btn.btn-primary{"data-target" => "#supportModal", "data-toggle" => "modal", :type => "button"}
+            Give
+            = @epicenter.mother_fruit.name
+
       - if @logs.present?
-        %h2 Latest activity
+        %h4 
+          %strong Latest Activity
         %table.table.table-condensed.table-log
           - for log in @logs
             %tr
