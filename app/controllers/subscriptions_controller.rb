@@ -1,6 +1,6 @@
 class SubscriptionsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :set_epicenter
+  before_filter :set_epicenter, except: [:update_creditcard]
 
   def index
     @memberships = @epicenter.memberships
@@ -228,6 +228,23 @@ class SubscriptionsController < ApplicationController
     redirect_to redirect_path
   end
 
+
+  def update_creditcard
+    token = params[:stripeToken]
+
+    card = current_user.get_membershipcard(@mother)
+    customer = Stripe::Customer.retrieve( card.payment_id )
+    current_user.update_card( customer, token)
+    card.update_valid_supply
+    
+    # name = params[:stripeBillingName]
+    # country = params[:stripeBillingAddressCountry]
+    # zip = params[:stripeBillingAddressZip]
+    # street1 = params[:stripeBillingAddressLine1]
+    # city = params[:stripeBillingAddressCity]
+    flash[:success] = "Great! Thansk for updating your credit card"
+    redirect_to user_payment_path(current_user)
+  end
 
   # def cancel_change
   #   change = current_user.requested_change(@epicenter)

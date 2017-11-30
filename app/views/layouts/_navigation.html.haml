@@ -59,6 +59,6 @@
 - if current_user and not current_user.has_valid_supply(@mother)
   %div.alert.alert-danger
     .container
-      There is a problem with your credit card. Please update 
-      -# ##42 make update card page
-      %button.btn.btn-sm TODO
+      Your credit card is about to expire. Please add a new credit card
+      .pull-right
+        = link_to "Update credit card", user_payment_path(current_user), :class => "btn btn-xs btn-primary"

@@ -11,9 +11,9 @@
   
 .container
   - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
-    %h1 Medlemskaber  
+    %h1 Memberships
     %p
-      %strong Medlemmer:
+      %strong Current members:
       = @epicenter.users_with_tshirt('member').count
 
     .row

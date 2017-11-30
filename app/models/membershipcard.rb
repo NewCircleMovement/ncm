@@ -37,13 +37,12 @@ class Membershipcard < ActiveRecord::Base
         else
             next_month_date = Date.today.end_of_month + 1.days
             
-            cards = Stripe::Customer.retrieve(self.payment_id)['sources']['data']
+            customer = Stripe::Customer.retrieve(self.payment_id)
+            card = customer.sources.retrieve(customer.default_source)
 
-            cards.each do |card|
-                expiration_date = Date.new(card.exp_year, card.exp_month)
-                if expiration_date >= next_month_date
-                    self.valid_supply = true
-                end
+            expiration_date = Date.new(card.exp_year, card.exp_month)
+            if expiration_date >= next_month_date
+                self.valid_supply = true
             end
         end
 

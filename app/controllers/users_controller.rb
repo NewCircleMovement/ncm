@@ -69,6 +69,20 @@ class UsersController < ApplicationController
     @user = User.find(params[:user_id])
   end
 
+  def payment
+    @user = User.find(params[:user_id])
+    @payment = @user.get_membershipcard(@mother)
+    @membership = @user.get_membership(@mother)
+    if @payment.payment_id != "bank" and @payment.payment_id != nil
+      begin
+        customer = Stripe::Customer.retrieve(@payment.payment_id)
+        @card = customer.sources.retrieve(customer.default_source)
+      rescue Stripe::InvalidRequestError => error
+        @error = error
+      end
+    end
+  end
+
 
   def support_epicenter
     amount = params['support']['amount']

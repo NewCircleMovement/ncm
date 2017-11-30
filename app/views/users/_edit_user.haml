@@ -7,16 +7,20 @@
     .col-md-3
       %ul.nav.nav-pills.nav-stacked
         %li{ class: "#{controller_name == 'users' && action_name == 'edit' ? 'active' : ''}" }
-          = link_to "Oplysninger", edit_user_path(current_user)
+          = link_to "Profile", edit_user_path(current_user)
+        
         %li{ class: "#{controller_name == 'users' && action_name == 'memberships' ? 'active' : ''}" }
-          = link_to "Medlemskaber", user_memberships_path(current_user)
+          = link_to "Memberships", user_memberships_path(current_user)
 
         - if current_user.has_epicenters_with_role('caretaker').present?
           %li{ class: "#{controller_name == 'users' && action_name == 'caretaker' ? 'active' : ''}" }
             = link_to "Caretaker", user_caretaker_path(current_user)
 
         %li{ class: "#{controller_name == 'users' && action_name == 'fruitbasket' ? 'active' : ''}" }
-          = link_to "Frugtkurv", user_fruitbasket_path(current_user)
+          = link_to "Fruit basket", user_fruitbasket_path(current_user)
+
+        %li{ class: "#{controller_name == 'users' && action_name == 'payment' ? 'active' : ''}" }
+          = link_to "Payment", user_payment_path(current_user)        
         
     .col-md-9
       = yield

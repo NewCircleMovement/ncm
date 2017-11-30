@@ -224,6 +224,7 @@ class EpicentersController < MainEpicentersController
     @mother = Epicenter.grand_mother
   end
 
+
   def set_minimum_requirements(epicenter)
     if epicenter.depth_fruits
       @depth_fruits = @epicenter.depth_fruits 

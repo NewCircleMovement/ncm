@@ -3,8 +3,7 @@
   / Tab panes
   .tab-content
     #about.tab-pane.active{:role => "tabpanel"} 
-      .well
-        Her kommer der noget info om brugeren
+      %h3.header Your profile
       
       %hr/
       - if @user.first_name.present? and @user.last_name.present?

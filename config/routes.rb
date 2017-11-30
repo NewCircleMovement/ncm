@@ -6,13 +6,16 @@ Rails.application.routes.draw do
     get '/memberships' => 'users#memberships'
     get '/fruitbasket' => 'users#fruitbasket'
     get '/caretaker' => 'users#caretaker'
+    get '/payment' => 'users#payment'
     post '/support_epicenter' => 'users#support_epicenter'
   end
 
   resources :epicenters do
     resources :subscriptions do
+      # post "/update_creditcard" => "subscriptions#update_creditcard"
       # get "/cancel_change" => "subscriptions#cancel_change"
     end
+      
 
     resources :epipages
     resources :memberships
@@ -38,11 +41,14 @@ Rails.application.routes.draw do
     get '/members' => 'epicenters#members'
     get '/tshirts' => 'epicenters#tshirts'
     post '/give_tshirt' => 'epicenters#give_tshirt'
+
+    
   end
 
   get '/info' => 'pages#info'
   get '/join_epicenter' => 'epicenters#join_epicenter'
   get '/leave_epicenter' => 'epicenters#leave_epicenter'
+  post "/update_creditcard" => "subscriptions#update_creditcard"
 
   
   namespace :api, defaults: { format: 'json' } do
