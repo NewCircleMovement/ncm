@@ -283,8 +283,12 @@ class Epicenter < Blueprint
   # check how to select through association attribute
   def members
     access_point = self.get_access_point("member")
-    users = self.users.joins(:tshirts).where(:tshirts => { :access_point_id => access_point.id })
-    return users.uniq
+    if access_point
+      users = self.users.joins(:tshirts).where(:tshirts => { :access_point_id => access_point.id })
+      return users.uniq
+    else
+      return []
+    end
   end
 
 
@@ -354,14 +358,17 @@ class Epicenter < Blueprint
     self.make_tshirt( user, member_access )
     self.give_fruittree_to( user )
     self.give_fruitbag_to( user )
-    self.update_counters
+    self.save
   end
 
 
   # makes a new tshirt with specific access point, e.g. 'member' or 'caretaker'
   def make_tshirt(user, access_point)
-    tshirt = Tshirt.where(:epicenter_id => self.id, :user_id => user.id, :access_point_id => access_point.id).first_or_create
-    # puts "Made tshirt", tshirt
+    tshirt = Tshirt.where(
+      :epicenter_id => self.id, 
+      :user_id => user.id, 
+      :access_point_id => access_point.id
+    ).first_or_create
   end
 
 
@@ -399,7 +406,7 @@ class Epicenter < Blueprint
     self.tshirts.where(user_id: user.id).delete_all
     fruittree = Fruittree.find_by(owner_id: user.id, owner_type: "User", fruittype_id: self.fruittype.id)
     fruittree.destroy
-    self.update_counters
+    self.save
     
     log_details = { from: self.name }
     EventLog.entry(user, self, DELETE_MEMBERSHIP, log_details, LOG_COARSE)
@@ -516,8 +523,11 @@ class Epicenter < Blueprint
 
   def update_counters
     self.members_count = self.members.count
-    self.fruits_count = self.fruitbasket.fruit_amount( self.mother.fruittype ) || 0
-    self.save
+    if self.fruitbasket
+      self.fruits_count = self.fruitbasket.fruit_amount( self.mother.fruittype ) || 0
+    else
+      self.fruits_count = 0
+    end
   end
 
 
