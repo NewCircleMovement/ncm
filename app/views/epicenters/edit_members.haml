@@ -1,6 +1,31 @@
 = render layout: "edit_epicenter" do
   %h3
-    Medlemmer
-  - for user in @epicenter.users_with_tshirt('member')
-    = user.name
-    = user.email
+    Members
+  %table.table
+    %thead
+      %tr
+        %th Name
+        %th Email
+        %th Membership
+        %th 
+        %th
+    %tbody
+      - for user in @epicenter.users_with_tshirt('member')
+        %tr
+          %td= user.name
+          %td= user.email
+          %td
+            - membership = user.get_membership(@epicenter)
+            = membership.name
+          %td
+            - card = user.get_membershipcard(@epicenter)
+            - if card.payment_id == "bank" 
+              %i.fa.fa-bank
+            - elsif card.payment_id != nil
+              %i.fa.fa-credit-card
+            - else
+              %i.fa.fa-circle-thin
+          %td
+            = link_to "Cancel", epicenter_subscription_path(@epicenter, membership, :user_id => user.id), :method => :delete, :class => 'btn btn-xs btn-danger', data: { confirm: "You are about to cancel #{user.name}s membership of #{@epicenter.name}. Are you sure!?" }
+
+      

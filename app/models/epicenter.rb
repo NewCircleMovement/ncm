@@ -179,13 +179,13 @@ class Epicenter < Blueprint
   def status_text
     case self.status
     when SEED
-      return "Frø"
+      return "Seed"
     when SPROUT
-      return "Spire"
+      return "Sprout"
     when PLANT
-      return "Plante"
+      return "Plant"
     when TREE
-      return "Træ"
+      return "Tree"
     end
   end
 
@@ -435,9 +435,15 @@ class Epicenter < Blueprint
 
 
   def all_caretakers_are_members?
+    result = false
     caretaker_ids = self.users_with_tshirt('caretaker').pluck(:id)
     member_ids = self.users_with_tshirt('member').pluck(:id)
-    return (caretaker_ids - member_ids).empty?
+
+    if caretaker_ids.count > 0 and (caretaker_ids - member_ids).empty?
+      result = true
+    end
+      
+    return result
   end
 
 

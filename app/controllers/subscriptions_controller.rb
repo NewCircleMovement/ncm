@@ -238,25 +238,46 @@ class SubscriptionsController < ApplicationController
 
 
   def destroy
-    if @epicenter == @mother
-      begin
-        card = current_user.get_membershipcard(@epicenter)
-        stripe_user = current_user.get_member(card)
-        if stripe_user.delete
-          @epicenter.delete_member(current_user)
-          current_user.destroy
-          flash[:success] = "Du er ikke længere aktiv medlem af New Circle Movement"
-        else
-          flash[:error] = "Der var et problem med at slette dit abonnement"
-        end
-      rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
-        flash[:error] = "Du ser ikke ud til at være aktivt tilmeldt"
-      end  
+    caretaker = false
+    
+    if params[:user_id].present?
+      caretaker = true
+      user = User.find(params[:user_id])
     else
-      @epicenter.delete_member(current_user)
+      user = current_user
     end
-    flash[:success] = "Du er ikke længere medlem af #{@epicenter.name}"
-    redirect_to epicenters_path
+
+    target = "#{caretaker ? user.name + ' is' : 'You are'}"
+
+    if @epicenter == @mother
+      card = user.get_membershipcard(@epicenter)
+      
+      if card.payment_id == "bank"
+        @epicenter.delete_member(user)
+      else
+        begin
+          stripe_user = user.get_member(card)
+          if stripe_user.delete
+            @epicenter.delete_member(user)
+            user.destroy
+            flash[:success] = "#{target} no longer active member of New Circle Movement"
+          else
+            flash[:error] = "A problem occurred while canceling the membership"
+          end  
+        rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
+          flash[:error] = "An error occurred while cancelling the payment"
+        end      
+      end
+    else
+      @epicenter.delete_member(user)
+    end
+    
+    flash[:success] = "#{target} no longer member of #{@epicenter.name}"
+    if caretaker
+      redirect_to epicenter_edit_members_path(@epicenter)
+    else
+      redirect_to epicenters_path
+    end
   end
 
 
