@@ -1,6 +1,12 @@
 = simple_form_for [@epicenter, @access] do |f|
-  = f.input :name, label: "Navn på rollen"
+  - unless ['caretaker', 'member'].include? @access.name
+    = f.input :name, label: "Navn på rollen"
   .well
+    - if ['caretaker', 'member'].include? @access.name
+      The
+      %strong= @access.name
+      role is a fixed role
+      %hr/
     = f.input :menu_item, label: "Gør rollen aktiv i epicenteres menu"
     = f.input :menu_title, label: "Menu punktets navn"
   
