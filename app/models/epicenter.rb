@@ -506,6 +506,13 @@ class Epicenter < Blueprint
         embed_link = "<iframe width='100%' src='https://www.youtube.com/embed/#{id}' frameborder='0' allowfullscreen></iframe>"
         return embed_link
       end
+
+      if video_url.include? "youtu.be"
+        id = video_url.split('youtu.be/')[1]
+        embed_link = "<iframe width='100%' src='https://www.youtube.com/embed/#{id}' frameborder='0' allowfullscreen></iframe>"
+        return embed_link
+      end
+
     end
     return ""
   end
