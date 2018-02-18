@@ -1,4 +1,3 @@
-
 namespace :ncm do
 
   desc "harvest and engage"
@@ -9,9 +8,62 @@ namespace :ncm do
     if today == today.end_of_month
       Epicenter.grand_mother.harvest_time
       Epicenter.grand_mother.engagement_time
+
+      # Epicenter.all.each do |epicenter|
+      #   bags = Fruitbag.where(:fruittype_id => epicenter.fruittype.id)
+
+      # end
+
+    end
+  end
+
+
+  task :reduce_fruit => :environment do
+    ActiveRecord::Base.logger.level = 1 
+    
+    Epicenter.all.each do |epicenter|
+      if epicenter.fruittype.present?
+        bags = Fruitbag.where(:fruittype_id => epicenter.fruittype.id)
+
+        bags.each do |bag|
+          # reduce bag.amount here accoreding to EPICENTER reduction rate
+
+          if bag.fruitbasket.present?
+            if bag.fruitbasket.owner.class == Postit
+              # update visibility here
+              puts "POSIT"
+            end
+          else
+            puts "no fruitbasket for bag id=#{bag.id}"
+          end
+        end
+
+      else
+        puts "Epicenter #{epicenter.name} has no fruittype"
+      end
+
+    end
+  end
+
+
+  task :give_waterdrops_to_all_members => :environment do
+    ActiveRecord::Base.logger.level = 1 
+
+    fruittype = Epicenter.grand_mother.fruittype
+
+    User.all.each do |user|
+      target_bag = user.fruitbasket.fruitbags.where(:fruittype_id => fruittype.id).first
+      if target_bag
+        target_bag.amount += 100
+        target_bag.save
+        puts "#{user.email} now has #{target_bag.amount} waterdrops"
+      else
+        puts "------> #{user.email} has no target bag"
+      end
     end
 
   end
+
 
   desc "Make new circle movement epicenter"
   task :make_mother => :environment do
