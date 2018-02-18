@@ -4,28 +4,62 @@
   %table.table
     %thead
       %tr
-        %th Name
-        %th Email
-        %th Membership
+        %th
+          = link_to epicenter_edit_members_path(@epicenter, :sort => "name", :dir => @up ? 'down' : 'up') do
+            - if @sort == "name" or not @sort
+              %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
+            Name
+        %th
+          = link_to epicenter_edit_members_path(@epicenter, :sort => "email", :dir => @up ? 'down' : 'up') do
+            - if @sort == "email" or not @sort
+              %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
+            Email
         %th 
+          = link_to epicenter_edit_members_path(@epicenter, :sort => "membership", :dir => @up ? 'down' : 'up') do
+            - if @sort == "membership" or not @sort
+              %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
+            Membership
+        %th 
+          - if @epicenter == Epicenter.grand_mother
+            = link_to epicenter_edit_members_path(@epicenter, :sort => "bank", :dir => @up ? 'down' : 'up') do
+              - if @sort == "bank" or not @sort
+                %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
+              Bank
         %th
     %tbody
-      - for user in @epicenter.users_with_tshirt('member')
+      - for card in @cards
         %tr
-          %td= user.name
-          %td= user.email
+          %td= card.user.name
+          %td= card.user.email
+          %td= card.membership.name
           %td
-            - membership = user.get_membership(@epicenter)
-            = membership.name
-          %td
-            - card = user.get_membershipcard(@epicenter)
-            - if card.payment_id == "bank" 
+            - if card.payment_id == "bank"
               %i.fa.fa-bank
+              bank
             - elsif card.payment_id != nil
               %i.fa.fa-credit-card
             - else
               %i.fa.fa-circle-thin
           %td
-            = link_to "Cancel", epicenter_subscription_path(@epicenter, membership, :user_id => user.id), :method => :delete, :class => 'btn btn-xs btn-danger', data: { confirm: "You are about to cancel #{user.name}s membership of #{@epicenter.name}. Are you sure!?" }
+            = link_to "Cancel", epicenter_subscription_path(@epicenter, card.membership, :user_id => card.user.id), :method => :delete, :class => 'btn btn-xs btn-danger', data: { confirm: "You are about to cancel #{card.user.name}s membership of #{@epicenter.name}. Are you sure!?" }
+
+      -# - for user in @members
+      -#   %tr
+      -#     %td= user.name
+      -#     %td= user.email
+      -#     %td
+      -#       - membership = user.get_membership(@epicenter)
+      -#       = membership.name
+      -#     %td
+      -#       - card = user.get_membershipcard(@epicenter)
+      -#       - if card.payment_id == "bank" 
+      -#         %i.fa.fa-bank
+      -#         bank
+      -#       - elsif card.payment_id != nil
+      -#         %i.fa.fa-credit-card
+      -#       - else
+      -#         %i.fa.fa-circle-thin
+      -#     %td
+      -#       = link_to "Cancel", epicenter_subscription_path(@epicenter, membership, :user_id => user.id), :method => :delete, :class => 'btn btn-xs btn-danger', data: { confirm: "You are about to cancel #{user.name}s membership of #{@epicenter.name}. Are you sure!?" }
 
       

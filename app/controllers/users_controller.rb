@@ -25,7 +25,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user, only: [:edit, :update, :show]
-  before_action :validate_user!, only: [:edit, :update]
+  before_action :validate_user!, only: [:edit, :update, :payment]
 
 
   def index

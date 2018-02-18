@@ -26,6 +26,10 @@
 #  meeting_week         :string
 #  meeting_address      :string
 #  meeting_active       :boolean          default(FALSE)
+#  ongoing              :boolean          default(TRUE)
+#  api_token            :string
+#  members_count        :integer
+#  fruits_count         :integer
 #
 
 # niveau "kan måske slettes... kan evt. sættes af location"
@@ -58,8 +62,9 @@ class Epicenter < Blueprint
   has_many :epipages, :dependent => :destroy
   has_many :memberships, :dependent => :destroy
   has_many :information, as: :owner, :dependent => :destroy
+  
   has_many :resources, as: :owner, :dependent => :destroy
-
+  has_many :postits
 
   has_one :fruittype, :dependent => :destroy
   has_one :fruitbasket, as: :owner, :dependent => :destroy

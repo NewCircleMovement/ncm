@@ -37,6 +37,7 @@ class Fruitbasket < ActiveRecord::Base
     if fruitbag
       amount = fruitbag.amount
     end
+    return amount
   end
 
   # def receive_fruit(fruittype, amount)

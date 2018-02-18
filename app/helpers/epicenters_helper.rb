@@ -26,6 +26,10 @@
 #  meeting_week         :string
 #  meeting_address      :string
 #  meeting_active       :boolean          default(FALSE)
+#  ongoing              :boolean          default(TRUE)
+#  api_token            :string
+#  members_count        :integer
+#  fruits_count         :integer
 #
 
 module EpicentersHelper

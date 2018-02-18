@@ -1,0 +1,27 @@
+.container
+  %h2 
+    PostIt
+    = @postit.title
+  %hr/
+  .row  
+    .col-md-4
+      .well.well-sm
+        = link_to "New PostIt", new_epicenter_postit_path(@epicenter), :class => "btn btn-primary"
+    .col-md-8
+      %h3.header
+        = @postit.title
+      %p
+        Posted by
+        %strong= @postit.owner.name
+        %span.grey
+          = time_ago_in_words(@postit.updated_at)
+          ago
+      %h4.header.space-bottom-15
+        = link_to @postit.owner.email, "mailto:#{@postit.owner.email}", :class => "label label-success label-lg"
+        
+      %p
+        = @postit.body
+      
+      - if @postit.resource.image.present?
+        .image{ :style => "width: 100%" }
+          = image_tag @postit.resource.image_url, style: 'width: 100%'

@@ -36,6 +36,11 @@ class User < ActiveRecord::Base
   has_many :epicenters, :through => :tshirts
   has_many :tshirts, :dependent => :destroy
 
+  # resources and postits
+  has_many :resources, as: :owner, :dependent => :destroy
+  has_many :postits, as: :owner, :dependent => :destroy
+  has_many :resource_requests, :foreign_key => :requester_id
+
   # a user has epicenter memberships through membershipcards
   # cards will be destroyed on deletion, but not memberships
   has_many :memberships, :through => :membershipcards
@@ -90,6 +95,10 @@ class User < ActiveRecord::Base
   def give_fruit_to(receiver, fruittype, amount)
     result = self.fruitbasket.give_fruit_to(receiver.fruitbasket, fruittype, amount, LOG_COARSE)
     return result
+  end
+
+  def has_enough_fruit(fruittype, amount)
+    return self.fruitbasket.fruit_amount(fruittype) > amount
   end
 
   def has_valid_supply(epicenter)

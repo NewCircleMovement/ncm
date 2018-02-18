@@ -9,6 +9,8 @@
 #  updated_at    :datetime         not null
 #  payment_id    :string
 #  epicenter_id  :integer
+#  valid_payment :boolean          default(TRUE)
+#  valid_supply  :boolean          default(TRUE)
 #
 
 class Membershipcard < ActiveRecord::Base
@@ -38,11 +40,15 @@ class Membershipcard < ActiveRecord::Base
             next_month_date = Date.today.end_of_month + 1.days
             
             customer = Stripe::Customer.retrieve(self.payment_id)
-            card = customer.sources.retrieve(customer.default_source)
 
-            expiration_date = Date.new(card.exp_year, card.exp_month)
-            if expiration_date >= next_month_date
-                self.valid_supply = true
+            if customer['sources'].present?
+                card = customer.sources.retrieve(customer.default_source)
+                expiration_date = Date.new(card.exp_year, card.exp_month)
+                if expiration_date >= next_month_date
+                    self.valid_supply = true
+                end
+            else
+                self.valid_supply = false
             end
         end
 

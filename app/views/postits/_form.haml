@@ -1,0 +1,36 @@
+.row
+  .col-md-4
+    .well.well-sm
+      %h3.header Share you announcement
+      %p
+        = "Give away a resource here (or exchange it for #{@epicenter.fruittype.name })"
+      %p
+        If you don't select a resource, your postit will be shown to the community as a notification.
+      %hr/
+      %p
+        %strong Note:
+        If you have a resource that you want to share you can create it here...
+      %p
+        = link_to "Create resource",  new_user_member_resource_path(current_user, :back => request.fullpath), :class => "btn btn-primary"
+
+
+  .col-md-8
+    .well.well-sm
+      = simple_form_for [@epicenter, @postit] do |f|
+        .row
+          .col-md-6
+            = f.input :resource_id, :collection => @resources, :input_html => { :class => 'form-control'}, :label => 'Select resource', include_blank: true
+
+          .col-md-3
+            = f.input :visibility, label: "Visibility (#{@epicenter.fruittype.name})", input_html: { min: '0', step: 'any' }
+          .col-md-3
+            = f.input :asking, label: "Asking (#{@epicenter.fruittype.name})", input_html: { min: '0', step: 'any' }
+
+        .form-group
+          = f.input :title, label: "Name"
+        .form-group
+          = f.input :body, label: "Description"
+
+        = f.submit "Post It", :class => "btn btn-primary"
+
+      

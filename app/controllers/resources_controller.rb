@@ -3,7 +3,7 @@
 # Table name: resources
 #
 #  id          :integer          not null, primary key
-#  kind        :string
+#  type        :string
 #  bookable    :boolean
 #  title       :string
 #  body        :text
@@ -12,6 +12,8 @@
 #  calender_id :integer
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  holder_id   :integer
+#  image       :string
 #
 
 class ResourcesController < MainEpicentersController

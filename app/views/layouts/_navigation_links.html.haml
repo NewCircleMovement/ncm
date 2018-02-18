@@ -8,6 +8,10 @@
           Caretaker
   
   %li= link_to "Members", epicenter_members_path(@epicenter)
+  
+  -# - if @epicenter.show_postits
+  %li= link_to "PostIts", epicenter_postits_path(@epicenter)
+
   - if @pages
     - @pages.each do |page|
       %li= link_to page.menu_title, epicenter_epipage_path(@epicenter, page)

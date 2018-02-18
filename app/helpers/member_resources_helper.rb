@@ -1,0 +1,2 @@
+module MemberResourcesHelper
+end

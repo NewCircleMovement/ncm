@@ -17,6 +17,7 @@
           = pluralize(@epicenters.count, "Epicenter")
       
         = link_to "All", epicenters_path(:search => @search, :status => @status, :sort => @sort, :dir => @dir), :class => "btn btn-sm btn-sort #{@status ? '' : 'active'}"
+        -# = link_to "All", epicenters_path, :class => "btn btn-sm btn-sort #{@status ? '' : 'active'}"
         - ['tree', 'plant', 'sprout', 'seed'].each do |kind|
           = link_to epicenters_path(:status => kind, :search => @search, :sort => @sort, :dir => @dir), :class => "btn btn-sm btn-sort #{@status == kind ? 'active' : ''}" do
             - case kind

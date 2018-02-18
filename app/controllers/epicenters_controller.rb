@@ -26,6 +26,10 @@
 #  meeting_week         :string
 #  meeting_address      :string
 #  meeting_active       :boolean          default(FALSE)
+#  ongoing              :boolean          default(TRUE)
+#  api_token            :string
+#  members_count        :integer
+#  fruits_count         :integer
 #
 
 class EpicentersController < MainEpicentersController
@@ -152,7 +156,26 @@ class EpicentersController < MainEpicentersController
   end
 
   def edit_members
+    if params[:dir].present?
+      @dir = params[:dir]
+      @up = if params[:dir] == 'up' then true else false end
+    end
+    @sort = if params[:sort].present? then params[:sort] else 'name' end
+    @direction = if @up then "asc" else "desc" end
+    
     @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
+    # @members = @epicenter.members.order("#{@sort} #{@sort_direction}")
+    # @cards = Membershipcard.where(:epicenter_id => @epicenter.id)
+    @cards = Membershipcard.where(:epicenter_id => @epicenter.id)
+    
+    if @sort == 'bank'
+      # @cards = Membershipcard.where(:epicenter_id => @epicenter.id).order(:payment_id)
+      @cards = @cards.order(:payment_id)
+    elsif @sort == 'membership'
+      @cards = @cards.includes(:membership).order("memberships.name #{@direction}")
+    else
+      @cards = @cards.includes(:user).order("users.#{@sort} #{@direction}")
+    end
   end
 
   def edit_engagement

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171129194243) do
+ActiveRecord::Schema.define(version: 20180218091747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20171129194243) do
     t.string   "api_token"
     t.integer  "members_count"
     t.integer  "fruits_count"
+    t.boolean  "show_postits",         default: false
   end
 
   create_table "epipages", force: :cascade do |t|
@@ -196,8 +197,43 @@ ActiveRecord::Schema.define(version: 20171129194243) do
 
   add_index "pg_search_documents", ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id", using: :btree
 
+  create_table "postits", force: :cascade do |t|
+    t.integer  "resource_id"
+    t.integer  "epicenter_id"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "wall_id"
+    t.integer  "visibility"
+    t.integer  "asking",         default: 0
+    t.boolean  "only_epicenter", default: false
+    t.string   "title"
+    t.text     "body"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "postits", ["only_epicenter"], name: "index_postits_on_only_epicenter", using: :btree
+  add_index "postits", ["owner_id"], name: "index_postits_on_owner_id", using: :btree
+  add_index "postits", ["owner_type"], name: "index_postits_on_owner_type", using: :btree
+  add_index "postits", ["resource_id"], name: "index_postits_on_resource_id", using: :btree
+
+  create_table "resource_requests", force: :cascade do |t|
+    t.integer  "requester_id"
+    t.integer  "holder_id"
+    t.integer  "resource_id"
+    t.integer  "postit_id"
+    t.integer  "amount"
+    t.boolean  "accepted"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "resource_requests", ["holder_id"], name: "index_resource_requests_on_holder_id", using: :btree
+  add_index "resource_requests", ["postit_id"], name: "index_resource_requests_on_postit_id", using: :btree
+  add_index "resource_requests", ["resource_id"], name: "index_resource_requests_on_resource_id", using: :btree
+
   create_table "resources", force: :cascade do |t|
-    t.string   "kind"
+    t.string   "type"
     t.boolean  "bookable"
     t.string   "title"
     t.text     "body"
@@ -206,7 +242,13 @@ ActiveRecord::Schema.define(version: 20171129194243) do
     t.integer  "calender_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "holder_id"
+    t.string   "image"
   end
+
+  add_index "resources", ["holder_id"], name: "index_resources_on_holder_id", using: :btree
+  add_index "resources", ["owner_id"], name: "index_resources_on_owner_id", using: :btree
+  add_index "resources", ["owner_type"], name: "index_resources_on_owner_type", using: :btree
 
   create_table "resources_collections", force: :cascade do |t|
     t.integer  "epipage_id"

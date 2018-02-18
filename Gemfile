@@ -15,8 +15,11 @@ gem 'bootstrap-sass'
 gem 'font-awesome-sass'
 
 #db
-gem 'pg'
+gem 'pg', '~> 0.20' # problem with newer version on heroku
 gem 'pg_search'
+
+#locations
+# gem 'geocoder'
 
 # images and aws S3 upload
 gem 'carrierwave'

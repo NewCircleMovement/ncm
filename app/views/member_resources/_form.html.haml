@@ -1,0 +1,21 @@
+= simple_form_for @resource, :url => @path, :method => @method do |f|
+  = f.hidden_field :back, :value => @back
+  .row
+    .col-md-8
+      .form-group
+        = f.input :title, label: "Name"
+    .col-md-4
+      .form-group
+        = f.input :type, :collection => @types ,:input_html => { :class => 'form-control'}, :label => 'Resource type', include_blank: false
+    
+  .form-group
+    = f.input :body, label: "Description"
+  .form-group
+    = f.input :image, label: "Image"
+  
+  %hr/
+
+  - if @back
+    = f.submit "Save Resource and return", :class => "btn btn-primary"
+  - else
+    = f.submit "Save Resource", :class => "btn btn-primary"

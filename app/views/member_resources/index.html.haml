@@ -1,0 +1,73 @@
+= render layout: "users/edit_user" do
+  %h3.header{ :style => "margin-bottom: 30px"}
+    My Resources
+    .pull-right
+      = link_to "New Resource", new_user_member_resource_path(current_user), :class => "btn btn-primary"
+
+
+  - if @resources.present?
+    - @resources.each do |resource|
+      .panel.panel-default
+        .row
+          .col-md-3
+            .image{ :style => "height: 180px" }
+              - if resource.image
+                = image_tag(resource.image_url(:thumbnail_large))
+              - else 
+                No image
+          .col-md-9
+            .row
+              .col-md-9
+                %h3= resource.title
+              .col-md-3
+                .pull-right
+                  = link_to "Delete", user_member_resource_path(current_user, resource), :method => 'DELETE', :data => { :confirm => "Are you sure?" }
+                  = link_to "Edit", edit_user_member_resource_path(current_user, resource), :class => "btn btn-default space-left-5"
+            - if resource.postits.present?
+              - resource.postits.each do |postit|
+                %em.space-right-5 Posted in
+                %span
+                  = link_to postit.epicenter.name, epicenter_postit_path(postit.epicenter, postit), :class => 'label label-success'
+            
+            - else
+              %em.space-right-5 No postings
+            %p.space-top-15
+              = resource.body
+
+        - if resource.resource_requests.present? and resource.show_requests(current_user)
+          #accordion.panel-group{"aria-multiselectable" => "true", :role => "tablist"}
+            .panel.panel-default
+              #headingThree.panel-heading{:role => "tab"}
+                %h4.panel-title
+                  %a.collapsed{"aria-controls" => "collapseResource#{resource.id}", "aria-expanded" => "false", "data-parent" => "#accordion", "data-toggle" => "collapse", :href => "#collapseResource#{resource.id}", :role => "button"}
+                    Resource Requests
+              .panel-collapse.collapse{:id => "collapseResource#{resource.id}", "aria-labelledby" => "headingThree", :role => "tabpanel"}
+                .panel-body
+                  - resource.resource_requests.each_with_index do |r, index|
+                    - if r.requester_id != current_user.id
+                      %div
+                        %span.grey
+                          = time_ago_in_words(r.created_at)
+                          ago
+                      %div
+                        %strong= r.user.name
+                        =link_to r.user.email, "mailto:#{r.user.email}"
+                        requested this resource for
+                        %strong= "#{r.amount} #{r.postit.epicenter.fruittype.name}"
+                        in
+                        %strong= r.postit.epicenter.name
+                        %br/
+                        = link_to "Accept", epicenter_resource_request_path(r.postit.epicenter, r, :accept => true, :back => request.fullpath), :method => "put", :class => "btn btn-sm btn-default"
+                      - unless index == resource.resource_requests.length - 1
+                        %hr/
+
+            
+              
+              
+  - else
+    %p
+      Currently you have no resources
+    %p
+      = link_to "New Resource", new_user_member_resource_path(current_user), :class => "btn btn-primary"
+
+  

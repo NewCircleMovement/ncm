@@ -1,4 +1,20 @@
 Rails.application.routes.draw do
+  # get 'member_resources/index'
+
+  # get 'member_resources/show'
+
+  # get 'member_resources/new'
+
+  # get 'member_resources/edit'
+
+  # get 'member_resources/create'
+
+  # get 'member_resources/destroy'
+
+  # get 'giveaways/index'
+
+  # get 'giveaways/new'
+
   root to: 'pages#index'
   devise_for :users, controllers: { registrations: "registrations" }
   
@@ -8,6 +24,10 @@ Rails.application.routes.draw do
     get '/caretaker' => 'users#caretaker'
     get '/payment' => 'users#payment'
     post '/support_epicenter' => 'users#support_epicenter'
+
+
+    resources :member_resources
+    
   end
 
   resources :epicenters do
@@ -22,10 +42,12 @@ Rails.application.routes.draw do
     resources :fruittypes
     resources :access_points
     resources :information
+    
     resources :resources
+    resources :postits
+    resources :resource_requests
     
     namespace :members do
-    
     end
 
     resources :epicenters
@@ -40,6 +62,7 @@ Rails.application.routes.draw do
 
     get '/members' => 'epicenters#members'
     get '/tshirts' => 'epicenters#tshirts'
+
     post '/give_tshirt' => 'epicenters#give_tshirt'
 
     
