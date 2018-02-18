@@ -70,7 +70,8 @@
             Find notifications, give aways, and offers to 
 
         %hr/
-        = link_to "New PostIt", new_epicenter_postit_path(@epicenter), :class => "btn btn-primary"
+        - if current_user and @epicenter.has_member?(current_user)
+          = link_to "New PostIt", new_epicenter_postit_path(@epicenter), :class => "btn btn-primary"
         
     .col-md-8
       - if @postits.present?
@@ -95,44 +96,36 @@
                     .badge
                       = "#{postit.asking} #{@epicenter.fruittype.name}"
 
-                  - if not postit.owner == current_user
-                    - if postit.resource_requests.present?
-                      - if postit.has_requester(current_user)
-                        %span.label.label-success
-                          You have requested
+                  - if current_user and @epicenter.has_member?(current_user)
+                    - if not postit.owner == current_user
+                      - if postit.resource_requests.present?
+                        - if postit.has_requester(current_user)
+                          %span.label.label-success
+                            You have requested
+                        - else
+                          = link_to epicenter_resource_requests_path(@epicenter, :holder_id => postit.owner.id, :resource_id => postit.resource.id, :postit_id => postit.id, :requester_id => current_user.id), :method => "post" do
+                            %span.label.label-default 
+                              Request
+                              = "(#{postit.asking})"  
                       - else
                         = link_to epicenter_resource_requests_path(@epicenter, :holder_id => postit.owner.id, :resource_id => postit.resource.id, :postit_id => postit.id, :requester_id => current_user.id), :method => "post" do
                           %span.label.label-default 
                             Request
-                            = "(#{postit.asking})"  
-                    - else
-                      = link_to epicenter_resource_requests_path(@epicenter, :holder_id => postit.owner.id, :resource_id => postit.resource.id, :postit_id => postit.id, :requester_id => current_user.id), :method => "post" do
-                        %span.label.label-default 
-                          Request
-                          = "(#{postit.asking})"
+                            = "(#{postit.asking})"
 
-                  - if postit.owner == current_user
-                    %span.space-left-10
-                      = link_to "Delete", epicenter_postit_path(@epicenter, postit), :method => 'DELETE', :data => { :confirm => "Are you sure?" }, :class => "space-right-5"
-                      = link_to "Edit", edit_epicenter_postit_path(@epicenter, postit)
+                    - if postit.owner == current_user
+                      %span.space-left-10
+                        = link_to "Delete", epicenter_postit_path(@epicenter, postit), :method => 'DELETE', :data => { :confirm => "Are you sure?" }, :class => "space-right-5"
+                        = link_to "Edit", edit_epicenter_postit_path(@epicenter, postit)
                 %p
                   %span.grey By
-                  %span.space-right-10= postit.owner.name
-
-                  %br/
-                  %span.grey
-                    = time_ago_in_words(postit.updated_at)
-                    ago
-                -# - if postit.owner == current_user
-                -#   .pull-right
-                -#     = link_to "Delete", epicenter_postit_path(@epicenter, postit), :method => 'DELETE', :data => { :confirm => "Are you sure?" }
-                -#     = link_to "Edit", edit_epicenter_postit_path(@epicenter, postit), :class => "btn btn-primary"
-                
+                  %span
+                    = postit.owner.name
+                    %span.grey.space-left-10
+                      = time_ago_in_words(postit.updated_at)
+                      ago
                 %p
                   = postit.body
-                -# %p
-                -#   = link_to "Edit", edit_user_member_resource_path(current_user, resource), :class => "btn btn-default space-right-10"
-                -#   = link_to "Delete", user_member_resource_path(current_user, resource), :method => 'DELETE', :data => { :confirm => "Are you sure?" }
       
       - else
         - case @kind
