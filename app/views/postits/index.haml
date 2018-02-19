@@ -110,10 +110,16 @@
                                 Request
                                 = "(#{postit.asking})"  
                         - else
-                          = link_to epicenter_resource_requests_path(@epicenter, :holder_id => postit.owner.id, :resource_id => postit.resource.id, :postit_id => postit.id, :requester_id => current_user.id), :method => "post" do
-                            %span.label.label-default 
-                              Request
-                              = "(#{postit.asking})"
+                          - if postit.resource
+                            = link_to epicenter_resource_requests_path(@epicenter, :holder_id => postit.owner.id, :resource_id => postit.resource.id, :postit_id => postit.id, :requester_id => current_user.id), :method => "post" do
+                              %span.label.label-default 
+                                Request
+                                = "(#{postit.asking})"
+                          -# - else
+                          -#   = link_to epicenter_resource_requests_path(@epicenter, :holder_id => postit.owner.id, :postit_id => postit.id, :requester_id => current_user.id), :method => "post" do
+                          -#     %span.label.label-default 
+                          -#       = "(#{postit.asking})"
+
 
                       - if postit.owner == current_user
                         %span.space-left-10

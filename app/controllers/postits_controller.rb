@@ -42,18 +42,17 @@ class PostitsController < ApplicationController
     @postits = @epicenter.postits.where(:only_epicenter => false).where.not(:visibility => 0)
     @postits = if @search then @postits.search_for(@search) else @postits end
 
-    if @kind and @kind == 'notify'
-      @postits = @postits.where(:resource_id => nil)
-    else
-      @postits = @postits.where.not(:resource_id => nil)
-    end
-
-    if @kind and @kind != 'notify'
-      case @kind
-      when 'exchange'
-        @postits = @postits.where.not(:asking => 0)
-      when 'giveaway'
-        @postits = @postits.where(:asking => 0)
+    if @kind
+      if @kind == 'notify'
+        @postits = @postits.where(:resource_id => nil)
+      else
+        @postits = @postits.where.not(:resource_id => nil)
+        case @kind
+        when 'exchange'
+          @postits = @postits.where.not(:asking => 0)
+        when 'giveaway'
+          @postits = @postits.where(:asking => 0)
+        end
       end
     end
 
