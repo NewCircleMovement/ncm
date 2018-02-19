@@ -88,7 +88,10 @@
               %div{ :class => "#{postit.resource.present? ? 'col-md-9' : 'col-md-12'}", :style => "height: 180px" }
                 %div{ :class => "#{postit.resource.present? ? '' : 'space-left-15'}" }
                   %h3
-                    = link_to postit.title, epicenter_postit_path(@epicenter, postit)
+                    - if current_user
+                      = link_to postit.title, epicenter_postit_path(@epicenter, postit)
+                    - else
+                      = postit.title
                   %p
                     - if postit.visibility > 0
                       .label.label-info.space-right-5

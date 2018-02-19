@@ -17,8 +17,34 @@
           = time_ago_in_words(@postit.updated_at)
           ago
       %h4.header.space-bottom-15
-        = link_to @postit.owner.email, "mailto:#{@postit.owner.email}", :class => "label label-success label-lg"
-        
+        = link_to @postit.owner.email, "mailto:#{@postit.owner.email}", :class => "label label-info space-right-15"
+        - if current_user and @epicenter.has_member?(current_user)
+          - if not current_user == @postit.owner
+            - if @postit.resource_requests.present?
+              - if @postit.has_requester(current_user)
+                %span.label.label-success
+                  You have requested
+              - else
+                = link_to epicenter_resource_requests_path(@epicenter, :holder_id => @postit.owner.id, :resource_id => @postit.resource.id, :postit_id => @postit.id, :requester_id => current_user.id), :method => "post" do
+                  %span.label.label-default 
+                    Request
+                    = "(#{@postit.asking})"  
+            - else
+              - if @postit.resource
+                = link_to epicenter_resource_requests_path(@epicenter, :holder_id => @postit.owner.id, :resource_id => @postit.resource.id, :postit_id => @postit.id, :requester_id => current_user.id), :method => "post" do
+                  %span.label.label-default 
+                    Request
+                    = "(#{@postit.asking})"
+              -# - else
+              -#   = link_to epicenter_resource_requests_path(@epicenter, :holder_id => postit.owner.id, :postit_id => postit.id, :requester_id => current_user.id), :method => "post" do
+              -#     %span.label.label-default 
+              -#       = "(#{postit.asking})"
+
+
+          - if current_user == @postit.owner
+            %span.space-left-10
+              = link_to "Delete", epicenter_postit_path(@epicenter, @postit), :method => 'DELETE', :data => { :confirm => "Are you sure?" }, :class => "space-right-5"
+              = link_to "Edit", edit_epicenter_postit_path(@epicenter, @postit)
       %p
         = @postit.body
       
