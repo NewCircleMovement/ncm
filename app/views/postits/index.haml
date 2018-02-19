@@ -80,7 +80,7 @@
             .row
               .col-md-3
                 .image{ :style => "height: 180px" }
-                  - if postit.resource.image
+                  - if postit.resource.image.present?
                     = image_tag(postit.resource.image_url(:thumbnail_large))
                   - else 
                     No image
