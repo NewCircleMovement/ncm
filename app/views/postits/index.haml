@@ -78,54 +78,56 @@
         - @postits.each do |postit|
           .panel.panel-default
             .row
-              .col-md-3
-                .image{ :style => "height: 180px" }
-                  - if postit.resource.image.present?
-                    = image_tag(postit.resource.image_url(:thumbnail_large))
-                  - else 
-                    No image
-              .col-md-9
-                %h3
-                  = postit.title
-                %p
-                  - if postit.visibility > 0
-                    .label.label-info.space-right-5
-                      %i.fa.fa-eye
-                      = postit.visibility
-                  - if postit.asking > 0
-                    .badge
-                      = "#{postit.asking} #{@epicenter.fruittype.name}"
+              - if postit.resource.present?
+                .col-md-3
+                  .image{ :style => "height: 180px" }
+                    - if postit.resource.image.present?
+                      = image_tag(postit.resource.image_url(:thumbnail_large))
+                    - else 
+                      No image
+              %div{ :class => "#{postit.resource.present? ? 'col-md-9' : 'col-md-12'}", :style => "height: 180px" }
+                %div{ :class => "#{postit.resource.present? ? '' : 'space-left-15'}" }
+                  %h3
+                    = postit.title
+                  %p
+                    - if postit.visibility > 0
+                      .label.label-info.space-right-5
+                        %i.fa.fa-eye
+                        = postit.visibility
+                    - if postit.asking > 0
+                      .badge
+                        = "#{postit.asking} #{@epicenter.fruittype.name}"
 
-                  - if current_user and @epicenter.has_member?(current_user)
-                    - if not postit.owner == current_user
-                      - if postit.resource_requests.present?
-                        - if postit.has_requester(current_user)
-                          %span.label.label-success
-                            You have requested
+                    - if current_user and @epicenter.has_member?(current_user)
+                      - if not postit.owner == current_user
+                        - if postit.resource_requests.present?
+                          - if postit.has_requester(current_user)
+                            %span.label.label-success
+                              You have requested
+                          - else
+                            = link_to epicenter_resource_requests_path(@epicenter, :holder_id => postit.owner.id, :resource_id => postit.resource.id, :postit_id => postit.id, :requester_id => current_user.id), :method => "post" do
+                              %span.label.label-default 
+                                Request
+                                = "(#{postit.asking})"  
                         - else
                           = link_to epicenter_resource_requests_path(@epicenter, :holder_id => postit.owner.id, :resource_id => postit.resource.id, :postit_id => postit.id, :requester_id => current_user.id), :method => "post" do
                             %span.label.label-default 
                               Request
-                              = "(#{postit.asking})"  
-                      - else
-                        = link_to epicenter_resource_requests_path(@epicenter, :holder_id => postit.owner.id, :resource_id => postit.resource.id, :postit_id => postit.id, :requester_id => current_user.id), :method => "post" do
-                          %span.label.label-default 
-                            Request
-                            = "(#{postit.asking})"
+                              = "(#{postit.asking})"
 
-                    - if postit.owner == current_user
-                      %span.space-left-10
-                        = link_to "Delete", epicenter_postit_path(@epicenter, postit), :method => 'DELETE', :data => { :confirm => "Are you sure?" }, :class => "space-right-5"
-                        = link_to "Edit", edit_epicenter_postit_path(@epicenter, postit)
-                %p
-                  %span.grey By
-                  %span
-                    = postit.owner.name
-                    %span.grey.space-left-10
-                      = time_ago_in_words(postit.updated_at)
-                      ago
-                %p
-                  = postit.body
+                      - if postit.owner == current_user
+                        %span.space-left-10
+                          = link_to "Delete", epicenter_postit_path(@epicenter, postit), :method => 'DELETE', :data => { :confirm => "Are you sure?" }, :class => "space-right-5"
+                          = link_to "Edit", edit_epicenter_postit_path(@epicenter, postit)
+                  %p
+                    %span.grey By
+                    %span
+                      = postit.owner.name
+                      %span.grey.space-left-10
+                        = time_ago_in_words(postit.updated_at)
+                        ago
+                  %p
+                    = postit.body
       
       - else
         - case @kind
