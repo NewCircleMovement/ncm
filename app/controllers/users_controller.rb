@@ -69,10 +69,12 @@ class UsersController < ApplicationController
     @user = User.find(params[:user_id])
   end
 
-  def payment
+
+  def payments
     @user = User.find(params[:user_id])
     @payment = @user.get_membershipcard(@mother)
     @membership = @user.get_membership(@mother)
+
     if @payment.payment_id != "bank" and @payment.payment_id != nil
       begin
         customer = Stripe::Customer.retrieve(@payment.payment_id)

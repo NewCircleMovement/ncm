@@ -22,9 +22,8 @@ Rails.application.routes.draw do
     get '/memberships' => 'users#memberships'
     get '/fruitbasket' => 'users#fruitbasket'
     get '/caretaker' => 'users#caretaker'
-    get '/payment' => 'users#payment'
+    get '/payment' => 'users#payments'
     post '/support_epicenter' => 'users#support_epicenter'
-
 
     resources :member_resources
     

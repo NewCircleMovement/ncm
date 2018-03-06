@@ -22,8 +22,8 @@
         %li{ class: "#{controller_name == 'users' && action_name == 'fruitbasket' ? 'active' : ''}" }
           = link_to "Fruit basket", user_fruitbasket_path(current_user)
 
-        %li{ class: "#{controller_name == 'users' && action_name == 'payment' ? 'active' : ''}" }
-          = link_to "Payment", user_payment_path(current_user)        
+        %li{ class: "#{controller_name == 'users' && action_name == 'payments' ? 'active' : ''}" }
+          = link_to "Payment", user_payment_path(current_user)
         
     .col-md-9
       = yield
