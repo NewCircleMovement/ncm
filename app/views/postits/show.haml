@@ -48,6 +48,6 @@
       %p
         = @postit.body
       
-      - if @postit and @postit.resource.image.present?
+      - if @postit.resource and @postit.resource.image.present?
         .image{ :style => "width: 100%" }
           = image_tag @postit.resource.image_url, style: 'width: 100%'
