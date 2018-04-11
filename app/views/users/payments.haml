@@ -1,11 +1,14 @@
 = render layout: "edit_user" do
   %h3.header Payment
   %p
-    You are paying to New Circle Movement via 
-    - if @payment.payment_id == "bank"
-      %strong bank transfer
-    - elsif @payment.payment_id != nil
-      %strong credit card
+    - if @payment
+      You are paying to New Circle Movement via 
+      - if @payment.payment_id == "bank"
+        %strong bank transfer
+      - elsif @payment.payment_id != nil
+        %strong credit card
+    - else
+      You are currently not paying to New Circle Movement
 
   %hr/
   - if @card

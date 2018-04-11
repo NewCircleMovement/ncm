@@ -1,18 +1,97 @@
 .container
-  .col-md-offset-4.col-md-4
-    .authform.panel.panel-default.space-top-30
-      .panel-body
-        = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :role => 'form'}) do |f|
-          %h2.header.text-center Opret profil
-          %hr/
-          = devise_error_messages!
-          .form-group
-            = f.label :email
-            = f.email_field :email, class: 'form-control', :autofocus => true
-          .form-group
-            = f.label :password
-            = f.password_field :password, class: 'form-control'
-          .form-group
-            = f.label :password_confirmation
-            = f.password_field :password_confirmation, class: 'form-control'
-          = f.submit 'Sign up', :class => 'btn btn-primary btn-wide'
+  - if @child
+    .col-md-12
+      .panel.panel-default.space-top-30
+        .panel-body
+          .row
+            .col-md-8
+              %h2.header
+                Membership of
+                = @child.name
+              %span.grey
+                Requested
+                = time_ago_in_words(@request_t)
+                ago
+              %hr/
+              %p
+                To become a
+                %strong= "#{@child_membership.name} Member"
+                of 
+                %strong= @child.name
+                you must first create a membership of 
+                %strong New Circle Movment
+              %p
+                It's very easy!
+              %ul
+                %li 
+                  Type your email, choose a password and click 
+                  %strong sign up
+                %li
+                  This will redirected you to
+                  %strong New Circle Movement payment
+                %li
+                  Comnplete your payment in 
+                  %strong the appearing box
+              %p
+                When your payment succeeds you will be both a member of
+                %strong= @child.name
+                and
+                %strong New Circle Movement
+              .well.well-sm
+                %p
+                  As a minimum
+                  %strong= "#{@child_membership.name} Membership"
+                  of 
+                  %strong= @child.name
+                  requires
+                  %strong= "#{@memberships.first.name} Membership"
+                  of
+                  %strong New Cirle Movement
+                  %br/
+                  %em This will be automatically chosen for you.
+              %p
+                If you already have a New Circle Movement account
+                = link_to "please log in here", new_user_session_path
+
+            .col-md-4
+              = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :role => 'form'}) do |f|
+                %h2.header Create profile
+                %hr/
+                = devise_error_messages!
+                .form-group
+                  = f.label :email
+                  = f.email_field :email, class: 'form-control', :autofocus => true
+                .form-group
+                  = f.label :password
+                  = f.password_field :password, class: 'form-control'
+                .form-group
+                  = f.label :password_confirmation
+                  = f.password_field :password_confirmation, class: 'form-control'
+                  
+                = f.submit 'Sign up', :class => 'btn btn-primary btn-wide'
+                %hr/
+                - if devise_mapping.registerable?
+                  = link_to 'Already have an account?', new_session_path(resource_name)
+            
+
+  - else
+    .col-md-offset-4.col-md-4
+      .authform.panel.panel-default.space-top-30
+        .panel-body
+          = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :role => 'form'}) do |f|
+            %h2.header.text-center Opret profil
+            %hr/
+            = devise_error_messages!
+            .form-group
+              = f.label :email
+              = f.email_field :email, class: 'form-control', :autofocus => true
+            .form-group
+              = f.label :password
+              = f.password_field :password, class: 'form-control'
+            .form-group
+              = f.label :password_confirmation
+              = f.password_field :password_confirmation, class: 'form-control'
+            = f.submit 'Sign up', :class => 'btn btn-primary btn-wide'
+            %hr/
+            - if devise_mapping.registerable?
+              = link_to 'I have an account', new_session_path(resource_name)

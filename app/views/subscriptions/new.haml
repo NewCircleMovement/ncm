@@ -10,21 +10,50 @@
 
   
 .container
-  - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
-    %h1 Memberships
-    %p
-      %strong Current members:
-      = @epicenter.users_with_tshirt('member').count
+  - if @request_epicenter
+    %h2
+      %strong
+        = @request_epicenter.name
+        membership
 
+    %p
+      You are in the process of becoming 
+      %strong
+        = @request_membership.name 
+        Member
+      of 
+      %strong
+        = @request_epicenter.name
+      through
+      %strong
+        New Circle Movement
+
+  - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
+    
+    - if @request_epicenter
+      %div.space-bottom-15
+        .alert.alert-success.space-bottom-15
+          These 
+          %strong New Circle Movement 
+          memberships are compatible with the 
+          %strong
+            = @request_membership.name
+            membership
+          of 
+          %strong
+            = @request_epicenter.name
+    - else
+      %h2
+        %strong Memberships
     .row
       - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
-        - for membership in @memberships
+        - @memberships.each_with_index do |membership, i|
           .col-md-4
             .panel.panel-default
               .panel-body
-                = render partial: 'form', locals: {membership: membership}
+                = render partial: 'form', locals: { membership: membership, index: i }
   - else
-    %h1 Medlemskaber er ikke aktiveret
+    %h2 Medlemskaber er ikke aktiveret
     %p
       = @epicenter.name 
       kan af følgende grunde endnu ikke modtage medlemmer

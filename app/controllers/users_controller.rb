@@ -75,7 +75,7 @@ class UsersController < ApplicationController
     @payment = @user.get_membershipcard(@mother)
     @membership = @user.get_membership(@mother)
 
-    if @payment.payment_id != "bank" and @payment.payment_id != nil
+    if @payment and @payment.payment_id != "bank" and @payment.payment_id != nil
       begin
         customer = Stripe::Customer.retrieve(@payment.payment_id)
         @card = customer.sources.retrieve(customer.default_source)

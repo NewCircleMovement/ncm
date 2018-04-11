@@ -1,6 +1,8 @@
 class SubscriptionsController < ApplicationController
-  before_filter :authenticate_user!
+  # before_filter :authenticate_user!, except: [:new, :create]
+  before_filter :authenticate, except: [:new]
   before_filter :set_epicenter, except: [:update_creditcard]
+  before_filter :check_user_before_membership, only: [:create]
 
   def index
     @memberships = @epicenter.memberships
@@ -22,13 +24,21 @@ class SubscriptionsController < ApplicationController
   end
 
   def new
-    if @epicenter.has_member?( current_user )
+    if current_user and @epicenter.has_member?( current_user )
       flash[:notice] = "Du er allerede medlem. Du kan redigere dit medlemsskab her."
       redirect_to epicenter_subscriptions_path( @epicenter )
     else
-      @memberships = @epicenter.memberships
+      if session[:new_ncm_membership] and @epicenter == Epicenter.grand_mother
+        @request = session[:new_ncm_membership]
+        @request_epicenter = Epicenter.find_by_slug(@request['epicenter_id'])
+        @request_membership = @request_epicenter.memberships.find(@request['membership_id'])
+        @memberships = @epicenter.memberships.where("monthly_gain >= ?", @request_membership.monthly_fee)
+      else
+        @memberships = @epicenter.memberships
+      end
     end
   end
+
 
   def create
     success = false
@@ -65,7 +75,7 @@ class SubscriptionsController < ApplicationController
             success = true
           rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
             flash[:danger] = "Din betaling blev desværre ikke gennemført. Prøv venligst igen"
-          end          
+          end
           flash[:success] = "Du er nu igen aktivt medlem af New Circle Movement"
         else
           flash[:warning] = "Der var et problem med din gentilmelding. Prøv venligst igen."
@@ -135,6 +145,7 @@ class SubscriptionsController < ApplicationController
         end
         current_user.save
       end
+
       @epicenter.make_membershipcard( current_user, @membership, stripe_customer )
       @epicenter.make_member( current_user )
       @epicenter.harvest_time_for( current_user )
@@ -142,8 +153,34 @@ class SubscriptionsController < ApplicationController
       log_details = { membership: @membership.name }
       EventLog.entry(current_user, @epicenter, NEW_MEMBERSHIP, log_details, LOG_COARSE)
 
-      flash[:success] = "Du er nu medlem af #{@epicenter.name}"
-      redirect_path = epicenter_path(@epicenter)
+      @request = session[:new_ncm_membership]
+      if stripe_customer and @request        
+        @child = Epicenter.find_by_slug(@request['epicenter_id'])
+        @child_membership = @child.memberships.find(@request['membership_id'])
+
+        session.delete(:new_ncm_membership)
+
+        if @child.validate_and_pay_new_membership( current_user, @child_membership )
+          @child.make_membershipcard( current_user, @child_membership, false )
+          @child.make_member( current_user )
+          @child.harvest_time_for( current_user )
+          log_details = { membership: @child_membership.name }
+          EventLog.entry(current_user, @child, NEW_MEMBERSHIP, log_details, LOG_COARSE)
+        end
+      end
+
+      if @child
+        if current_user.has_member_tshirt?(@child)
+          flash[:success] = "Welcome. You are now a member of #{@child.name} and #{@epicenter.name}"
+          redirect_path = epicenter_path(@child)
+        else
+          flash[:success] = "Welcome. You are now a member of #{@child.name}. BUT NOT #{@epicenter.name}"
+          redirect_path = epicenter_path(@epicenter)
+        end
+      else
+        flash[:success] = "Welcome. You are now a member af #{@epicenter.name}"
+        redirect_path = epicenter_path(@epicenter)
+      end
     else
       flash[:warning] = no_success_message
       redirect_path =  new_epicenter_subscription_path(@epicenter)
@@ -304,5 +341,50 @@ class SubscriptionsController < ApplicationController
       @epicenter = Epicenter.find_by_slug(params[:epicenter_id])
       @pages = @epicenter.epipages
     end
+
+    # checks that a user is active NCM member before signing up to child epicenter
+    # if user is not NCM user, redirects to ncm payment page (with requested child epicenter)
+    def check_user_before_membership
+      if current_user
+        ncm_membership = current_user.get_membership(@mother)
+        epicenter = Epicenter.find_by_slug(params['epicenter_id'])
+
+        if epicenter != @mother and not ncm_membership
+          session[:new_ncm_membership] = { 
+            :epicenter_id => params['epicenter_id'], 
+            :membership_id => params['membership_id'],
+            :t => Time.now
+          }
+          #
+          redirect_to new_epicenter_subscription_path(@mother)
+        end
+      else
+        # it's possible that we can put the logic from "authenticate" method below here
+        redirect_to epicenters_path
+      end
+    end
+
+    def authenticate
+      # @child = Epicenter.find_by_slug(params['epicenter_id'])
+      # @child_membershio = @child.memberships.find(params['membership_id'])      
+
+      # if @check_epicenter == Epicenter.grand_mother
+      #   session.delete(:new_ncm_membership)
+      # else
+      #   session[:new_ncm_membership] = { :epicenter_id => params['epicenter_id'], :membership_id => params['membership_id'] }
+      # end
+
+      if current_user
+        authenticate_user!
+      else
+        session[:new_ncm_membership] = { 
+          :epicenter_id => params['epicenter_id'], 
+          :membership_id => params['membership_id'],
+          :t => Time.now
+        }
+        redirect_to new_user_registration_path(:epicenter_id => params['epicenter_id'], :membership_id => params['membership_id'])
+      end
+    end
+
 
 end
