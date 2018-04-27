@@ -64,7 +64,7 @@
                 %i.fa.fa-exclamation-triangle 
                 Det er påkrævet at alle caretakers er medlem
               %p
-                = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-primary'
+                = link_to "Join #{@epicenter.size}", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-primary'
           - else
             - if @epicenter.fruittype.present?
               %p

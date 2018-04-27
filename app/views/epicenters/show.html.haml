@@ -11,9 +11,9 @@
         - if @epicenter.can_accept_members?
           - if current_user
             - unless @epicenter.has_member?(current_user)
-              = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
+              = link_to "Join #{@epicenter.size}", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
           - else
-            = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
+            = link_to "Join #{@epicenter.size}", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-lg btn-primary'
 
 .container
   .row
@@ -55,7 +55,7 @@
             - if current_user and @epicenter.has_member?(current_user)
               Member
             - else
-              = link_to "Bliv medlem", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-xs btn-primary'
+              = link_to "Join #{@epicenter.size}", new_epicenter_subscription_path( @epicenter ), :class => 'btn btn-xs btn-primary'
 
         %tr
           %td Epicenter
