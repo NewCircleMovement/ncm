@@ -22,7 +22,7 @@ class MembershipsController < MainEpicentersController
 
   def index
     @sow = params['sow']
-    @memberships = @epicenter.memberships
+    @memberships = @epicenter.memberships.order(:monthly_fee)
     @hard_currency = (@epicenter == @mother)
   end
 
