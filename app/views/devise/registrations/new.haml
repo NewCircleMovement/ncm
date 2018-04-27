@@ -38,7 +38,7 @@
                 and
                 %strong New Circle Movement
               .well.well-sm
-                - if @memberships
+                - if @memberships.present?
                   %p
                     As a minimum
                     %strong= "#{@child_membership.name} Membership"

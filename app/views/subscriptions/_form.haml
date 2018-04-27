@@ -5,9 +5,9 @@
     =membership.name
   %p= membership.profile
   %p
-    %strong Pris:
+    %strong Price:
     = membership.monthly_fee
-    kroner pr. måned
+    kroner per month
   %hr/
   = form_tag({:controller => "subscriptions", :action => "create", :membership_id => membership.id}, {:method => "post"}) do
     %article
@@ -28,9 +28,9 @@
     = membership.name
   %p= membership.profile
   %p
-    %strong Pris:
+    %strong Price:
     = membership.monthly_fee
     = @epicenter.mother.fruittype.name
-    pr. måned
+    per month
   %hr/
-  %p= link_to "Join #{@epicenter.size}", epicenter_subscriptions_path(@epicenter.slug, membership_id: membership.id), method: :post, class: "btn btn-primary"
+  %p= link_to "Select", epicenter_subscriptions_path(@epicenter.slug, membership_id: membership.id), method: :post, class: "btn btn-primary"
