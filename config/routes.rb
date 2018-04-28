@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "registrations" }
   
   resources :users do
+    get '/admissions' => 'users#admissions'
     get '/memberships' => 'users#memberships'
     get '/fruitbasket' => 'users#fruitbasket'
     get '/caretaker' => 'users#caretaker'
@@ -34,10 +35,12 @@ Rails.application.routes.draw do
       # post "/update_creditcard" => "subscriptions#update_creditcard"
       # get "/cancel_change" => "subscriptions#cancel_change"
     end
+    resources :tickets
       
 
     resources :epipages
     resources :memberships
+    resources :admissions
     resources :fruittypes
     resources :access_points
     resources :information

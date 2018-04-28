@@ -1,0 +1,27 @@
+.jumbotron.epicenter
+  .image
+    - if @epicenter.image
+      = image_tag(@epicenter.image, width: "100%", height: "250")
+    .text-wrap
+      .text 
+        %h1= @epicenter.name
+        - if @epicenter.tagline.present?
+          %p= @epicenter.tagline
+
+  
+.container
+  %h2
+    %strong
+      Tickets
+
+  - if @admissions.present?
+    .row
+      - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
+        - @admissions.each_with_index do |admission, i|
+          .col-md-4
+            .panel.panel-default
+              .panel-body
+                = render partial: 'form', locals: { admission: admission, index: i }
+  - else
+    %p 
+      No tickets are currently being offered

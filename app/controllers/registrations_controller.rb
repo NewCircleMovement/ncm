@@ -19,12 +19,9 @@ class RegistrationsController < Devise::RegistrationsController
         session.delete(:new_ncm_membership)
       end
     end
+
   end
 
-
-  def after_sign_up_path_for(resource)
-    "/epicenters/#{Epicenter.grand_mother.slug}/subscriptions/new"
-  end
 
 
   # custom fields are :name

@@ -1,0 +1,39 @@
+= render layout: "epicenters/edit_epicenter" do
+  - if @epicenter.admissions.present?
+    %h3.header Admissions
+    %p
+      Sell admission tickets/cards for events here. All admissions are public
+
+    .row
+      - for admission in @epicenter.admissions
+        .col-md-6
+          .well.well-sm
+            %h4.header
+              %strong= admission.name
+            %p
+              = admission.description
+            %p
+              %strong Start: 
+              = admission.start_t.to_formatted_s(:long_ordinal)
+              %br/
+              %strong End: 
+              = admission.end_t.to_formatted_s(:long_ordinal)
+              %br/
+              %strong Price:
+              = admission.price
+            - if admission.n_max
+              %p
+                %strong Maximum participants:
+                = admission.n_max
+                %br/
+                %strong Current count:
+                = admission.n_actual || 0
+            %hr/
+            = link_to "Edit", edit_epicenter_admission_path(@epicenter, admission), class: "btn btn-default"
+      .col-md-12
+        = link_to "Create admission", new_epicenter_admission_path(@epicenter), class: "btn btn-primary"  
+  - else
+    / %h3.header
+    /   Der er ikke oprettet nogen medlemskaber
+    = link_to "Create admission ", new_epicenter_admission_path(@epicenter), class: "btn btn-primary"
+    

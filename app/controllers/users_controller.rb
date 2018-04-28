@@ -61,6 +61,10 @@ class UsersController < ApplicationController
     @user = User.find(params[:user_id])
   end
 
+  def admissions
+    @user = User.find(params[:user_id])
+  end
+
   def caretaker
     @user = User.find(params[:user_id])
   end

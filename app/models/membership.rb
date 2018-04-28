@@ -27,6 +27,7 @@ class Membership < ActiveRecord::Base
 
   has_many :membershipcards
   has_many :users, :through => :membershipcards
+  
   belongs_to :epicenter
 
   def monthly_fee_fruittype

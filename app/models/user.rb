@@ -42,9 +42,14 @@ class User < ActiveRecord::Base
   has_many :resource_requests, :foreign_key => :requester_id
 
   # a user has epicenter memberships through membershipcards
-  # cards will be destroyed on deletion, but not memberships
+  # cards will be destroyed on deletion, but not memberships (belongs to epicenter)
   has_many :memberships, :through => :membershipcards
   has_many :membershipcards, :dependent => :destroy
+
+  # a user has epicenter admissions through tickets
+  # tickets will be destory on user deletion, but not admission (belongs to epicenter)
+  has_many :admissions, :through => :admissioncards
+  has_many :admissioncards, :dependent => :destroy
 
   # membership_changes are used to store membership change requests
   has_many :membership_changes, :dependent => :destroy

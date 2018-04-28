@@ -1,0 +1,36 @@
+= render layout: "edit_user" do
+  - unless current_user.admissions.present?
+    %h3.header You have not purchased any admission
+  - else
+    %h3.header You have purchased tickets to these admissions
+    .row
+      - current_user.admissions.each do |admission|
+
+        .col-md-6
+          .panel.panel-default
+            .panel-image
+              - if admission.epicenter.image.present?
+                = image_tag(admission.epicenter.image)
+              - elsif admission.epicenter.mother.image.present?
+                = image_tag(admission.epicenter.mother.image)
+              - else
+                = image_tag(@mother.image)
+            .panel-body
+              %h4.header
+                = admission.name
+              %p
+                = admission.description
+              %p
+                %strong By:
+                = link_to admission.epicenter.name, epicenter_path(admission.epicenter)
+                %br/
+                %strong Price:
+                = admission.price
+              %hr/
+              %p
+                %strong Starts:
+                = admission.start_t.to_formatted_s(:long_ordinal)
+                %br/
+                %strong Ends:
+                = admission.end_t.to_formatted_s(:long_ordinal)
+              

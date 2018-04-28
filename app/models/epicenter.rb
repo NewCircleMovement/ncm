@@ -30,6 +30,7 @@
 #  api_token            :string
 #  members_count        :integer
 #  fruits_count         :integer
+#  show_postits         :boolean          default(FALSE)
 #
 
 # niveau "kan måske slettes... kan evt. sættes af location"
@@ -61,6 +62,7 @@ class Epicenter < Blueprint
   has_many :tshirts, :dependent => :destroy
   has_many :epipages, :dependent => :destroy
   has_many :memberships, :dependent => :destroy
+  has_many :admissions, :dependent => :destroy
   has_many :information, as: :owner, :dependent => :destroy
   
   has_many :resources, as: :owner, :dependent => :destroy
@@ -205,6 +207,10 @@ class Epicenter < Blueprint
 
   def check_seed
     
+  end
+
+  def has_current_admissions?
+    return self.admissions.map(&:start_t).any? { |t| t >= Time.now }
   end
 
 

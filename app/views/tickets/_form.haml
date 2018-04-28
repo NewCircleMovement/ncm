@@ -1,0 +1,38 @@
+%h3.header 
+  = admission.name
+%p
+  = admission.description
+
+%p
+  %strong Start:
+  = admission.start_t.to_formatted_s(:long_ordinal)
+  %br/
+  %strong End:
+  = admission.end_t.to_formatted_s(:long_ordinal)
+  %br/
+  %strong Price:
+  = admission.price
+  kroner
+  = "(#{@mother.fruittype.name})"
+
+- if admission.n_max
+  %p
+    %strong Maximum participants:
+    = admission.n_max
+
+%hr/
+- if current_user
+  - if admission.n_max && admission.n_actual >= admission.n_max
+    %button.btn.btn-default{ :disabled => true } Sold Out
+  - else
+    = form_tag({:controller => "tickets", :action => "create", :admission_id => admission.id}, {:method => "post"}) do
+      %article
+        - if flash[:error].present?
+          #error_explanation
+            %p= flash[:error]
+
+      %script.stripe-button{ "data-name" => "New Circle Movement", "data-description" => "#{admission.name}", "data-zip-code" => true, "data-billing-address" => true, "data-email" => current_user.email, "data-amount" => "#{admission.price}00", "data-image" => "", "data-label" => "Purchase", "data-key" => Rails.configuration.stripe[:publishable_key], "data-locale" => "en", "data-currency" => "dkk", :src => "https://checkout.stripe.com/checkout.js", :id => "button#{index}" }
+- else
+  = link_to epicenter_tickets_path, :method => "post", :class => 'btn btn-primary' do
+    Select
+    

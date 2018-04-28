@@ -49,6 +49,9 @@
           %li{ class: "#{action_name == 'edit_members' ? 'active' : ''}" }
             = link_to "Members", epicenter_edit_members_path(@epicenter)
 
+          %li{ class: "#{controller_name == 'admissions' ? 'active' : ''}" }
+            = link_to "Admissions", epicenter_admissions_path(@epicenter)
+
           %li{ class: "#{action_name == 'tshirts' ? 'active' : ''}" }
             = link_to "Tshirts", epicenter_tshirts_path(@epicenter)
 

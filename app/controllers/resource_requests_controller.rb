@@ -1,19 +1,16 @@
 # == Schema Information
 #
-# Table name: resources
+# Table name: resource_requests
 #
-#  id          :integer          not null, primary key
-#  type        :string
-#  bookable    :boolean
-#  title       :string
-#  body        :text
-#  owner_id    :integer
-#  owner_type  :string
-#  calender_id :integer
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  holder_id   :integer
-#  image       :string
+#  id           :integer          not null, primary key
+#  requester_id :integer
+#  holder_id    :integer
+#  resource_id  :integer
+#  postit_id    :integer
+#  amount       :integer
+#  accepted     :boolean
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
 #
 
 class ResourceRequestsController < ApplicationController

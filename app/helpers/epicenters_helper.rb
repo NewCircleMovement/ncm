@@ -30,6 +30,7 @@
 #  api_token            :string
 #  members_count        :integer
 #  fruits_count         :integer
+#  show_postits         :boolean          default(FALSE)
 #
 
 module EpicentersHelper

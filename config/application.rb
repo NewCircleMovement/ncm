@@ -8,7 +8,10 @@ Bundler.require(*Rails.groups)
 
 module Ncm
   class Application < Rails::Application
-
+    
+    config.time_zone = 'Copenhagen'
+    config.active_record.default_timezone = :local
+    
     config.generators do |g|
       g.test_framework :rspec,
         fixtures: true,

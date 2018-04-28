@@ -12,6 +12,9 @@
         %li{ class: "#{controller_name == 'users' && action_name == 'memberships' ? 'active' : ''}" }
           = link_to "Memberships", user_memberships_path(current_user)
 
+        %li{ class: "#{controller_name == 'users' && action_name == 'admissions' ? 'active' : ''}" }
+          = link_to "Admissions", user_admissions_path(current_user)
+
         %li{ class: "#{controller_name == 'member_resources' ? 'active' : ''}" }
           = link_to "My resources", user_member_resources_path(current_user)
 

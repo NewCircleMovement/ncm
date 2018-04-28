@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180218091747) do
+ActiveRecord::Schema.define(version: 20180428115150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,27 @@ ActiveRecord::Schema.define(version: 20180218091747) do
     t.boolean  "menu_item"
     t.string   "menu_title"
     t.text     "profile"
+  end
+
+  create_table "admissioncards", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "admission_id"
+    t.integer  "charge_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "admissions", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "price"
+    t.datetime "start_t"
+    t.datetime "end_t"
+    t.integer  "epicenter_id"
+    t.integer  "n_max"
+    t.integer  "n_actual",     default: 0
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "calendars", force: :cascade do |t|

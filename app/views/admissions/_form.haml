@@ -1,0 +1,21 @@
+= simple_form_for [@epicenter, @admission] do |f|
+  = f.input :name
+  = f.input :description, label: "Description of admission"
+
+  .row
+    .col-md-6
+      = f.input :start_t, label: "Start date and time"
+    .col-md-6
+      = f.input :end_t, label: "End date and time"
+
+    .col-md-6
+      = f.input :price, label: "Pris for admission (kroner = #{@epicenter.mother_fruit.name})"
+    .col-md-6
+      = f.input :n_max, label: "Maximum number of participants (optional)"
+  
+  = f.submit "Save", :class => 'btn btn-primary'
+  - if action_name == 'edit'
+    = link_to "Delete", [@epicenter, @admission], :method => :delete, :data => { :confirm => 'Are you sure' }, class: "btn btn-danger"
+  - if action_name == 'new'
+    = link_to "Cancel", :back, class: "btn btn-default"
+

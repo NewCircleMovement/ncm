@@ -30,6 +30,7 @@
 #  api_token            :string
 #  members_count        :integer
 #  fruits_count         :integer
+#  show_postits         :boolean          default(FALSE)
 #
 
 class EpicentersController < MainEpicentersController
@@ -79,6 +80,7 @@ class EpicentersController < MainEpicentersController
     @left_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:left] ).first
     @right_info = @epicenter.information.where(:position => INFORMATION_POSITIONS[:right] ).first
     @logs = @epicenter.event_log
+    @admissions = @epicenter.admissions
   end
 
 
