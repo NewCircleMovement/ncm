@@ -15,7 +15,7 @@
   
   = f.submit "Save", :class => 'btn btn-primary'
   - if action_name == 'edit'
-    = link_to "Delete", [@epicenter, @admission], :method => :delete, :data => { :confirm => 'Are you sure' }, class: "btn btn-danger"
+    = link_to "Delete", [@epicenter, @admission], :method => :delete, :data => { :confirm => 'Are you really sure about this' }, class: "btn btn-danger"
   - if action_name == 'new'
     = link_to "Cancel", :back, class: "btn btn-default"
 

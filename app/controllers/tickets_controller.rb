@@ -49,6 +49,7 @@ class TicketsController < ApplicationController
 
         # increase counter on admissions count
         @admission.n_actual += 1
+        @admission.save
         
         unless current_user.name.present?
           current_user.name = params['stripeBillingName']

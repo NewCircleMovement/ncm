@@ -18,13 +18,16 @@
 class AdmissionsController < MainEpicentersController
 
   before_action :set_epicenter
-  before_action :set_admission, only: [:edit, :update, :destroy]
+  before_action :set_admission, only: [:show, :edit, :update, :destroy]
   before_action :require_caretaker, only: [:edit, :index]
   
 
   def index
     @admissions = @epicenter.admissions
     @hard_currency = (@epicenter == @mother)
+  end
+
+  def show
   end
 
   def new
@@ -49,6 +52,8 @@ class AdmissionsController < MainEpicentersController
   
 
   def update
+    @admission.n_actual = @admission.users.count
+
     if @admission.update(admission_params)
       redirect_to epicenter_admissions_path(@epicenter), notice: 'Medlemskabet blev opdateret.'
     else

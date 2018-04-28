@@ -1,0 +1,43 @@
+= render layout: "epicenters/edit_epicenter" do
+  - if @epicenter.admissions.present?
+    %h3.header 
+      Admissions
+    .well
+      %h4.header
+        %strong= @admission.name
+      %p
+        = @admission.description
+      %p
+        %strong Start:
+        = @admission.start_t.to_formatted_s(:long_ordinal)
+        %br/
+        %strong End:
+        = @admission.end_t.to_formatted_s(:long_ordinal)
+      %p
+        %strong Price:
+        = @admission.price
+        %br/
+        %strong Maximum participants:
+        = @admission.n_max || 'No maximum'
+        %br/
+        %strong Current participants:
+        = @admission.n_actual
+    - if @admission.users
+      .well
+        %table.table
+          %thead
+            %tr
+              %th #
+              %th Purchased
+              %th Name
+              %th Email
+          %tbody
+            - @admission.admissioncards.each_with_index do |card, index|
+              %tr
+                %td= index + 1
+                %td= card.created_at.to_formatted_s(:long_ordinal)
+                %td= card.user.name
+                %td= card.user.email
+
+
+

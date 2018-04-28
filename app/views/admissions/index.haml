@@ -21,15 +21,17 @@
               %br/
               %strong Price:
               = admission.price
-            - if admission.n_max
-              %p
+            
+            %p
+              - if admission.n_max
                 %strong Maximum participants:
                 = admission.n_max
                 %br/
-                %strong Current count:
-                = admission.n_actual || 0
+              %strong Current count:
+              = admission.n_actual || 0
             %hr/
             = link_to "Edit", edit_epicenter_admission_path(@epicenter, admission), class: "btn btn-default"
+            = link_to "Show", epicenter_admission_path(@epicenter, admission), class: "btn btn-default"
       .col-md-12
         = link_to "Create admission", new_epicenter_admission_path(@epicenter), class: "btn btn-primary"  
   - else
