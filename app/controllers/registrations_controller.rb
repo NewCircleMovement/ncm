@@ -22,6 +22,10 @@ class RegistrationsController < Devise::RegistrationsController
 
   end
 
+  def after_sign_up_path_for(resource)
+    ticket_path = get_ticket_path
+    ticket_path || "/epicenters/#{Epicenter.grand_mother.slug}/subscriptions/new"
+  end
 
 
   # custom fields are :name
