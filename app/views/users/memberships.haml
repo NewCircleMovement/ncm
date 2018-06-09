@@ -1,26 +1,32 @@
 = render layout: "edit_user" do
-  %h3.header Du er medlem af disse epicentre
-  .row
-    - current_user.memberships.each do |membership|
-
-      .col-md-4
-        
-        .panel.panel-default
-          .panel-image
-            - if membership.epicenter.image.present?
-              = image_tag(membership.epicenter.image)
-            - elsif membership.epicenter.mother.image.present?
-              = image_tag(membership.epicenter.mother.image)
-            - else
-              = image_tag(@mother.image)
-          .panel-body
-            %h4.header
-              = membership.epicenter.name
-            %p
-              = membership.name
-              %br/
-              = membership.monthly_fee
-              = membership.epicenter.mother_fruit.name
-            %p
-              = link_to "Vis", epicenter_path(membership.epicenter), :class => "btn btn-primary"
-              = link_to "Ret", epicenter_subscriptions_path(membership.epicenter), :class => "btn btn-default"
+  
+  - if current_user.memberships.present?
+    %h3.header You are a member of these Epicenters
+    .row
+      - current_user.memberships.each do |membership|
+        .col-md-4
+          .panel.panel-default
+            .panel-image
+              - if membership.epicenter.image.present?
+                = image_tag(membership.epicenter.image)
+              - elsif membership.epicenter.mother.image.present?
+                = image_tag(membership.epicenter.mother.image)
+              - else
+                = image_tag(@mother.image)
+            .panel-body
+              %h4.header
+                = membership.epicenter.name
+              %p
+                = membership.name
+                %br/
+                = membership.monthly_fee
+                = membership.epicenter.mother_fruit.name
+              %p
+                = link_to "Vis", epicenter_path(membership.epicenter), :class => "btn btn-primary"
+                = link_to "Ret", epicenter_subscriptions_path(membership.epicenter), :class => "btn btn-default"
+  - else
+    .col-md-12
+      %h3.header You are currently not a member of New Circle Movement
+      %p
+        = link_to "Join here", new_epicenter_subscription_path(Epicenter.grand_mother), :class => "btn btn-lg btn-primary"
+    

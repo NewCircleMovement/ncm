@@ -1,3 +1,18 @@
+- if current_user
+  - unless current_user.has_valid_supply(@epicenter)
+    %div.alert.alert-danger
+      .container
+        
+        Your monthly supply of
+        = @epicenter.mother.fruittype.name
+        is not enough to sustain your
+        = current_user.membership_for(@epicenter).name
+        membership of
+        = @epicenter.name
+        .button.pull-right
+          = link_to "Upgrade Membership", epicenter_subscriptions_path(@epicenter.mother), :class => "btn btn-sm btn-primary"
+
+
 .jumbotron.epicenter
   .image
     - if @epicenter.image

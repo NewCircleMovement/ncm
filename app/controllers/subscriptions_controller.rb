@@ -52,10 +52,10 @@ class SubscriptionsController < ApplicationController
     if @epicenter == @mother
       puts "create NCM subscription"
       token = params[:stripeToken]
-
       member = current_user.get_member( membershipcard )
 
-      if member # already has membershipcard with payment info
+      if member 
+        # already already has membershipcard with payment info, upgrade or downgrade
         puts "using old membership card"
         if current_user.update_card( member, token )
           begin
@@ -203,27 +203,41 @@ class SubscriptionsController < ApplicationController
     
     old_membership = current_user.membership_for(@epicenter)
     new_membership = Membership.find(params[:id])
+    upgrade = new_membership.monthly_fee > old_membership.monthly_fee
 
     membershipcard = current_user.get_membershipcard( @epicenter )
 
-
-    # change subscription to "new circle movement"
+    # change subscription for "new circle movement"
     if @epicenter == @mother  
-      puts "mother stuff---------------------------------------------------"
-
       customer = Stripe::Customer.retrieve( membershipcard.payment_id )
+
+      # change user's subscription
       subscription = customer['subscriptions']['data'][0]
       subscription.plan = new_membership.payment_id.to_s
 
-      # update the users subscription and charge the monthly fee for new fruits
+      # if success and upgrade, charge additional payment
       if subscription.save
-        payment = Stripe::Charge.create(
-          :amount => new_membership.monthly_fee * 100,
-          :currency => 'dkk',
-          :customer => customer.id,
-          :description => "Membership change from #{old_membership.name} to #{new_membership.name}"
-        )
         success = true
+
+        if upgrade
+          today = Date.today
+          diff_amount = new_membership.monthly_fee - old_membership.monthly_fee
+          days_in_month = Time.days_in_month(today.month, today.year)
+          days_left_in_month = days_in_month - today.day + 1
+          percent_left = days_left_in_month / days_in_month.to_f
+          charge_amount = [diff_amount * percent_left, 25].max.round
+
+          payment = Stripe::Charge.create(
+            :amount => charge_amount * 100,
+            :currency => 'dkk',
+            :customer => customer.id,
+            :description => "Membership change from #{old_membership.name} to #{new_membership.name}"
+          )
+        end
+        
+        current_user.membershipcards.each do |card|
+          card.update_valid_supply
+        end
       else
         no_success_message = "Der skete desvære en fejl. Betalingen blev ikke gennemført (subs171)"
       end
@@ -311,7 +325,8 @@ class SubscriptionsController < ApplicationController
       else
         begin
           stripe_user = user.get_member(card)
-          if stripe_user.delete
+          subscription = Stripe::Subscription.retrieve( stripe_user.subscriptions.first.id )
+          if subscription.delete
             @epicenter.delete_member(user)
             user.destroy
             flash[:success] = "#{target} no longer active member of New Circle Movement"
