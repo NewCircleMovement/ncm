@@ -323,19 +323,25 @@ class SubscriptionsController < ApplicationController
       if card.payment_id == "bank"
         @epicenter.delete_member(user)
       else
-        begin
-          stripe_user = user.get_member(card)
-          subscription = Stripe::Subscription.retrieve( stripe_user.subscriptions.first.id )
-          if subscription.delete
-            @epicenter.delete_member(user)
-            user.destroy
-            flash[:success] = "#{target} no longer active member of New Circle Movement"
-          else
-            flash[:error] = "A problem occurred while canceling the membership"
-          end  
-        rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
-          flash[:error] = "An error occurred while cancelling the payment"
-        end      
+        stripe_user = user.get_member(card)
+        stripe_subscription = stripe_user.subscriptions.first
+        if stripe_subscription.present?
+          begin
+            subscription = Stripe::Subscription.retrieve( stripe_user.subscriptions.first.id )
+            if subscription.delete
+              @epicenter.delete_member(user)
+              user.destroy
+              flash[:success] = "#{target} no longer active member of New Circle Movement"
+            else
+              flash[:error] = "A problem occurred while canceling the membership"
+            end
+          rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
+            flash[:error] = "An error occurred while cancelling the payment"
+          end
+        else
+          @epicenter.delete_member(user)
+          user.destroy
+        end
       end
     else
       @epicenter.delete_member(user)
