@@ -43,7 +43,9 @@
           %td= card.user.email
           %td= card.membership.name
           %td= card.created_at.strftime("%-d %b, %Y")
-          %td= card.updated_at.strftime("%-d %b, %Y")
+          %td
+            - if card.created_at.strftime("%-d %b, %Y") != card.updated_at.strftime("%-d %b, %Y")
+              = card.updated_at.strftime("%-d %b, %Y")
           %td
             - if card.payment_id == "bank"
               %i.fa.fa-bank
