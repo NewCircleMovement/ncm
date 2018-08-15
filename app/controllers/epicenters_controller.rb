@@ -172,7 +172,11 @@ class EpicentersController < MainEpicentersController
     
     if @sort == 'bank'
       # @cards = Membershipcard.where(:epicenter_id => @epicenter.id).order(:payment_id)
-      @cards = @cards.order(:payment_id)
+      @cards = @cards.order("payment_id #{@direction}")
+    elsif @sort == 'created'
+      @cards = @cards.order("created_at #{@direction}")
+    elsif @sort == 'updated'
+      @cards = @cards.order("updated_at #{@direction}")
     elsif @sort == 'membership'
       @cards = @cards.includes(:membership).order("memberships.name #{@direction}")
     else

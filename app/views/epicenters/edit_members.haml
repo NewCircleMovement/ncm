@@ -19,6 +19,16 @@
             - if @sort == "membership" or not @sort
               %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
             Membership
+        %th
+          = link_to epicenter_edit_members_path(@epicenter, :sort => "created", :dir => @up ? 'down' : 'up') do
+            - if @sort == "created" or not @sort
+              %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
+            Created
+        %th
+          = link_to epicenter_edit_members_path(@epicenter, :sort => "updated", :dir => @up ? 'down' : 'up') do
+            - if @sort == "updated" or not @sort
+              %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
+            Updated
         %th 
           - if @epicenter == Epicenter.grand_mother
             = link_to epicenter_edit_members_path(@epicenter, :sort => "bank", :dir => @up ? 'down' : 'up') do
@@ -32,6 +42,8 @@
           %td= card.user.name
           %td= card.user.email
           %td= card.membership.name
+          %td= card.created_at.strftime("%-d %b, %Y")
+          %td= card.updated_at.strftime("%-d %b, %Y")
           %td
             - if card.payment_id == "bank"
               %i.fa.fa-bank
