@@ -415,9 +415,11 @@ class Epicenter < Blueprint
 
   def delete_member(user)
     self.tshirts.where(user_id: user.id).delete_all
+    
     fruittree = Fruittree.find_by(owner_id: user.id, owner_type: "User", fruittype_id: self.fruittype.id)
-    fruittree.destroy
-    self.save
+    if fruittree
+      fruittree.destroy
+    end
     
     log_details = { from: self.name }
     EventLog.entry(user, self, DELETE_MEMBERSHIP, log_details, LOG_COARSE)

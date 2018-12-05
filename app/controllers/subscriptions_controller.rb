@@ -322,6 +322,7 @@ class SubscriptionsController < ApplicationController
       
       if card.payment_id == "bank"
         @epicenter.delete_member(user)
+        user.destroy
       else
         stripe_user = user.get_member(card)
         stripe_subscription = stripe_user.subscriptions.first
