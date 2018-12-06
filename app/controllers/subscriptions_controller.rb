@@ -29,7 +29,7 @@ class SubscriptionsController < ApplicationController
     if @epicenter == Epicenter.grand_mother
       membershipcard = current_user.get_membershipcard( @epicenter )
       if membershipcard.present?
-        switch_to_credit_card = (membershipcard.payment_id == 'bank')
+        switch_to_credit_card = (membershipcard.payment_id == 'bank' or membershipcard.payment_id == 'upgrade')
       end
     end
 
@@ -38,7 +38,13 @@ class SubscriptionsController < ApplicationController
       redirect_to epicenter_subscriptions_path( @epicenter )
     else
       if switch_to_credit_card
-        flash[:notice] = "Du er ved at skifte betaling fra Bank til kredit kort."  
+        if membershipcard.payment_id == 'bank'
+          flash[:notice] = "You are changing from Bank to Credit card member."
+        end
+
+        if membershipcard.payment_id == 'upgrade'
+          flash[:notice] = "Please pick a new plan."    
+        end
       end
       if session[:new_ncm_membership] and @epicenter == Epicenter.grand_mother
         @request = session[:new_ncm_membership]
@@ -219,18 +225,25 @@ class SubscriptionsController < ApplicationController
 
     membershipcard = current_user.get_membershipcard( @epicenter )
 
-    if membershipcard.payment_id == 'bank'
-      redirect_path = new_epicenter_subscription_path(@epicenter)
-    else
+    # change subscription for "new circle movement"
+    if @epicenter == @mother 
+      redirect_path = nil
 
-      # change subscription for "new circle movement"
-      if @epicenter == @mother  
-        customer = Stripe::Customer.retrieve( membershipcard.payment_id )
 
+      # subscription is nil if bank member of if we have stripe info but no active subsctiptions
+      if membershipcard.payment_id == 'bank'
+        subscription = nil
+      else
+        customer = Stripe::Customer.retrieve( membershipcard.payment_id ) rescue nil
+        subscription = customer['subscriptions']['data'][0] rescue nil
+      end
+
+      
+      # if we have active subscription we can simply change it
+      if subscription
         # change user's subscription
-        subscription = customer['subscriptions']['data'][0]
         subscription.plan = new_membership.payment_id.to_s
-
+        
         # if success and upgrade, charge additional payment
         if subscription.save
           success = true
@@ -249,8 +262,7 @@ class SubscriptionsController < ApplicationController
               :customer => customer.id,
               :description => "Membership change from #{old_membership.name} to #{new_membership.name}"
             )
-          end
-          
+          end          
           current_user.membershipcards.each do |card|
             card.update_valid_supply
           end
@@ -258,34 +270,54 @@ class SubscriptionsController < ApplicationController
           no_success_message = "Der skete desvære en fejl. Betalingen blev ikke gennemført (subs171)"
         end
 
-      # change subscription to all other epicenters
-      else 
-        success = @epicenter.validate_and_pay_new_membership( current_user, new_membership )
-        unless success 
-          no_success_message = "Du har ikke nok beholdning og/eller månedlig tilførsel af #{@epicenter.mother.fruittype.name}"
+      # otherwise we need to create a new credit card subscription
+      # the user does not have an active subscription but we have stripe info, so we delete it
+      else
+        if customer
+          customer.delete
         end
+        if membershipcard.payment_id != 'bank'
+          membershipcard.payment_id = 'upgrade'
+        end
+        membershipcard.save
+
+        redirect_path = new_epicenter_subscription_path(@epicenter)
       end
 
-      if success
-        # update membershipcard
-        membershipcard.membership_id = new_membership.id
-        membershipcard.valid_payment = true
-        membershipcard.update_valid_supply
+    # change subscription to all other epicenters
+    else 
+      success = @epicenter.validate_and_pay_new_membership( current_user, new_membership )
+      unless success 
+        no_success_message = "Du har ikke nok beholdning og/eller månedlig tilførsel af #{@epicenter.mother.fruittype.name}"
+      end
+    end
 
-        puts "--------------------------------"
-        puts "new membership", membershipcard.membership.monthly_gain
 
-        if membershipcard.save
-          log_details = { from: old_membership.name, to: new_membership.name }
-          EventLog.entry(current_user, @epicenter, MEMBERSHIP_CHANGE, log_details, LOG_COARSE)
+    # if we have success we can update the users membershipcard
+    if success
+      # update membershipcard
+      membershipcard.membership_id = new_membership.id
+      membershipcard.valid_payment = true
+      membershipcard.update_valid_supply
 
-          @epicenter.harvest_time_for( current_user )
-          flash[:success] = "Du er nu #{new_membership.name} medlem af #{@epicenter.name}"        
-        else 
-          flash[:error] = "Der skete desværre en fejl (142). Kontakt venligst NCM"
-        end
-        redirect_path = epicenter_path(@epicenter)
-      else
+      puts "--------------------------------"
+      puts "new membership", membershipcard.membership.monthly_gain
+
+      if membershipcard.save
+        log_details = { from: old_membership.name, to: new_membership.name }
+        EventLog.entry(current_user, @epicenter, MEMBERSHIP_CHANGE, log_details, LOG_COARSE)
+
+        @epicenter.harvest_time_for( current_user )
+        flash[:success] = "Du er nu #{new_membership.name} medlem af #{@epicenter.name}"        
+      else 
+        flash[:error] = "Der skete desværre en fejl (142). Kontakt venligst NCM"
+      end
+      redirect_path = epicenter_path(@epicenter)
+    
+    # otherwise, if we don't have a redirect already (change from bank to credit card)
+    # display error to user
+    else
+      if not redirect_path
         membershipcard.valid_payment = false
         membershipcard.save
 
