@@ -77,19 +77,34 @@ class SubscriptionsController < ApplicationController
         puts "using old membership credit card"
         if current_user.update_card( member, token )
           begin
-            # first create active subscription to get payment
-            subscription = Stripe::Subscription.create(
-              :customer => member.id,
-              :plan => @membership.payment_id
-            )
-            # delete active subscription
-            subscription.delete
-            # create new subscription with trial period to begin payment cycle at 1st in month
+
+            if Time.now <= Date.new(2019, 8).end_of_month
+              trial_end = Date.new(2019, 9).end_of_month.to_time.to_i
+            else            
+              trial_end = Time.now.end_of_month.to_time.to_i
+            end
+
             Stripe::Subscription.create(
               :customer => member.id,
               :plan => @membership.payment_id,
-              :trial_end => Time.now.end_of_month.to_i
+              :trial_end => trial_end
             )
+
+            # OLD WAY ----------------------------------------------
+            # first create active subscription to get payment
+            # subscription = Stripe::Subscription.create(
+            #   :customer => member.id,
+            #   :plan => @membership.payment_id
+            # )
+            # # delete active subscription
+            # subscription.delete
+            # # create new subscription with trial period to begin payment cycle at 1st in month
+            # Stripe::Subscription.create(
+            #   :customer => member.id,
+            #   :plan => @membership.payment_id,
+            #   :trial_end => Time.now.end_of_month.to_i
+            # )
+            # OLD WAY END ============================================
             success = true
           rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
             flash[:danger] = "Din betaling blev desværre ikke gennemført. Prøv venligst igen"
@@ -100,32 +115,48 @@ class SubscriptionsController < ApplicationController
         end
       else # create new stripe customer and attach to new/existing membershipcard
         begin
-          puts "new customer and new membership card"
-          # first create customer, subscription and membershipcard
-          stripe_customer = Stripe::Customer.create(
-            card: token,
-            plan: @membership.payment_id, 
-            email: current_user.email
-          )
-          puts "--------------- member payment created -----------------"
-          puts stripe_customer
-          
-          # then delete the subscription
-          puts "stripe subscription", stripe_customer.subscriptions
-          puts stripe_customer.subscriptions.first
-          if stripe_customer.subscriptions.first
-            stripe_customer.subscriptions.first.delete
-            puts "subscription deleted"
+          if Time.now <= Date.new(2019,8).end_of_month
+            trial_end = Date.new(2019, 9).end_of_month.to_time.to_i
+          else            
+            trial_end = Time.now.end_of_month.to_time.to_i
           end
-          
-          puts "now create new trial subscription"
-          # then create new subscription with trial_end (end of month)
+
+          stripe_customer = Stripe::Customer.create(card: token, email: current_user.email)
+
           Stripe::Subscription.create(
             :customer => stripe_customer.id,
             :plan => @membership.payment_id,
-            :trial_end => Time.now.end_of_month.to_i
+            :trial_end => trial_end
           )
-          puts "new trial subscription created"
+
+          # OLD WAY ------------------------------------------------
+          # puts "new customer and new membership card"
+          # first create customer, subscription and membershipcard
+          # stripe_customer = Stripe::Customer.create(
+          #   card: token,
+          #   plan: @membership.payment_id, 
+          #   email: current_user.email
+          # )
+          # puts "--------------- member payment created -----------------"
+          # puts stripe_customer
+          
+          # # then delete the subscription
+          # puts "stripe subscription", stripe_customer.subscriptions
+          # puts stripe_customer.subscriptions.first
+          # if stripe_customer.subscriptions.first
+          #   stripe_customer.subscriptions.first.delete
+          #   puts "subscription deleted"
+          # end
+          
+          # puts "now create new trial subscription"
+          # # then create new subscription with trial_end (end of month)
+          # Stripe::Subscription.create(
+          #   :customer => stripe_customer.id,
+          #   :plan => @membership.payment_id,
+          #   :trial_end => Time.now.end_of_month.to_i
+          # )
+          # puts "new trial subscription created"
+          # OLD WAY END ------------------------------------------------
 
           success = true
         rescue Stripe::InvalidRequestError => e
