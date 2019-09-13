@@ -41,6 +41,7 @@ class Membershipcard < ActiveRecord::Base
             
             customer = Stripe::Customer.retrieve(self.payment_id)
 
+            # TODO: change this function to meet new STRIP api requirements
             if customer['sources'].present?
                 card = customer.sources.retrieve(customer.default_source)
                 expiration_date = Date.new(card.exp_year, card.exp_month)
