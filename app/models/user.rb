@@ -126,6 +126,21 @@ class User < ActiveRecord::Base
     false
   end
 
+  def update_name(name_entry)
+    self.name = name_entry || 'Unknown'
+    splitted_name = self.name.split(' ')
+    if splitted_name.length > 2
+      self.last_name = splitted_name[-1]
+      self.first_name = self.name.strip().gsub(self.last_name, '')
+    elsif splitted_name == 2
+      self.first_name = splitted_name[0]
+      self.last_name = splitted_name[1]
+    else
+      self.first_name = splitted_name[0]
+    end
+    self.save
+  end
+
 
   # returns a user's fruit expences per month in a given epicenter
   def monthly_engagement( epicenter )

@@ -37,7 +37,7 @@
                 - else
                   = @epicenter.mother.fruittype.name
               %hr/
-              - if @membership == membership && 
+              - if @membership == membership
                 = link_to "Cancel membership", epicenter_subscription_path(@epicenter, membership), :method => :delete, :class => 'btn btn-danger', data: { confirm: 'Er du sikker?' }
               - else
                 = link_to "Select", epicenter_subscription_path(@epicenter, membership), method: :put, class: "btn btn-primary", data: { confirm: 'Er du sikker?' }

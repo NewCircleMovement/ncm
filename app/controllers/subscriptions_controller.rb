@@ -58,6 +58,13 @@ class SubscriptionsController < ApplicationController
   end
 
 
+  # will be called by stripe upon successful signup
+  def welcome
+    @membership = Membership.find(params['subscription_id'])
+  end
+
+
+  # POST > createa NEW subscription (but only for NON-mother epicenters)
   def create
     success = false
     no_success_message = ""
@@ -68,105 +75,8 @@ class SubscriptionsController < ApplicationController
 
     # subscription to "new circle movement"
     if @epicenter == @mother
-      puts "create NCM subscription"
-      token = params[:stripeToken]
-      member = current_user.get_member( membershipcard )
-
-      if member 
-        # user already has membershipcard with payment info, upgrade or downgrade
-        puts "using old membership credit card"
-        if current_user.update_card( member, token )
-          begin
-
-            if Time.now <= Date.new(2019, 8).end_of_month
-              trial_end = Date.new(2019, 9).end_of_month.to_time.to_i
-            else            
-              trial_end = Time.now.end_of_month.to_time.to_i
-            end
-
-            Stripe::Subscription.create(
-              :customer => member.id,
-              :plan => @membership.payment_id,
-              :trial_end => trial_end
-            )
-
-            # OLD WAY ----------------------------------------------
-            # first create active subscription to get payment
-            # subscription = Stripe::Subscription.create(
-            #   :customer => member.id,
-            #   :plan => @membership.payment_id
-            # )
-            # # delete active subscription
-            # subscription.delete
-            # # create new subscription with trial period to begin payment cycle at 1st in month
-            # Stripe::Subscription.create(
-            #   :customer => member.id,
-            #   :plan => @membership.payment_id,
-            #   :trial_end => Time.now.end_of_month.to_i
-            # )
-            # OLD WAY END ============================================
-            success = true
-          rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
-            flash[:danger] = "Din betaling blev desværre ikke gennemført. Prøv venligst igen"
-          end
-          flash[:success] = "Du er nu igen aktivt medlem af New Circle Movement"
-        else
-          flash[:warning] = "Der var et problem med din gentilmelding. Prøv venligst igen."
-        end
-      else # create new stripe customer and attach to new/existing membershipcard
-        begin
-          if Time.now <= Date.new(2019,8).end_of_month
-            trial_end = Date.new(2019, 9).end_of_month.to_time.to_i
-          else            
-            trial_end = Time.now.end_of_month.to_time.to_i
-          end
-
-          stripe_customer = Stripe::Customer.create(card: token, email: current_user.email)
-
-          Stripe::Subscription.create(
-            :customer => stripe_customer.id,
-            :plan => @membership.payment_id,
-            :trial_end => trial_end
-          )
-
-          # OLD WAY ------------------------------------------------
-          # puts "new customer and new membership card"
-          # first create customer, subscription and membershipcard
-          # stripe_customer = Stripe::Customer.create(
-          #   card: token,
-          #   plan: @membership.payment_id, 
-          #   email: current_user.email
-          # )
-          # puts "--------------- member payment created -----------------"
-          # puts stripe_customer
-          
-          # # then delete the subscription
-          # puts "stripe subscription", stripe_customer.subscriptions
-          # puts stripe_customer.subscriptions.first
-          # if stripe_customer.subscriptions.first
-          #   stripe_customer.subscriptions.first.delete
-          #   puts "subscription deleted"
-          # end
-          
-          # puts "now create new trial subscription"
-          # # then create new subscription with trial_end (end of month)
-          # Stripe::Subscription.create(
-          #   :customer => stripe_customer.id,
-          #   :plan => @membership.payment_id,
-          #   :trial_end => Time.now.end_of_month.to_i
-          # )
-          # puts "new trial subscription created"
-          # OLD WAY END ------------------------------------------------
-
-          success = true
-        rescue Stripe::InvalidRequestError => e
-          flash[:danger] = "Betalingen blev desværre ikke gennemført (Invalid Request). Prøv venligst igen"
-          puts e
-        rescue Stripe::APIConnectionError => e
-          flash[:danger] = "Betalingen blev ikke gennemført på grund af netforbindelsen. Prøv venligst igen"
-          puts e
-        end
-      end
+      flash[:warning] = 'This option is no longer active'
+      redirect_path = epicenter_path(@epicenter)
     
     # subscription to all other epicenters
     else 
@@ -239,14 +149,10 @@ class SubscriptionsController < ApplicationController
 
 
   def edit
-    puts "we are in edit"
-    # if current_user.stripe_id
-    #   customer = Stripe::Customer.retrieve( current_user.stripe_id )
-    #   @subscription_id = customer.subscriptions.data[0]["id"]
-    #   @card = customer.sources.data[0]
-    # end
   end
 
+  
+  # changing / updating a users subscription goes through this
   def update
     success = false
     
@@ -260,16 +166,14 @@ class SubscriptionsController < ApplicationController
     if @epicenter == @mother 
       redirect_path = nil
 
-
       # subscription is nil if bank member of if we have stripe info but no active subsctiptions
       if membershipcard.payment_id == 'bank'
         subscription = nil
       else
         customer = Stripe::Customer.retrieve( membershipcard.payment_id ) rescue nil
-        subscription = customer['subscriptions']['data'][0] rescue nil
+        subscription = customer.subscriptions.first rescue nil
       end
 
-      
       # if we have active subscription we can simply change it
       if subscription
         # change user's subscription
@@ -285,15 +189,19 @@ class SubscriptionsController < ApplicationController
             days_in_month = Time.days_in_month(today.month, today.year)
             days_left_in_month = days_in_month - today.day + 1
             percent_left = days_left_in_month / days_in_month.to_f
-            charge_amount = [diff_amount * percent_left, 25].max.round
 
-            payment = Stripe::Charge.create(
-              :amount => charge_amount * 100,
-              :currency => 'dkk',
-              :customer => customer.id,
-              :description => "Membership change from #{old_membership.name} to #{new_membership.name}"
-            )
-          end          
+            # only charge for changes if there are more than 5% of days left in month and user is not in "trialing" subscription
+            if (percent_left > 0.05 and subscription.status != 'trialing')
+              charge_amount = [diff_amount * percent_left, 25].max.round
+              payment = Stripe::Charge.create(
+                :amount => charge_amount * 100,
+                :currency => 'dkk',
+                :customer => customer.id,
+                :description => "Membership change from #{old_membership.name} to #{new_membership.name}"
+              )
+            end
+          end
+
           current_user.membershipcards.each do |card|
             card.update_valid_supply
           end
@@ -338,7 +246,11 @@ class SubscriptionsController < ApplicationController
         log_details = { from: old_membership.name, to: new_membership.name }
         EventLog.entry(current_user, @epicenter, MEMBERSHIP_CHANGE, log_details, LOG_COARSE)
 
-        @epicenter.harvest_time_for( current_user )
+        # only add fruits if upgrading
+        if upgrade
+          @epicenter.harvest_time_for(current_user)
+        end
+
         flash[:success] = "Du er nu #{new_membership.name} medlem af #{@epicenter.name}"        
       else 
         flash[:error] = "Der skete desværre en fejl (142). Kontakt venligst NCM"

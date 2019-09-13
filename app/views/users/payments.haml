@@ -32,4 +32,19 @@
                 #error_explanation
                   %p= flash[:error]
 
-            %script.stripe-button{ "data-name" => "New Circle Movement", "data-description" => "Monthly fee", "data-zip-code" => true, "data-billing-address" => true, "data-email" => current_user.email, "data-amount" => "#{@membership.monthly_fee}00", "data-image" => "", "data-label" => "Update Creditcard", "data-key" => Rails.configuration.stripe[:publishable_key], "data-locale" => "en", "data-currency" => "dkk", :src => "https://checkout.stripe.com/checkout.js" }
+            = button_tag 'Update Creditcard', type: 'button', onclick: "updateCreditCard('#{current_user.id}')", class: "btn btn-info"
+            -# %script.stripe-button{ "data-name" => "New Circle Movement", "data-description" => "Monthly fee", "data-zip-code" => true, "data-billing-address" => true, "data-email" => current_user.email, "data-amount" => "#{@membership.monthly_fee}00", "data-image" => "", "data-label" => "Update Creditcard", "data-key" => Rails.configuration.stripe[:publishable_key], "data-locale" => "en", "data-currency" => "dkk", :src => "https://checkout.stripe.com/checkout.js" }
+  - else
+    .row
+      .col-md-6
+        .well.well-sm
+          %p
+            %strong= current_user.name
+          %p
+            %span.grey XXXX XXXX XXXX XXXX
+          %p.grey
+            You are on a trial membership and your credit card has not been charged yet. 
+          %p
+            = button_tag 'Update Creditcard', type: 'button', onclick: "updateCreditCard('#{current_user.id}')", class: "btn btn-info"
+  
+

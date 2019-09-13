@@ -1,0 +1,25 @@
+.jumbotron.epicenter
+  .image
+    - if @epicenter.image
+      = image_tag(@epicenter.image, width: "100%", height: "250")
+    .text-wrap
+      .text 
+        %h1= @epicenter.name
+        - if @epicenter.tagline.present?
+          %p= @epicenter.tagline
+
+.container
+  %h2 
+    Welcome to
+    = @epicenter.name
+  %p 
+    We are pleased to welcome you as a 
+    %strong
+      = @membership.name
+    member of
+    %strong
+      = @epicenter.name
+  .row
+    .col-md-3
+      %p
+        = link_to "Continue", @epicenter, class: "btn btn-primary btn-wide"

@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   resources :epicenters do
     resources :subscriptions do
       # post "/update_creditcard" => "subscriptions#update_creditcard"
-      # get "/cancel_change" => "subscriptions#cancel_change"
+      get "/welcome" => "subscriptions#welcome"
     end
     resources :tickets
       
@@ -77,16 +77,25 @@ Rails.application.routes.draw do
 
   
   namespace :api, defaults: { format: 'json' } do
-    # resources :users
     
-    namespace :v1 do
+    
+    namespace :v1, defaults: { format: 'json' } do
       resources :epicenters, param: :slug do
         resources :users
         post '/authenticate' => 'users#authenticate'
       end
+
+      
+      get '/stripe/public_key' => "stripe#get_public_key"
+      post '/stripe/new_subscription_session' => "stripe#new_subscription_session"      
+      post '/stripe/change_subscription_session' => "stripe#change_subscription_session"
+      post '/stripe/update_card_session' => "stripe#update_card_session"
+      post '/stripe/webhooks' => "stripe#webhooks"
       
     end
   end
+
+  
 
 
 end
