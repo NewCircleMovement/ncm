@@ -82,11 +82,13 @@ class UsersController < ApplicationController
     if @payment and @payment.payment_id != "bank" and @payment.payment_id != nil
       begin
         customer = Stripe::Customer.retrieve(@payment.payment_id)
-        if customer and customer.subscriptions and customer.subscriptions.data.first
+        if customer.default_source
+          @card = Stripe::Customer.retrieve_source(customer.id, customer.default_source)
+        elsif customer and customer.subscriptions and customer.subscriptions.data.first
           @subscription = customer.subscriptions.first
           pm = @subscription.default_payment_method
           @card = Stripe::PaymentMethod.retrieve(pm).card
-        else 
+        else
           @card = nil
           @subscription = customer.subscriptions.first
         end
