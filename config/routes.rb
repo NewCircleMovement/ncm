@@ -90,6 +90,7 @@ Rails.application.routes.draw do
       post '/stripe/change_subscription_session' => "stripe#change_subscription_session"
       post '/stripe/update_card_session' => "stripe#update_card_session"
       post '/stripe/webhooks' => "stripe#webhooks"
+      post '/stripe/webhooks/checkout' => "stripe#webhooks"
       
     end
   end
