@@ -10,7 +10,7 @@ module Api
       # GET
       def get_domain_url
         if Rails.env == "production"
-          domain_url = "https://www.newcirclemovement.org/"
+          domain_url = "https://www.newcirclemovement.org"
         else
           domain_url = "http://localhost:3000"
         end

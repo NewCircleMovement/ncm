@@ -84,7 +84,6 @@ Rails.application.routes.draw do
         resources :users
         post '/authenticate' => 'users#authenticate'
       end
-
       
       get '/stripe/public_key' => "stripe#get_public_key"
       post '/stripe/new_subscription_session' => "stripe#new_subscription_session"      

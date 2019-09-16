@@ -1,7 +1,7 @@
 class Api::V1::BaseController < ApplicationController
 
     skip_before_action :verify_authenticity_token
-    # before_filter :authenticate_token!
+    before_filter :authenticate_token!
 	
     # before_filter :parse_request, :authenticate_user_from_token!
 	# before_filter :parse_request
@@ -42,9 +42,12 @@ class Api::V1::BaseController < ApplicationController
     # end
 
     def authenticate_token!
-        return true if @epicenter
-        
         url = request.original_url
+
+        return true if @epicenter
+        return true if url.include?('api/v1/stripe/')
+
+        
         epicenter_slug = url.split('api/v1/epicenters/')[-1].split('/')[0]
 
         authenticate_with_http_token do |token, options|
