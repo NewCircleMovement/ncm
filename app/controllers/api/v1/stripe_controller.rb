@@ -81,9 +81,20 @@ module Api
           elsif data_object['mode'] == 'subscription'
             create_subscription(data_object)
           end
+
+        when 'payment_method.attached', 'payment_method.updated'
+          set_user_name_from_payment_object(data_object)
         end
 
         render json: { status: 'success' }
+      end
+
+
+      def set_user_name_from_payment_object(data_object)
+        @user = User.find_by(:email => data_object['billing_details']['email'])
+        unless @user.name.present?
+          @user.update_name(data_object['billing_details']['name'])
+        end
       end
 
 
@@ -98,8 +109,6 @@ module Api
         active_subscription = current_subscriptions.select { |x| x.status == 'active' or x.status = 'trialing'}.first
 
         if active_subscription
-          @user.update_name(data_object['name'])
-
           plan_id = active_subscription['plan']['id'].to_i
           @membership = Membership.find_by(payment_id: plan_id)
 

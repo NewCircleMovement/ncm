@@ -45,6 +45,7 @@ class EventLog < ActiveRecord::Base
 
 	def self.get_name(owner)
 		who = "Unknown"
+
 		case owner.class.name
 			when User.name
 				who = owner.name
