@@ -72,7 +72,9 @@ module Api
         event_type = params['type']
         data = params['data']
         data_object = data['object']
+      
         puts event_type
+
 
         case event_type
         when 'checkout.session.completed'
@@ -109,9 +111,9 @@ module Api
         active_subscription = current_subscriptions.select { |x| x.status == 'active' or x.status = 'trialing'}.first
 
         if active_subscription
-          plan_id = active_subscription['plan']['id'].to_i
+          plan_id = active_subscription['plan']['id']
           @membership = Membership.find_by(payment_id: plan_id)
-
+        
           @epicenter.make_membershipcard(@user, @membership, stripe_customer )
           @epicenter.make_member( @user )
           @epicenter.harvest_time_for( @user )

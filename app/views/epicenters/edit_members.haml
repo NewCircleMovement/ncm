@@ -36,26 +36,33 @@
                 %i.fa{ :class => "#{@up ? 'fa-chevron-up' : 'fa-chevron-down'} space-right-5"}
               Bank
         %th
+    
     %tbody
       - for card in @cards
-        %tr
-          %td= card.user.name
-          %td= card.user.email
-          %td= card.membership.name
-          %td= card.created_at.strftime("%-d %b, %Y")
-          %td
-            - if card.created_at.strftime("%-d %b, %Y") != card.updated_at.strftime("%-d %b, %Y")
-              = card.updated_at.strftime("%-d %b, %Y")
-          %td
-            - if card.payment_id == "bank"
-              %i.fa.fa-bank
-              bank
-            - elsif card.payment_id != nil
-              %i.fa.fa-credit-card
-            - else
-              %i.fa.fa-circle-thin
-          %td
-            = link_to "Cancel", epicenter_subscription_path(@epicenter, card.membership, :user_id => card.user.id), :method => :delete, :class => 'btn btn-xs btn-danger', data: { confirm: "You are about to cancel #{card.user.name}s membership of #{@epicenter.name}. Are you sure!?" }
+        - if card.user.present?
+          %tr
+            %td= card.user.name
+            %td= card.user.email
+            %td= card.membership.name
+            %td= card.created_at.strftime("%-d %b, %Y")
+            %td
+              - if card.created_at.strftime("%-d %b, %Y") != card.updated_at.strftime("%-d %b, %Y")
+                = card.updated_at.strftime("%-d %b, %Y")
+            %td
+              - if card.payment_id == "bank"
+                %i.fa.fa-bank
+                bank
+              - elsif card.payment_id != nil
+                %i.fa.fa-credit-card
+              - else
+                %i.fa.fa-circle-thin
+            %td
+              = link_to "Cancel", epicenter_subscription_path(@epicenter, card.membership, :user_id => card.user.id), :method => :delete, :class => 'btn btn-xs btn-danger', data: { confirm: "You are about to cancel #{card.user.name}s membership of #{@epicenter.name}. Are you sure!?" }
+        - else
+          %tr
+            %td
+              Problem with card id
+              = card.id
 
       -# - for user in @members
       -#   %tr
