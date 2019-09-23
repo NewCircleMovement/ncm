@@ -121,6 +121,9 @@ module Api
           log_details = { membership: @membership.name }
           EventLog.entry(@user, @epicenter, NEW_MEMBERSHIP, log_details, LOG_COARSE)
         else
+          puts "--- no active subscription for user ---"
+          puts "user id", @user.id
+          puts "stripe id", data_object['customer']
           raise
         end
       end
