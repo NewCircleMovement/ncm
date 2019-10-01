@@ -132,8 +132,8 @@ module Api
       # -----------------------------------------------------------------------------
       
       def get_trial_end
-        today = Date.new
-        if (today <= Date.new(2019, 8).end_of_month) or (today <= Date.new(2019, 9).end_of_month - 2.days)
+        today = Date.today
+        if (today <= Date.new(2019, 9).end_of_month - 3.days)
           return Date.new(2019, 9).end_of_month.to_time.to_i
         end
         return nil
