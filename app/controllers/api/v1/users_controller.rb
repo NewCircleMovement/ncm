@@ -68,8 +68,8 @@ module Api
           valid_password = @user.valid_password?(params[:password] || '')
           valid_member = @epicenter.has_member?(@user)
           membership = @user.membership_for(@epicenter)
-
         end
+
         render json: { 
           user: @user, 
           valid_password: valid_password, 

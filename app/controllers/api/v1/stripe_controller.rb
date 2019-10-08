@@ -39,24 +39,33 @@ module Api
             }
           )
         rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
-          error = "Your payment were not completed. Please try again."
+          error = "Your payment was not completed. Please try again."
         end
 
         render json: { checkoutSessionId: session['id'], error: error }
       end
 
       def update_card_session
+        card = current_user.get_membershipcard(@mother)
+        customer = Stripe::Customer.retrieve(card['payment_id'])
+        subscription_id = customer.subscriptions.first.id
+
         begin
           session = Stripe::Checkout::Session.create(
             success_url: get_domain_url + "/users/#{current_user.id}/payment?card_update=true&session_id={CHECKOUT_SESSION_ID}",
             cancel_url: get_domain_url + "/users/#{current_user.id}/payment?card_update=false",
             payment_method_types: ['card'],
-            client_reference_id: current_user.id,
             customer_email: current_user.email,
-            mode: 'setup'
+            mode: 'setup',
+            setup_intent_data: {
+            metadata: {
+              customer_id: customer.id,
+              subscription_id: subscription_id,
+            },
+          },
           )
         rescue Stripe::InvalidRequestError, Stripe::APIConnectionError
-          error = "Your payment were not completed. Please try again."
+          error = "Your payment was not completed. Please try again."
         end
 
         render json: { checkoutSessionId: session['id'], error: error }
@@ -68,18 +77,14 @@ module Api
       # POST webhooks
       def webhooks
         webhook_secret = Rails.application.secrets.stripe_webhooks_secret
-
         event_type = params['type']
         data = params['data']
         data_object = data['object']
       
-        puts event_type
-
-
         case event_type
         when 'checkout.session.completed'
-          if data_object['mode'] == 'setup'
-            puts data_object
+          if data_object['mode'] == 'setup'            
+            attach_payment_id_to_customer(data_object)
           elsif data_object['mode'] == 'subscription'
             create_subscription(data_object)
           end
@@ -97,6 +102,21 @@ module Api
         unless @user.name.present?
           @user.update_name(data_object['billing_details']['name'])
         end
+      end
+
+      def attach_payment_id_to_customer(data_object)
+        seti = Stripe::SetupIntent.retrieve(data_object['setup_intent'])
+
+        payment_method = Stripe::PaymentMethod.attach(
+          seti['payment_method'],
+          {
+            customer: seti.metadata.customer_id,
+          }
+        )
+
+        customer = Stripe::Customer.retrieve(seti.metadata.customer_id)
+        customer.invoice_settings.default_payment_method = payment_method.id
+        customer.save
       end
 
 
