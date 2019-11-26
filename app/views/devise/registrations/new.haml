@@ -37,25 +37,6 @@
                 %strong= @child.name
                 and
                 %strong New Circle Movement
-              .well.well-sm
-                - if @memberships.present?
-                  %p
-                    As a minimum
-                    %strong= "#{@child_membership.name} Membership"
-                    of 
-                    %strong= @child.name
-                    requires
-                    %strong= "#{@memberships.first.name} Membership"
-                    of
-                    %strong New Cirle Movement
-                    %br/
-                    %em This will be automatically chosen for you.
-                - else
-                  %p
-                    There are currently no New Circle Movement memberships available that supports a 
-                    %strong= "#{@child_membership.name} Membership"
-                    of 
-                    %strong= @child.name
               %p
                 If you already have a New Circle Movement account
                 = link_to "please log in here", new_user_session_path

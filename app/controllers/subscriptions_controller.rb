@@ -50,7 +50,8 @@ class SubscriptionsController < ApplicationController
         @request = session[:new_ncm_membership]
         @request_epicenter = Epicenter.find_by_slug(@request['epicenter_id'])
         @request_membership = @request_epicenter.memberships.find(@request['membership_id'])
-        @memberships = @epicenter.memberships.where("monthly_gain >= ?", @request_membership.monthly_fee)
+        
+        @membership = @epicenter.memberships.where("monthly_gain >= ?", @request_membership.monthly_fee).min_by(&:monthly_gain)
       else
         @memberships = @epicenter.memberships
       end
@@ -144,6 +145,8 @@ class SubscriptionsController < ApplicationController
       flash[:warning] = no_success_message
       redirect_path =  new_epicenter_subscription_path(@epicenter)
     end
+
+
     redirect_to redirect_path
   end
 

@@ -1,5 +1,5 @@
 -# MOTHER EPICENTERE
-- if @epicenter == @mother
+- if @epicenter == @mother and not request_membership
   %h3.header 
     Engagement: 
     =membership.name
@@ -21,7 +21,12 @@
     = @epicenter.mother.fruittype.name
     per month
   %hr/
-  %p= link_to "Select", epicenter_subscriptions_path(@epicenter.slug, membership_id: membership.id), method: :post, class: "btn btn-primary"
+  %p
+    = link_to epicenter_subscriptions_path(@epicenter.slug, membership_id: membership.id), method: :post, disabled: request_membership, class: "btn btn-primary"  do
+      - if request_membership
+        Selected
+      - else 
+        Select
 
 -# %script
 -#   function myFunction(membership) {

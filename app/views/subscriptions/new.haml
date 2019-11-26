@@ -17,41 +17,39 @@
         membership
 
     %p
-      You are in the process of becoming 
-      %strong
-        = @request_membership.name 
-        Member
-      of 
-      %strong
-        = @request_epicenter.name
-      through
-      %strong
-        New Circle Movement
+      Your 
+      %strong Tinkuy membership 
+      requires a membership with 
+      %strong New Circle Movement. 
+    %p.space-bottom-30
+      You will only be charged through your New Circle Movement account. Please confirm your membership below.
 
   - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
     
-    - if @request_epicenter
-      %div.space-bottom-15
-        .alert.alert-success.space-bottom-15
-          These 
-          %strong New Circle Movement 
-          memberships are compatible with the 
-          %strong
-            = @request_membership.name
-            membership
-          of 
-          %strong
-            = @request_epicenter.name
+    - if @request_epicenter 
+      - if @request_membership.present?
+        .row
+          .col-md-4
+            .well.well-sm
+              = render partial: 'form', locals: { membership: @request_membership, request_membership: true }
+          .col-md-4
+            .well.well-sm.new-ncm-membership
+              = render partial: 'form', locals: { membership: @membership, request_membership: false }
+      - else
+        %p
+          Please contact New Circle Movement support
+
+
     - else
       %h2
         %strong Memberships
-    .row
-      - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
-        - @memberships.each_with_index do |membership, i|
-          .col-md-4
-            .panel.panel-default
-              .panel-body
-                = render partial: 'form', locals: { membership: membership, index: i }
+      .row
+        - if @epicenter.can_accept_members? || @epicenter.has_caretaker?( current_user )
+          - @memberships.each_with_index do |membership, i|
+            .col-md-4
+              .panel.panel-default
+                .panel-body
+                  = render partial: 'form', locals: { membership: membership, request_membership: false }
   - else
     %h2 Medlemskaber er ikke aktiveret
     %p
