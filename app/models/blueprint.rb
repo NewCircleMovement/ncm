@@ -1,5 +1,3 @@
-puts "/////////////////////"
-
 class Blueprint < ActiveRecord::Base
   self.abstract_class = true
 
@@ -14,7 +12,5 @@ class Blueprint < ActiveRecord::Base
     end
 
   end
-
-
 
 end

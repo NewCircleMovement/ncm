@@ -4,45 +4,39 @@
       .panel.panel-default.space-top-30
         .panel-body
           .row
-            .col-md-8
-              %h2.header
-                Membership of
-                = @child.name
-              %span.grey
-                Requested
-                = time_ago_in_words(@request_t)
-                ago
-              %hr/
-              %p
-                To become a
-                %strong= "#{@child_membership.name} Member"
-                of 
-                %strong= @child.name
-                you must first create a membership of 
-                %strong New Circle Movement
-              %p
-                It's very easy!
-              %ul
-                %li 
-                  Type your email, choose a password and click 
-                  %strong sign up
-                %li
-                  This will redirected you to
-                  %strong New Circle Movement payment
-                %li
-                  Comnplete your payment in 
-                  %strong the appearing box
-              %p
-                When your payment succeeds you will be both a member of
-                %strong= @child.name
-                and
-                %strong New Circle Movement
-              %p
-                If you already have a New Circle Movement account
-                = link_to "please log in here", new_user_session_path
+            = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :role => 'form'}) do |f|
+              .col-md-8
+                %h2.header
+                  Membership of
+                  = @child.name
+                %hr/
+                %p
+                  To become a
+                  %strong= "#{@child_membership.name} Member"
+                  of 
+                  %strong= @child.name
+                  you must create a membership of 
+                  %strong New Circle Movement
+                %ul
+                  %li 
+                    Type your email, choose a password and click 
+                    %strong sign up
+                  %li
+                    This will redirected you to
+                    %strong New Circle Movement payment
+                  %li
+                    Complete your payment in 
+                    %strong the appearing box
+                %p
+                  When your payment succeeds you will be both a member of
+                  %strong= @child.name
+                  and
+                  %strong New Circle Movement
+                %hr/
+                - if devise_mapping.registerable?
+                  = link_to 'Already have an account?', new_session_path(resource_name)
 
-            .col-md-4
-              = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :role => 'form'}) do |f|
+              .col-md-4
                 %h2.header Create profile
                 %hr/
                 = devise_error_messages!
@@ -55,11 +49,12 @@
                 .form-group
                   = f.label :password_confirmation
                   = f.password_field :password_confirmation, class: 'form-control'
-                  
+                %p.hint.grey.smaller
+                  By signing up you agree to receive occassional information from New Circle Movement as well as any
+                  epicenter
+                  = "(like #{@child.name})"
+                  that you become a member of through New Circle Movement.                  
                 = f.submit 'Sign up', :class => 'btn btn-primary btn-wide'
-                %hr/
-                - if devise_mapping.registerable?
-                  = link_to 'Already have an account?', new_session_path(resource_name)
             
 
   - else
@@ -79,6 +74,9 @@
             .form-group
               = f.label :password_confirmation
               = f.password_field :password_confirmation, class: 'form-control'
+            %p.hint.grey.smaller
+              By signing up you agree to receive occassional information from New Circle Movement as well as any
+              epicenter that you become a member of through New Circle Movement.
             = f.submit 'Sign up', :class => 'btn btn-primary btn-wide'
             %hr/
             - if devise_mapping.registerable?

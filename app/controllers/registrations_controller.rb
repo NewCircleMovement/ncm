@@ -6,6 +6,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def new_membership
     request = session[:new_ncm_membership]
+    epicenter_id, membership_id = params['epicenter_id'], params['membership_id']
     
     if request
       @request_t = request['t'].to_time
@@ -18,9 +19,15 @@ class RegistrationsController < Devise::RegistrationsController
       else
         session.delete(:new_ncm_membership)
       end
+    elsif epicenter_id and membership_id
+      @child = Epicenter.find_by_slug(epicenter_id)
+      @child_membership = @child.memberships.find(membership_id)
+      @memberships = Epicenter.grand_mother.memberships.where("monthly_gain >= ?", @child_membership.monthly_fee)
     end
-
+      
   end
+
+
 
   def after_sign_up_path_for(resource)
     ticket_path = get_ticket_path
