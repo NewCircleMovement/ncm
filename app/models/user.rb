@@ -30,6 +30,11 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  # ensure lowercase email
+  before_save do
+    self.email.downcase! if self.email
+  end
+
   # all users must have a fruitbasket
   after_create :create_fruitbasket
 
@@ -58,6 +63,11 @@ class User < ActiveRecord::Base
   has_one :fruitbasket, as: :owner, :dependent => :destroy
   has_many :event_logs, as: :owner, :dependent => :destroy ##42
 
+
+  def self.find_for_authentication(conditions)
+    conditions[:email].downcase! 
+    super(conditions) 
+  end
 
   # when user creates account he/she will a fruitbasket
   def create_fruitbasket
